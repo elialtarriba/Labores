@@ -1,6 +1,5 @@
-const CACHE_NAME = 'labores-v16-cache';
+const CACHE_NAME = 'labores-v18-cache';
 const ASSETS = [
-  './',
   './index.html',
   './manifest.json',
   './icon.png',
