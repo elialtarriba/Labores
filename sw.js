@@ -1,4 +1,4 @@
-const CACHE_NAME = 'labores-v18-cache';
+const CACHE_NAME = 'labores-v19-cache';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -32,7 +32,7 @@ self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   
   e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
+    caches.match(e.request, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
         fetch(e.request).then((networkResponse) => {
           if (networkResponse.status === 200) {
