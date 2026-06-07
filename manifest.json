@@ -1,16 +1,16 @@
 {
-  "name": "Labores - Tejedores y Artesanos",
-  "short_name": "Labores",
+  "name": "MisLabores - Mi taller de labores",
+  "short_name": "MisLabores",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#FFF7EE",
-  "theme_color": "#6E4A3A",
+  "background_color": "#FEFCE8",
+  "theme_color": "#FFF5CC",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%236E4A3A' rx='100'/><text x='50%' y='58%' font-size='220' fill='%23FFF7EE' font-family='Georgia, serif' font-weight='bold' text-anchor='middle'>🧶</text></svg>",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
