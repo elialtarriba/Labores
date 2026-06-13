@@ -1,10 +1,12 @@
-const CACHE_NAME = 'labores-v68-cache';
+const CACHE_NAME = 'labores-v70-cache';
 const ASSETS = [
   './index.html',
   './manifest.json',
   './icon.png',
   './logo_corrected.jpg',
-  './CODEX/pdf-lib.min.js'
+  './CODEX/pdf-lib.min.js',
+  './CODEX/pdf.min.mjs',
+  './CODEX/pdf.worker.min.mjs'
 ];
 
 self.addEventListener('install', (e) => {
