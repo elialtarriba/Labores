@@ -1,4 +1,4 @@
-const CACHE_NAME = 'labores-v66-cache';
+const CACHE_NAME = 'labores-v68-cache';
 const ASSETS = [
   './index.html',
   './manifest.json',
