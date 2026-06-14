@@ -900,3 +900,22 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 - **Stock reubicado**: La información de "STOCK: X" se ha movido a la esquina superior derecha (antiguo lugar de la basura) y se le ha dado formato de "medalla/badge" para destacar visualmente.
 - **Botones de acción agrupados**: El botón redondo de basura se ha eliminado. En su lugar, se ha añadido un botón de borrar ("🗑 Borrar") con la misma forma "chiclet" y estilo visual que el botón "⧉ Duplicar". Ambos botones se han agrupado en la parte inferior izquierda de la tarjeta.
 - **Limpieza del pie de tarjeta**: El pie inferior (`inventory-card-footer`) ahora aloja los botones de acción a la izquierda y el precio (si lo hay) a la derecha de forma más estructurada y balanceada mediante flexbox.
+
+## Mejoras del 14 de junio de 2026 - Ajuste de Botones Principales (Versión 81)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botones uniformes**: Se forzó mediante CSS que el botón de "Base de datos local" (`.fb-pill`) se expanda exactamente al 100% del ancho de su columna y se centre el contenido. De esta forma, ya no es más corto que el botón de la paleta de colores y ambos miden visualmente lo mismo, generando una cuadrícula perfectamente cuadrada.
+
+## Mejoras del 14 de junio de 2026 - Ajustes en Notas y Medidas (Versión 82)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Fichas de Medidas**: Se ha rediseñado la tarjeta de medidas ("Medidas de personas") para adoptar la nueva estética del inventario. El antiguo botón de la papelera en la esquina superior se ha eliminado y ahora cuenta con un pie de tarjeta (`inventory-card-footer`) con el nuevo botón unificado de "🗑 Borrar".
+- **Notas de Proyecto más compactas**: Se ha ajustado el CSS del historial de notas (`timeline-entry`) dentro de los proyectos. Se ha reducido drásticamente el espacio en blanco (el `padding` vertical bajó de 12px a 6px, y el margen entre elementos se redujo de 16px a 10px), haciendo que la lectura sea mucho más continua y aprovechando mejor el espacio de la pantalla. El cuadro para escribir una nueva nota también se ha acercado al listado.

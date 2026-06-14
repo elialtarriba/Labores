@@ -2346,8 +2346,8 @@ if ('serviceWorker' in navigator) {
   /* ─── TIMELINE / NOTES ───────────────────────────────────── */
   .timeline { display: flex; flex-direction: column; gap: 0; }
   .timeline-entry {
-    display: flex; gap: 16px; align-items: flex-start;
-    padding: 12px 0;
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 6px 0;
     border-bottom: 1px solid var(--cream-dark);
   }
   .timeline-entry:last-child { border-bottom: none; }
@@ -4368,6 +4368,16 @@ if ('serviceWorker' in navigator) {
     color: var(--terracota-d) !important;
   }
 </style>
+<style id="home-tools-fix-v81">
+  .home-tools-grid .home-tool {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .home-tools-grid .fb-pill {
+    margin-left: 0 !important;
+    justify-content: center !important;
+  }
+</style>
 </head>
 <body>
 
@@ -4566,7 +4576,7 @@ if ('serviceWorker' in navigator) {
         <div class="form-section">
           <h3>📝 Notas del proyecto</h3>
           <div class="timeline" id="notas-timeline"></div>
-          <div style="display:flex;align-items:flex-end;gap:10px;margin-top:16px;">
+          <div style="display:flex;align-items:flex-end;gap:10px;margin-top:8px;">
             <textarea id="new-nota-input" placeholder="Escribe una nota…" rows="2"
               style="flex:1;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);padding:9px 14px;font-family:'Lato',sans-serif;font-size:14px;outline:none;resize:vertical;background:var(--warm-white);color:var(--text-main);line-height:1.4;transition:border-color var(--transition),box-shadow var(--transition);"></textarea>
             <button class="btn btn-primary" onclick="addNota()" style="align-self:flex-end;flex-shrink:0;">Añadir</button>
@@ -9895,7 +9905,6 @@ function renderMedidas() {
     const foto = mediaSrc(person, 'foto');
     return `
       <div class="item-card" onclick="openPersonMeasurements('${person.id}')">
-        <button class="item-delete-btn" title="Borrar ficha de medidas" onclick="deleteMeasurementPerson('${person.id}',event)">🗑</button>
         <div class="item-card-header">
           <div class="item-thumb">${foto ? `<img src="${foto}" alt="${escapeAttr(person.nombre || 'Foto')}">` : `<span style="font-size:30px;">${icon}</span>`}</div>
           <div>
@@ -9908,6 +9917,11 @@ function renderMedidas() {
           ${person.actualizadoEn ? `<span class="tag">${new Date(person.actualizadoEn).toLocaleDateString('es')}</span>` : ''}
         </div>
         ${person.notas ? `<p style="font-size:13px;color:var(--text-soft);margin-top:8px;">${escapeAttr(person.notas)}</p>` : ''}
+        <div class="inventory-card-footer">
+          <div class="inventory-card-footer-actions">
+            <button class="inventory-action-btn delete-btn" title="Borrar ficha de medidas" onclick="deleteMeasurementPerson('${person.id}',event)">🗑 Borrar</button>
+          </div>
+        </div>
       </div>`;
   }).join('');
   updateBadges();
