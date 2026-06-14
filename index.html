@@ -13801,6 +13801,9 @@ let currentReportShareTitle = '';
 let currentReportShareFileName = '';
 let currentReportShareText = '';
 let currentReportPdfBlob = null;
+let currentReportPdfPromise = null;
+let currentReportPdfError = null;
+let currentReportForceDownload = false;
 
 function buildCurrentReportShareText() {
   const page = document.querySelector('#report-overlay .page');
@@ -13993,40 +13996,51 @@ async function buildCurrentReportPdfBlob(includeImages = true) {
   return currentReportPdfBlob;
 }
 
-window.shareCurrentProjectReport = async function() {
-  if (!currentReportShareHtml) {
-    alert('Primero genera el informe.');
-    return;
-  }
-  let pdfBlob;
+function updateCurrentReportShareButton(label, busy = false) {
+  const button = document.getElementById('report-share-button');
+  if (!button) return;
+  button.textContent = label;
+  button.setAttribute('aria-busy', busy ? 'true' : 'false');
+  button.classList.toggle('is-preparing', busy);
+}
+
+async function createCurrentReportPdfWithFallback() {
   try {
-    pdfBlob = await buildCurrentReportPdfBlob();
+    return await buildCurrentReportPdfBlob();
   } catch (error) {
     console.warn('No se pudo crear el PDF con fotos; se reintenta sin ellas.', error);
     currentReportPdfBlob = null;
-    try {
-      pdfBlob = await buildCurrentReportPdfBlob(false);
-    } catch (fallbackError) {
-      console.error('No se pudo crear el PDF del informe.', fallbackError);
-      alert('No se pudo crear el PDF del informe. Cierra el informe, vuelve a generarlo e inténtalo otra vez.');
-      return;
-    }
+    return buildCurrentReportPdfBlob(false);
   }
-  const file = new File([pdfBlob], currentReportShareFileName || 'informe-proyecto.pdf', {type:'application/pdf'});
-  const canSharePdf = navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}));
-  if (canSharePdf) {
-    try {
-      await navigator.share({
-        title: currentReportShareTitle || 'Informe Proyecto',
-        files: [file]
-      });
-      showNotification('PDF preparado para enviar');
-      return;
-    } catch (error) {
-      if (error && error.name === 'AbortError') return;
-      console.warn('No se pudo abrir el menú para enviar el informe:', error);
-    }
+}
+
+function prepareCurrentProjectReportPdf() {
+  if (currentReportPdfBlob) {
+    updateCurrentReportShareButton('📄 Enviar PDF');
+    return Promise.resolve(currentReportPdfBlob);
   }
+  if (currentReportPdfPromise) return currentReportPdfPromise;
+  currentReportPdfError = null;
+  updateCurrentReportShareButton('⏳ Preparando PDF…', true);
+  currentReportPdfPromise = createCurrentReportPdfWithFallback()
+    .then(blob => {
+      currentReportPdfBlob = blob;
+      updateCurrentReportShareButton('📄 Enviar PDF');
+      return blob;
+    })
+    .catch(error => {
+      currentReportPdfError = error;
+      console.error('No se pudo preparar el PDF del informe.', error);
+      updateCurrentReportShareButton('↻ Reintentar PDF');
+      return null;
+    })
+    .finally(() => {
+      currentReportPdfPromise = null;
+    });
+  return currentReportPdfPromise;
+}
+
+function downloadCurrentReportPdf(file) {
   const url = URL.createObjectURL(file);
   const link = document.createElement('a');
   link.href = url;
@@ -14035,7 +14049,46 @@ window.shareCurrentProjectReport = async function() {
   link.click();
   link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
-  alert('El PDF del informe se ha descargado. Ya puedes adjuntarlo en WhatsApp o en un correo.');
+  showNotification('PDF descargado para adjuntarlo en WhatsApp o Mail');
+}
+
+window.shareCurrentProjectReport = function() {
+  if (!currentReportShareHtml) {
+    alert('Primero genera el informe.');
+    return;
+  }
+  if (!currentReportPdfBlob) {
+    if (currentReportPdfError) prepareCurrentProjectReportPdf();
+    showNotification(currentReportPdfError ? 'Reintentando preparar el PDF…' : 'El PDF todavía se está preparando…');
+    return;
+  }
+  const file = new File([currentReportPdfBlob], currentReportShareFileName || 'informe-proyecto.pdf', {type:'application/pdf'});
+  if (currentReportForceDownload) {
+    downloadCurrentReportPdf(file);
+    return;
+  }
+  const canSharePdf = navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}));
+  if (canSharePdf) {
+    try {
+      const shareResult = navigator.share({
+        title: currentReportShareTitle || 'Informe Proyecto',
+        files: [file]
+      });
+      Promise.resolve(shareResult)
+        .then(() => showNotification('PDF enviado o compartido'))
+        .catch(error => {
+          if (error && error.name === 'AbortError') return;
+          console.warn('No se pudo abrir el menú para enviar el informe:', error);
+          currentReportForceDownload = true;
+          updateCurrentReportShareButton('⬇️ Descargar PDF');
+          alert('Safari no pudo abrir el menú de compartir. Pulsa Descargar PDF para guardar el archivo y adjuntarlo en WhatsApp o Mail.');
+        });
+      return;
+    } catch (error) {
+      console.warn('No se pudo abrir el menú para enviar el informe:', error);
+    }
+  }
+  downloadCurrentReportPdf(file);
 };
 
 window.generateProjectFinancePDF = async function(isComplete = true) {
@@ -14045,6 +14098,9 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
     const reportTitle = isComplete ? 'Informe Proyecto Completo' : 'Informe Proyecto';
     const reportFileName = `${safeSharedFileName(reportTitle)}-${safeSharedFileName(p.nombre || 'proyecto')}.pdf`;
     currentReportPdfBlob = null;
+    currentReportPdfPromise = null;
+    currentReportPdfError = null;
+    currentReportForceDownload = false;
 
     // Create loading overlay inside the same window
     let overlay = document.getElementById('report-overlay');
@@ -14241,7 +14297,7 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
   const reportToolbarHTML = `<div class="no-print report-action-bar">
     <span class="report-action-title">📄 ${reportTitle}</span>
     <div class="report-action-buttons">
-      <button class="report-action-btn report-share-btn" onclick="window.shareCurrentProjectReport()">📄 Enviar PDF</button>
+      <button id="report-share-button" class="report-action-btn report-share-btn" onclick="window.shareCurrentProjectReport()" aria-busy="true">⏳ Preparando PDF…</button>
       <button class="report-action-btn report-print-btn" onclick="window.print()">🖨️ Imprimir</button>
       <button class="report-action-btn report-close-btn" onclick="window.closeReportOverlay()">✕ Cerrar</button>
     </div>
@@ -14529,6 +14585,7 @@ ${reportToolbarHTML}
     currentReportShareFileName = reportFileName;
     overlay.innerHTML = html;
     currentReportShareText = buildCurrentReportShareText();
+    setTimeout(() => prepareCurrentProjectReportPdf(), 0);
     showNotification('Informe generado: puedes enviarlo o imprimirlo');
   } catch (err) {
     console.error("Error generating report PDF:", err);
