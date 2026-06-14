@@ -80,6 +80,9 @@ if ('serviceWorker' in navigator) {
   /* Mandarina: naranja mandarina + morado */
   body.theme-mandarina { --terracota:#F07028; --terracota-l:#F88840; --terracota-d:#D05008; --bark:#602000; --bark-l:#883010; --camel:#F0A860; --camel-l:#F8C888; --cream:#FFF6EE; --cream-dark:#FFE4C0; --warm-white:#FFFAF5; --text-main:#280800; --text-soft:#783020; --text-muted:#C07030; }
 
+  
+  body.theme-elibi1 { --terracota:#F2AFA9; --terracota-l:#F9D6D2; --terracota-d:#D99C96; --bark:#829A66; --bark-l:#CFE5B5; --camel:#F5D982; --camel-l:#FCECC0; --cream:#FAF5D9; --cream-dark:#E8E2BE; --warm-white:#FDFCEF; --text-main:#2D281C; --text-soft:#5A523A; --text-muted:#8F866A; }
+  body.theme-elibi2 { --terracota:#DFA283; --terracota-l:#F0C1A7; --terracota-d:#C48968; --bark:#4A6B7C; --bark-l:#C4D8E2; --camel:#F2AFA9; --camel-l:#F9D6D2; --cream:#F8EBEA; --cream-dark:#E6D5D3; --warm-white:#FDF6F5; --text-main:#2A1E1C; --text-soft:#554441; --text-muted:#8C7571; }
   body.theme-blanco {
     background:#fff;
     color:#111;
@@ -4267,6 +4270,51 @@ if ('serviceWorker' in navigator) {
     height: auto !important;
   }
 </style>
+
+<style id=home-v78-styles>
+  /* Unificar botones principales de la cabecera */
+  .home-tool {
+    height: 38px !important;
+    max-height: 38px !important;
+    min-height: 38px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .home-tool span {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  /* Destacar más el botón + para que sea 3D */
+  .home-new-project {
+    box-shadow: 0 8px 0 var(--terracota-d), 0 16px 24px rgba(110,74,58,.3), inset 0 2px 4px rgba(255,255,255,.4) !important;
+    background: linear-gradient(180deg, var(--terracota) 0%, var(--terracota-d) 100%) !important;
+  }
+  .home-new-project:active {
+    box-shadow: 0 2px 0 var(--terracota-d), 0 4px 8px rgba(110,74,58,.2), inset 0 2px 4px rgba(0,0,0,.2) !important;
+    transform: translateY(6px) !important;
+  }
+
+  /* Bloquear completamente scroll lateral en visor PDF iOS Safari */
+  .pdf-viewer-modal {
+    touch-action: pan-y !important;
+  }
+  .pdf-viewer-stage, .pdf-viewer-pages {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+  .pdf-viewer-page {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    touch-action: pan-y !important;
+  }
+  body.view-detalle {
+    overflow-x: hidden !important;
+  }
+</style>
 <!-- Optimización local de PDFs; la app no depende de Internet. -->
 <script src="pdf-lib.min.js"></script>
 </head>
@@ -5094,6 +5142,9 @@ service cloud.firestore {<br>
         <button class="theme-choice" type="button" data-theme="rosa" onclick="chooseHomeTheme('rosa')"><span class="theme-swatch" style="background:linear-gradient(90deg,#FFF3F8,#F8BED4,#E895B5)"></span>Rosa pastel</button>
         <button class="theme-choice" type="button" data-theme="violeta" onclick="chooseHomeTheme('violeta')"><span class="theme-swatch" style="background:linear-gradient(90deg,#F7F2FF,#D1C3FA,#AA93E8)"></span>Violeta pastel</button>
         <button class="theme-choice" type="button" data-theme="mixpastel" onclick="chooseHomeTheme('mixpastel')"><span class="theme-swatch" style="background:linear-gradient(90deg,#F7CDE2,#CDEBDD,#CADBFA,#F8E6AF)"></span>Mixpastel</button>
+        <button class="theme-choice" type="button" data-theme="elibi1" onclick="chooseHomeTheme('elibi1')"><span class="theme-swatch" style="background:linear-gradient(90deg,#FAF5D9,#F2AFA9,#CFE5B5)"></span>Elibi 1</button>
+        <button class="theme-choice" type="button" data-theme="elibi2" onclick="chooseHomeTheme('elibi2')"><span class="theme-swatch" style="background:linear-gradient(90deg,#F8EBEA,#C4D8E2,#DFA283)"></span>Elibi 2</button>
+
         <button class="theme-choice" type="button" data-theme="blanco" onclick="chooseHomeTheme('blanco')"><span class="theme-swatch" style="background:linear-gradient(90deg,#fff,#eee,#d8d8d8)"></span>Blanco suave</button>
         <button class="theme-choice" type="button" data-theme="negro" onclick="chooseHomeTheme('negro')"><span class="theme-swatch" style="background:linear-gradient(90deg,#111,#333,#777)"></span>Negro difuminado</button>
       </div>
@@ -7692,8 +7743,8 @@ async function renderPdfViewerPages() {
     canvas.setAttribute('aria-label', `Página ${pageNumber} de ${documentToRender.numPages}`);
     canvas.width = Math.max(1, Math.floor(viewport.width * outputScale));
     canvas.height = Math.max(1, Math.floor(viewport.height * outputScale));
-    canvas.style.width = `${Math.floor(viewport.width)}px`;
-    canvas.style.height = `${Math.floor(viewport.height)}px`;
+    canvas.style.width = '100vw';
+    canvas.style.height = 'auto';
     pages.appendChild(canvas);
     const context = canvas.getContext('2d', {alpha: false});
     await page.render({
@@ -14221,19 +14272,33 @@ async function reportImageBytesForPdf(src) {
 async function buildCurrentReportPdfBlob(includeImages = true) {
   if (currentReportPdfBlob) return currentReportPdfBlob;
   const pdfLibrary = await ensureReportPdfLibrary();
-  const pageElement = document.querySelector('#report-overlay .page');
-  if (!pageElement) throw new Error('No se encuentra el informe abierto.');
-
+  
   const {PDFDocument, StandardFonts} = pdfLibrary;
   const pdfDoc = await PDFDocument.create();
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const bark = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--bark'), '#6E4A3A');
-  const terracota = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--terracota'), '#D98463');
-  const muted = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--text-soft'), '#7B5C50');
-  const black = pdfLibrary.rgb(0.14, 0.10, 0.08);
+
+  const getC = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d;
+  const hexToRgb = hex => {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c+c).join('');
+    return pdfLibrary.rgb(parseInt(hex.substring(0,2),16)/255, parseInt(hex.substring(2,4),16)/255, parseInt(hex.substring(4,6),16)/255);
+  };
+  
+  const terracota = hexToRgb(getC('--terracota', '#D98463'));
+  const bark = hexToRgb(getC('--bark', '#6E4A3A'));
+  const textMain = hexToRgb(getC('--text-main', '#34231C'));
+  const textMuted = hexToRgb(getC('--text-muted', '#AA8C80'));
+  const creamDark = hexToRgb(getC('--cream-dark', '#F3E4D4'));
+  const cream = hexToRgb(getC('--cream', '#FFF7EE'));
+  
+  const p = currentProject;
+  if (!p) throw new Error('No hay ningún proyecto activo.');
+
+  const isComplete = (currentReportShareTitle || '').toLowerCase().includes('completo');
+
   const pageSize = [595.28, 841.89];
-  const margin = 44;
+  const margin = 40;
   const maxWidth = pageSize[0] - margin * 2;
   let page;
   let y;
@@ -14241,91 +14306,245 @@ async function buildCurrentReportPdfBlob(includeImages = true) {
   function newPage() {
     page = pdfDoc.addPage(pageSize);
     y = pageSize[1] - margin;
-    page.drawText(pdfSafeText(currentReportShareTitle || 'Informe Proyecto'), {x:margin, y, size:18, font:bold, color:terracota});
-    y -= 28;
   }
-
   function ensureSpace(height) {
-    if (!page || y - height < margin + 18) newPage();
+    if (!page || y - height < margin + 20) newPage();
   }
 
-  function wrappedLines(text, font, size) {
-    const result = [];
-    String(text || '').split(/\n+/).forEach(paragraph => {
-      const words = pdfSafeText(paragraph).split(/\s+/).filter(Boolean);
-      if (!words.length) return;
-      let line = '';
-      words.forEach(word => {
-        const candidate = line ? line + ' ' + word : word;
-        if (font.widthOfTextAtSize(candidate, size) <= maxWidth) line = candidate;
-        else { if (line) result.push(line); line = word; }
-      });
-      if (line) result.push(line);
-    });
-    return result;
+  function drawTextWrap(text, x, size, font, color, maxW) {
+    if (!text) return;
+    const str = pdfSafeText(text);
+    let line = '';
+    const words = str.split(' ');
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (font.widthOfTextAtSize(test, size) <= maxW) line = test;
+      else {
+        ensureSpace(size + 4);
+        page.drawText(line, {x, y, size, font, color});
+        y -= (size + 4);
+        line = w;
+      }
+    }
+    if (line) {
+      ensureSpace(size + 4);
+      page.drawText(line, {x, y, size, font, color});
+      y -= (size + 4);
+    }
   }
 
-  function drawBlock(text, options = {}) {
-    const font = options.bold ? bold : regular;
-    const size = options.size || 10;
-    const color = options.color || black;
-    const lineHeight = options.lineHeight || size + 4;
-    const lines = wrappedLines(text, font, size);
-    if (!lines.length) return;
-    ensureSpace(lines.length * lineHeight + (options.gap || 0));
-    lines.forEach(line => {
-      ensureSpace(lineHeight);
-      page.drawText(line, {x:margin, y, size, font, color});
-      y -= lineHeight;
-    });
-    y -= options.gap || 4;
-  }
-
-  newPage();
-  const reportCopy = pageElement.cloneNode(true);
-  reportCopy.querySelectorAll('.no-print, script, style, img').forEach(element => element.remove());
-  const lines = String(reportCopy.innerText || reportCopy.textContent || '').split('\n').map(line => line.trim()).filter(Boolean);
-  lines.forEach(line => {
-    const section = /^\d+\.\s/.test(line);
-    const total = /total|coste de producci/i.test(line);
-    drawBlock(line, {
-      bold: section || total,
-      size: section ? 13 : total ? 11 : 9.5,
-      color: section ? bark : total ? terracota : black,
-      lineHeight: section ? 18 : 13,
-      gap: section ? 4 : 1
-    });
+  // Helpers data
+  const secs = getWorkedSeconds(p);
+  const timeStr = window.formatElapsedTimeInSpanish ? window.formatElapsedTimeInSpanish(secs) : (Math.floor(secs/3600)+' h');
+  const hours = Math.round((secs/3600)*100)/100;
+  const rate = parseFloat(p.tarifaHora)||0;
+  const labour = hours * rate;
+  
+  let totalMat = 0;
+  const matRows = [];
+  (p.materiales||[]).forEach(m => {
+    const qty = parseInt(m.cantidad)||0; if (!qty) return;
+    const ll = db.llanas.find(l=>l.id===m.llanaId);
+    const price = parseDecimalInput(ll?.precio ?? m.precio)||0;
+    const div = ll?.divisa||m.divisa||'EUR';
+    const cost = qty * price;
+    totalMat += cost;
+    matRows.push({nombre: m.nombre||(ll?(ll.nombre||ll.marca):'Lana/Hilo'), cantidad:qty, unidad:'ovillo(s)', price, div, cost});
+  });
+  (p.accesoriosSlots||[]).forEach(ac => {
+    const qty = parseInt(ac.cantidad)||0; if (!qty) return;
+    const acc = db.accesorios.find(a=>a.id===ac.accesorioId);
+    const price = parseDecimalInput(acc?.precio||ac.precio)||0;
+    const div = acc?.divisa||ac.divisa||'EUR';
+    const cost = qty * price;
+    totalMat += cost;
+    matRows.push({nombre: ac.nombre||(acc?(acc.nombre||acc.tipo):'Accesorio'), cantidad:qty, unidad:'ud(s).', price, div, cost});
+  });
+  (p.agujasUsadas||[]).forEach(n => {
+    const qty = parseInt(n.cantidad)||0; if (!qty) return;
+    const needle = db.agujas.find(x=>x.id===n.agujaId);
+    const price = parseDecimalInput(needle?.precio ?? n.precio)||0;
+    const div = needle?.divisa||n.divisa||'EUR';
+    const cost = qty * price;
+    totalMat += cost;
+    matRows.push({nombre: n.nombre||(needle?needle.nombre:'Aguja'), cantidad:qty, unidad:'ud(s).', price, div, cost});
   });
 
-  const imageSources = includeImages ? Array.from(pageElement.querySelectorAll('.cover-img, .gallery-item img'))
-    .map(img => img.currentSrc || img.src)
-    .filter(Boolean) : [];
-  if (imageSources.length) {
-    newPage();
-    drawBlock('Fotografias del informe', {bold:true, size:13, color:bark, lineHeight:18, gap:8});
-    for (const src of imageSources) {
-      try {
-        const imageData = await reportImageBytesForPdf(src);
-        const embedded = imageData.type === 'image/png' ? await pdfDoc.embedPng(imageData.bytes) : await pdfDoc.embedJpg(imageData.bytes);
-        const maxImageWidth = maxWidth;
-        const maxImageHeight = 300;
-        const scale = Math.min(maxImageWidth / embedded.width, maxImageHeight / embedded.height, 1);
-        const width = embedded.width * scale;
-        const height = embedded.height * scale;
-        ensureSpace(height + 18);
-        page.drawImage(embedded, {x:margin + (maxWidth - width) / 2, y:y - height, width, height});
-        y -= height + 18;
-      } catch (error) {
-        console.warn('No se pudo incluir una foto en el PDF del informe.', error);
+  const total = labour + totalMat;
+  const today = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const fmtDate = d => d ? new Date(d+'T00:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
+  const statusMap = { 'en-curso':'En curso','terminado':'Terminado','pendiente':'Idea / Pendiente', 'en-pausa':'En pausa','archivado':'Archivado' };
+  const statusLabel = statusMap[p.estado] || (p.estado||'—');
+
+  const projectDivisa = p.divisa || 'EUR';
+  const fmtPriceLoc = (num, div) => {
+    const n = parseFloat(String(num||0).replace(',', '.'));
+    if (isNaN(n)) return '—';
+    const curr = (div||projectDivisa||'EUR').trim();
+    const c = (currencies||[]).find(x => x.name.toLowerCase()===curr.toLowerCase());
+    let sym = c ? (c.symbol||c.name) : curr;
+    if (sym.includes('EUR')||sym.includes('€')) sym='€';
+    else if (sym.includes('USD')||sym.includes('$')) sym='$';
+    else if (sym.includes('GBP')||sym.includes('£')) sym='£';
+    else if (sym.includes('MXN')) sym='$';
+    return n.toFixed(2).replace('.', ',') + ' ' + sym;
+  };
+
+  newPage();
+
+  ensureSpace(80);
+  page.drawRectangle({ x: margin, y: y - 60, width: maxWidth, height: 70, color: cream, borderColor: creamDark, borderWidth: 1.5 });
+  
+  try {
+    const logoRes = await fetch('logo_corrected.jpg');
+    if (logoRes.ok) {
+      const logoBytes = await logoRes.arrayBuffer();
+      const logoImg = await pdfDoc.embedJpg(logoBytes);
+      page.drawImage(logoImg, { x: margin + 10, y: y - 50, width: 60, height: 50 });
+    }
+  } catch (e) {}
+
+  page.drawText(pdfSafeText((currentReportShareTitle || 'INFORME PROYECTO').toUpperCase()), { x: margin + 140, y: y - 15, size: 14, font: bold, color: terracota });
+  page.drawText('RESUMEN GENERAL Y FINANCIERO', { x: margin + 140, y: y - 30, size: 9, font: regular, color: textMuted });
+  
+  page.drawText('Fecha: ' + today, { x: margin + maxWidth - 140, y: y - 15, size: 9, font: regular, color: textMain });
+  page.drawText('Proyecto: ' + pdfSafeText(p.nombre||'—'), { x: margin + maxWidth - 140, y: y - 30, size: 9, font: bold, color: textMain });
+  y -= 80;
+
+  function drawSectionTitle(num, title) {
+    ensureSpace(30);
+    y -= 10;
+    page.drawText(num + '. ' + title, { x: margin, y, size: 12, font: bold, color: bark });
+    y -= 8;
+    page.drawLine({ start: {x: margin, y}, end: {x: margin + maxWidth, y}, thickness: 1.5, color: creamDark });
+    y -= 15;
+  }
+
+  let secNum = 1;
+  drawSectionTitle(secNum++, 'Información General');
+  
+  const infoLeft = margin;
+  const infoRight = margin + maxWidth / 2;
+  const drawInfo = (label, val, isRight, offset) => {
+    page.drawText(pdfSafeText(label.toUpperCase()), { x: isRight ? infoRight : infoLeft, y: y - offset, size: 8, font: bold, color: textMuted });
+    page.drawText(pdfSafeText(val||'—'), { x: (isRight ? infoRight : infoLeft) + 70, y: y - offset, size: 9, font: regular, color: textMain });
+  };
+
+  ensureSpace(70);
+  drawInfo('Nombre', p.nombre, false, 0);
+  drawInfo('Tipo', p.tipo ? projectTypeLabel(p.tipo) : '', true, 0);
+  drawInfo('Técnica', p.tecnica, false, 15);
+  drawInfo('Estado', statusLabel, true, 15);
+  drawInfo('Para quién', p.para, false, 30);
+  drawInfo('Patrón', p.patron, true, 30);
+  drawInfo('Fecha inicio', fmtDate(p.fechaInicio), false, 45);
+  drawInfo('Fecha fin', fmtDate(p.fechaFin), true, 45);
+  if (p.progreso != null) drawInfo('Progreso', p.progreso+'%', false, 60);
+
+  y -= 80;
+  
+  ensureSpace(30);
+  page.drawRectangle({ x: margin, y: y - 10, width: 140, height: 20, color: cream, borderColor: creamDark, borderWidth: 1.5 });
+  page.drawText('Tiempo total: ' + timeStr, { x: margin + 10, y: y - 3, size: 9, font: bold, color: bark });
+  y -= 30;
+
+  if (includeImages) {
+    const pageElement = document.querySelector('#report-overlay .page');
+    if (pageElement) {
+      const imageSources = Array.from(pageElement.querySelectorAll('.cover-img, .gallery-item img'))
+        .map(img => img.currentSrc || img.src)
+        .filter(Boolean);
+      if (imageSources.length) {
+        drawSectionTitle(secNum++, 'Fotos de Evolución');
+        let imgX = margin;
+        let rowMaxH = 0;
+        for (const src of imageSources) {
+          try {
+            const imageData = await reportImageBytesForPdf(src);
+            const embedded = imageData.type === 'image/png' ? await pdfDoc.embedPng(imageData.bytes) : await pdfDoc.embedJpg(imageData.bytes);
+            const maxImgW = 120;
+            const maxImgH = 120;
+            const scale = Math.min(maxImgW / embedded.width, maxImgH / embedded.height, 1);
+            const w = embedded.width * scale;
+            const h = embedded.height * scale;
+            if (imgX + w > margin + maxWidth) {
+              imgX = margin;
+              y -= (rowMaxH + 10);
+              rowMaxH = 0;
+              ensureSpace(h + 20);
+            } else {
+              ensureSpace(h + 20);
+            }
+            page.drawImage(embedded, { x: imgX, y: y - h, width: w, height: h });
+            imgX += w + 10;
+            rowMaxH = Math.max(rowMaxH, h);
+          } catch (e) {}
+        }
+        y -= (rowMaxH + 20);
       }
     }
   }
 
+  drawSectionTitle(secNum++, 'Coste de Materiales');
+  if (matRows.length) {
+    ensureSpace(20);
+    page.drawRectangle({ x: margin, y: y - 15, width: maxWidth, height: 20, color: creamDark });
+    page.drawText('Material / Insumo', { x: margin + 5, y: y - 10, size: 9, font: bold, color: bark });
+    page.drawText('Cantidad', { x: margin + 230, y: y - 10, size: 9, font: bold, color: bark });
+    page.drawText('P. Unitario', { x: margin + 320, y: y - 10, size: 9, font: bold, color: bark });
+    page.drawText('Subtotal', { x: margin + 410, y: y - 10, size: 9, font: bold, color: bark });
+    y -= 25;
+
+    for (const row of matRows) {
+      ensureSpace(15);
+      page.drawText(pdfSafeText(row.nombre), { x: margin + 5, y, size: 9, font: regular, color: textMain });
+      page.drawText(row.cantidad + ' ' + row.unidad, { x: margin + 230, y, size: 9, font: regular, color: textMain });
+      page.drawText(fmtPriceLoc(row.price, row.div), { x: margin + 320, y, size: 9, font: regular, color: textMain });
+      page.drawText(fmtPriceLoc(row.cost, row.div), { x: margin + 410, y, size: 9, font: bold, color: textMain });
+      y -= 10;
+      page.drawLine({ start: {x: margin, y}, end: {x: margin + maxWidth, y}, thickness: 1, color: creamDark });
+      y -= 10;
+    }
+    
+    ensureSpace(20);
+    page.drawText('Total Materiales: ' + fmtPriceLoc(totalMat), { x: margin + maxWidth - 150, y, size: 10, font: bold, color: terracota });
+    y -= 30;
+  } else {
+    drawTextWrap('Sin materiales registrados.', margin, 9, regular, textMuted, maxWidth);
+    y -= 15;
+  }
+
+  drawSectionTitle(secNum++, 'Mano de Obra');
+  ensureSpace(50);
+  page.drawRectangle({ x: margin, y: y - 40, width: maxWidth, height: 50, color: cream, borderColor: creamDark, borderWidth: 1.5 });
+  page.drawText('Tiempo invertido:', { x: margin + 10, y: y - 15, size: 9, font: bold, color: textMain });
+  page.drawText(timeStr, { x: margin + 100, y: y - 15, size: 9, font: regular, color: textMain });
+  page.drawText('Tarifa por hora:', { x: margin + 10, y: y - 30, size: 9, font: bold, color: textMain });
+  page.drawText(fmtPriceLoc(rate), { x: margin + 100, y: y - 30, size: 9, font: regular, color: textMain });
+  
+  page.drawText(fmtPriceLoc(labour), { x: margin + maxWidth - 100, y: y - 20, size: 14, font: bold, color: terracota });
+  page.drawText('Cálculo: ' + hours + ' h × ' + fmtPriceLoc(rate) + '/h', { x: margin + maxWidth - 100, y: y - 32, size: 8, font: regular, color: textMuted });
+  y -= 60;
+
+  drawSectionTitle(secNum++, 'Resumen Financiero');
+  ensureSpace(60);
+  page.drawRectangle({ x: margin, y: y - 50, width: maxWidth, height: 60, color: cream, borderColor: creamDark, borderWidth: 1.5 });
+  page.drawText('Total Materiales:', { x: margin + 10, y: y - 15, size: 10, font: bold, color: bark });
+  page.drawText(fmtPriceLoc(totalMat), { x: margin + maxWidth - 100, y: y - 15, size: 10, font: bold, color: textMain });
+  page.drawText('Total Mano Obra:', { x: margin + 10, y: y - 30, size: 10, font: bold, color: bark });
+  page.drawText(fmtPriceLoc(labour), { x: margin + maxWidth - 100, y: y - 30, size: 10, font: bold, color: textMain });
+  
+  page.drawLine({ start: {x: margin+10, y:y-38}, end: {x: margin+maxWidth-10, y:y-38}, thickness: 1, color: creamDark });
+  page.drawText('COSTE TOTAL DE PRODUCCIÓN:', { x: margin + 10, y: y - 48, size: 10, font: bold, color: bark });
+  page.drawText(fmtPriceLoc(total), { x: margin + maxWidth - 100, y: y - 48, size: 12, font: bold, color: terracota });
+  y -= 70;
+
   const pages = pdfDoc.getPages();
   pages.forEach((pdfPage, index) => {
-    const footer = `Labores · ${index + 1} / ${pages.length}`;
-    pdfPage.drawText(footer, {x:margin, y:22, size:8, font:regular, color:muted});
+    const footer = 'Labores · ' + (index + 1) + ' / ' + pages.length;
+    pdfPage.drawText(footer, {x: margin, y: 22, size: 8, font: regular, color: textMuted});
   });
+
   const bytes = await pdfDoc.save();
   currentReportPdfBlob = new Blob([bytes], {type:'application/pdf'});
   return currentReportPdfBlob;
@@ -14415,7 +14634,6 @@ window.shareCurrentProjectReport = function() {
     try {
       updateCurrentReportShareButton('Abriendo…', true);
       const shareResult = navigator.share({
-        title: currentReportShareTitle || 'Informe Proyecto',
         files: [file]
       });
       Promise.resolve(shareResult)

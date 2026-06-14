@@ -851,3 +851,27 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 
 - No se han modificado las lógicas internas de guardado ni de cálculos financieros.
 - La exportación de datos sigue intacta y los documentos se generan con total privacidad de forma local.
+
+## Mejoras del 14 de junio de 2026 - Versión 78 (Rediseño PDF y Ajustes UI)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+- `sw.js`
+- `CODEX.md`
+- `REGISTRO.md`
+
+### Cambios realizados
+- **Botones de Inicio**: Se unificó la altura y el ancho de los 4 botones principales (Buscar, Base de datos, Sonido, Temas) utilizando CSS, evitando saltos de línea largos mediante truncamiento (`text-overflow: ellipsis`). 
+- **Botón "Nuevo Proyecto"**: Se incrementó notoriamente el relieve y sombra 3D, añadiendo un degradado vertical para destacar el botón frente a los demás y asegurando que cubra las dos filas visualmente.
+- **Scroll del Visor PDF**: Se blindó la estructura del visor de PDF para iOS Safari forzando `width: 100vw !important` y deshabilitando cualquier desbordamiento mediante `overflow-x: hidden !important` tanto en la hoja de estilos como en el script que inyecta los `canvas` (`pdf.js`).
+- **Web Share en iOS**: Al detectar que WhatsApp iOS falla recurrentemente si se envía un texto, título y un archivo a la vez mediante `navigator.share`, se han eliminado los campos superfluos, compartiendo exclusivamente el bloque de archivos (`files: [file]`).
+- **Rediseño Estructural del PDF Exportado**: Se reemplazó la extracción de texto lineal (sin formato) por un "motor de renderizado" local implementado directamente sobre `pdf-lib`. Ahora la app dibuja cabeceras, fondos en colores pastel crema y texto terracota, líneas divisoras, y organiza estructuradamente tablas completas (Materiales y Mano de Obra) emulando exactamente la interfaz visual del reporte HTML original.
+
+### Comportamiento protegido
+- Generación 100% offline y privada (dibujo de PDF a nivel local en el dispositivo del usuario).
+
+## Actualización Rápida (14 de junio 2026 - Temas Elibi)
+- Se han añadido dos temas nuevos basados en paletas pastel: "Elibi 1" y "Elibi 2".
+- Los colores se extrajeron de capturas de calculadoras.
+- Se agregaron las opciones al selector de temas de la interfaz de inicio.
