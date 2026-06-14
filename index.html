@@ -4368,7 +4368,8 @@ if ('serviceWorker' in navigator) {
     color: var(--terracota-d) !important;
   }
 </style>
-<style id="home-tools-fix-v81">
+<!-- removed v81 -->
+<style id="old-v81">
   .home-tools-grid .home-tool {
     width: 100% !important;
     box-sizing: border-box !important;
@@ -4376,6 +4377,22 @@ if ('serviceWorker' in navigator) {
   .home-tools-grid .fb-pill {
     margin-left: 0 !important;
     justify-content: center !important;
+  }
+</style>
+<style id="home-tools-fix-v83">
+  .home-tools-grid .home-tool {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    justify-content: flex-start !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    margin: 0 !important;
+    border-radius: 16px !important;
+  }
+  .home-tools-grid .fb-pill {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 </style>
 </head>
@@ -9919,7 +9936,7 @@ function renderMedidas() {
         ${person.notas ? `<p style="font-size:13px;color:var(--text-soft);margin-top:8px;">${escapeAttr(person.notas)}</p>` : ''}
         <div class="inventory-card-footer">
           <div class="inventory-card-footer-actions">
-            <button class="inventory-action-btn delete-btn" title="Borrar ficha de medidas" onclick="deleteMeasurementPerson('${person.id}',event)">🗑 Borrar</button>
+            <button class="inventory-duplicate-btn inventory-action-btn delete-btn" title="Borrar ficha de medidas" onclick="deleteMeasurementPerson('${person.id}',event)">🗑 Borrar</button>
           </div>
         </div>
       </div>`;

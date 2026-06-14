@@ -919,3 +919,13 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 ### Cambios realizados
 - **Fichas de Medidas**: Se ha rediseñado la tarjeta de medidas ("Medidas de personas") para adoptar la nueva estética del inventario. El antiguo botón de la papelera en la esquina superior se ha eliminado y ahora cuenta con un pie de tarjeta (`inventory-card-footer`) con el nuevo botón unificado de "🗑 Borrar".
 - **Notas de Proyecto más compactas**: Se ha ajustado el CSS del historial de notas (`timeline-entry`) dentro de los proyectos. Se ha reducido drásticamente el espacio en blanco (el `padding` vertical bajó de 12px a 6px, y el margen entre elementos se redujo de 16px a 10px), haciendo que la lectura sea mucho más continua y aprovechando mejor el espacio de la pantalla. El cuadro para escribir una nueva nota también se ha acercado al listado.
+
+## Mejoras del 14 de junio de 2026 - Ajustes de UI en Botones (Versión 83)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botón de Borrar en Medidas**: Se corrigió la falta de la clase CSS base (`.inventory-duplicate-btn`) que hacía que el botón de borrar en la lista de medidas no tuviera el estilo 3D de píldora que se esperaba.
+- **Cuadrícula de Herramientas de Inicio**: Se forzó mediante CSS que todos los botones de la cuadrícula superior (`home-tool` y `fb-pill`) tengan exactamente el mismo padding, margen nulo, bordes redondeados idénticos (`16px`), y que el contenido esté alineado rígidamente a la izquierda (`justify-content: flex-start`). Esto unifica completamente el diseño y tamaño del botón "Base de datos local" con el botón "Temas", dejándolos simétricos y homogéneos.
