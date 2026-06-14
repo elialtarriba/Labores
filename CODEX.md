@@ -970,3 +970,14 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 
 ### Cambios realizados
 - **Resolución de Error Crítico de Sintaxis**: Se detectó y solucionó un error por el cual el código fuente de la función del Dictado por Voz se había inyectado por accidente dentro de la función generadora de informes PDF, rompiendo la estructura de la aplicación y mostrando código de programación directamente en la pantalla de inicio del usuario. El código defectuoso se ha eliminado y restaurado a su correcta posición al final del documento.
+
+## Mejoras del 14 de junio de 2026 - Textos y Diseño de Botón Añadir (Versión 88)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Textos de Botón Personalizados**: Se actualizaron los textos del botón flotante/principal para que al entrar a los apartados ponga exactamente "Añadir lanas", "Añadir agujas", "Añadir accesorios" y "Añadir medidas", tal y como se solicitó.
+- **Armonía Visual (Diseño Oscurito 3D)**: Se inyectó CSS dinámico para que, cuando estés dentro de estos apartados, este botón de "Añadir" cambie su color terracota original por el color madera oscuro (`var(--bark)`) con efecto 3D pronunciado, igualándose exactamente en estética y color al nuevo botón de "← Inicio".
+- **Ajuste de anchuras**: La cuadrícula superior ahora permite que el botón "Añadir" se expanda lo suficiente para mostrar los textos largos sin aplastarlos, y el botón de inicio mantiene un tamaño compacto a su lado.

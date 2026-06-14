@@ -4426,7 +4426,30 @@ if ('serviceWorker' in navigator) {
     box-shadow: 0 1px 0 #4a3026, 0 2px 4px rgba(110,74,58,.2) !important;
   }
 </style>
+
+<!-- CSS PARA BOTON AÑADIR -->
+<style id="add-btn-v88">
+  body:not(.view-proyectos) .home-actions-grid {
+    grid-template-columns: minmax(150px, 1fr) auto !important;
+  }
+  body:not(.view-proyectos) #btn-nuevo {
+    background: var(--bark) !important;
+    color: #fff !important;
+    border: 1.5px solid var(--bark-l) !important;
+    box-shadow: 0 5px 0 #4a3026, 0 9px 18px rgba(110,74,58,.2) !important;
+    border-radius: 16px !important;
+    padding: 0 16px !important;
+  }
+  body:not(.view-proyectos) #btn-nuevo:active {
+    transform: translateY(4px) !important;
+    box-shadow: 0 1px 0 #4a3026, 0 2px 4px rgba(110,74,58,.2) !important;
+  }
+  body:not(.view-proyectos) #btn-nuevo-text {
+    font-size: 14px !important;
+  }
+</style>
 </head>
+
 
 <body>
 
@@ -8682,8 +8705,8 @@ const viewTitles = {
   detalle:       ['', ''],
 };
 const btnTexts = {
-  proyectos:'Nuevo proyecto', llanas:'Nueva lana o hilo',
-  agujas:'Nueva aguja', accesorios:'Nuevo accesorio', medidas:'Nueva ficha', configuracion:null
+  proyectos:'Nuevo proyecto', llanas:'Añadir lanas',
+  agujas:'Añadir agujas', accesorios:'Añadir accesorios', medidas:'Añadir medidas', configuracion:null
 };
 
 window.showView = function(v) {
