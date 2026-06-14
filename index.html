@@ -869,11 +869,16 @@ if ('serviceWorker' in navigator) {
     line-height: 1.45;
   }
   .detail-header .back-btn {
-    background: var(--cream); border: 1.5px solid var(--cream-dark);
-    border-radius: var(--radius-sm); padding: 8px 12px;
-    cursor: pointer; font-size: 18px; transition: background var(--transition);
+    min-width: 104px; min-height: 48px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    background: linear-gradient(180deg, #fff 0%, var(--cream) 100%); border: 1.5px solid rgba(255,255,255,.82);
+    border-radius: 16px; padding: 10px 15px;
+    color: var(--bark); cursor: pointer; font: 900 14px 'Lato', sans-serif;
+    box-shadow: 0 5px 0 var(--cream-dark), 0 8px 16px rgba(110,74,58,.14), inset 0 1px 0 rgba(255,255,255,.95);
+    transition: transform 80ms ease, box-shadow 80ms ease, filter 80ms ease;
   }
-  .detail-header .back-btn:hover { background: var(--cream-dark); }
+  .detail-header .back-btn:hover { filter: brightness(1.03); }
+  .detail-header .back-btn:active { transform:translateY(4px); box-shadow:0 1px 0 var(--cream-dark), 0 3px 7px rgba(110,74,58,.1), inset 0 2px 4px rgba(0,0,0,.08); }
 
   .detail-tabs {
     display: flex;
@@ -2611,7 +2616,7 @@ if ('serviceWorker' in navigator) {
     background: linear-gradient(180deg, #fff 0%, var(--cream) 100%);
     border-radius: var(--radius-sm);
     border: 1.5px solid rgba(255,255,255,.75);
-    padding: 18px 20px;
+    padding: 12px 16px;
     display: flex; flex-direction: column; gap: 4px;
     cursor: pointer; user-select: none;
     box-shadow:
@@ -2640,7 +2645,7 @@ if ('serviceWorker' in navigator) {
   .stat-card.active .stat-label { color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,.18); }
   .stat-card .stat-number {
     font-family: 'Playfair Display', serif;
-    font-size: 32px; color: var(--terracota);
+    font-size: 27px; color: var(--terracota);
   }
   .stat-card .stat-label {
     font-size: 12px; color: var(--text-muted);
@@ -2648,7 +2653,7 @@ if ('serviceWorker' in navigator) {
   }
   .calculator-stat {
     justify-content: center;
-    min-height: 98px;
+    min-height: 72px;
   }
   .calculator-stat .stat-number { font-size: 30px; }
   .shared-projects-bar {
@@ -2701,6 +2706,74 @@ if ('serviceWorker' in navigator) {
     display:flex; justify-content:space-between; gap:12px; padding:9px 11px;
     border-radius:10px; background:var(--cream); color:var(--text-soft); font-size:13px;
   }
+  .home-actions-grid {
+    flex: 1 1 620px;
+    display: grid;
+    grid-template-columns: minmax(360px, 1fr) 118px;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .home-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .home-tool {
+    min-width: 0;
+    min-height: 48px;
+    border: 1.5px solid rgba(255,255,255,.82);
+    border-radius: 18px;
+    background: linear-gradient(180deg, #fff 0%, var(--cream) 100%);
+    color: var(--bark);
+    box-shadow: 0 5px 0 var(--cream-dark), 0 9px 18px rgba(110,74,58,.12), inset 0 1px 0 rgba(255,255,255,.95);
+    transition: transform 80ms ease, box-shadow 80ms ease, filter 100ms ease;
+  }
+  button.home-tool {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 12px;
+    font: 800 13px 'Lato', sans-serif;
+    cursor: pointer;
+  }
+  .home-tool:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--cream-dark), 0 3px 7px rgba(110,74,58,.1), inset 0 2px 4px rgba(0,0,0,.08);
+  }
+  .home-search { width: auto; padding: 8px 13px; }
+  .home-database { margin: 0; justify-content: center; text-align: center; }
+  .home-new-project {
+    width: 100%; height: 100%; min-height: 106px; border-radius: 22px;
+    justify-content: center; font-size: 34px;
+  }
+  .home-new-project #btn-nuevo-text { display: none; }
+  .home-theme-label, .home-sound-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .theme-picker-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .theme-choice {
+    min-height: 70px; padding: 12px; border: 2px solid var(--cream-dark); border-radius: 16px;
+    background: var(--warm-white); color: var(--text-main); font: 800 13px 'Lato', sans-serif;
+    cursor: pointer; box-shadow: 0 4px 0 var(--cream-dark), 0 7px 14px rgba(110,74,58,.1);
+  }
+  .theme-choice:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--cream-dark); }
+  .theme-choice.active { border-color: var(--terracota); box-shadow: 0 4px 0 var(--terracota-d), 0 7px 14px rgba(110,74,58,.14); }
+  .theme-swatch { display:block; height:18px; margin-bottom:8px; border-radius:999px; border:1px solid rgba(0,0,0,.08); }
+  .detail-origin-badge {
+    display: none; width: fit-content; margin-top: 8px; padding: 6px 10px; border-radius: 999px;
+    background: var(--sage-l); color: #46604d; font-size: 12px; font-weight: 900;
+  }
+  .detail-origin-badge.visible { display: inline-flex; align-items: center; gap: 5px; }
+  .manual-index {
+    margin: 16px 0 20px; padding: 14px; border: 1.5px solid var(--cream-dark);
+    border-radius: 16px; background: var(--cream);
+  }
+  .manual-index h3 { margin: 0 0 10px; color: var(--bark); }
+  .manual-index-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .manual-index a {
+    display:block; padding:9px 10px; border-radius:10px; background:var(--warm-white);
+    color:var(--bark); font-size:13px; font-weight:800; text-decoration:none;
+  }
+  .manual-contact { margin-top:20px; padding:16px; border-radius:16px; background:var(--cream); text-align:center; color:var(--bark); }
   .calculator-shell {
     --calc-accent: #D98463;
     --calc-accent-dark: #B96546;
@@ -4010,6 +4083,35 @@ if ('serviceWorker' in navigator) {
       inset 0 2px 3px rgba(0,0,0,.15);
   }
 </style>
+<style id="home-v74-styles">
+@media (max-width: 980px) {
+  .topbar { align-items: stretch; flex-wrap: wrap; }
+  .title-profile-wrap { flex: 1 1 100%; }
+  .home-actions-grid { flex: 1 1 100%; }
+}
+@media (max-width: 700px) {
+  .topbar { display: block; padding: 12px 14px 14px; }
+  .title-profile-wrap { margin-bottom: 14px; }
+  .home-actions-grid { grid-template-columns: minmax(0, 1fr) 82px; gap: 10px; }
+  .home-tools-grid { gap: 9px; }
+  .home-tool { min-height: 50px; border-radius: 16px; }
+  button.home-tool { padding: 8px 7px; font-size: 11px; line-height: 1.12; }
+  .home-search { display:flex; order:initial; width:auto; padding:8px 10px; }
+  .home-search input { font-size: 13px; min-width:0; }
+  .home-database { display:flex; order:initial; font-size:11px; padding:8px 7px; }
+  .home-new-project { min-height: 109px; padding: 8px; font-size: 32px; }
+  .stats-row { gap: 10px; margin-bottom: 19px; }
+  .stat-card { min-height: 68px; padding: 10px 7px; gap: 1px; }
+  .stat-card .stat-number { font-size: 24px; }
+  .stat-card .stat-label { font-size: 10px; line-height:1.1; }
+  .calculator-stat { min-height: 68px; }
+  .calculator-stat .stat-number { font-size: 24px; }
+  .detail-heading-row { grid-template-columns: 1fr; gap:12px; }
+  .detail-heading-row .back-btn { width:100%; min-height:52px; font-size:15px; }
+  .detail-header-actions { padding-left:0; }
+  .theme-picker-grid, .manual-index-grid { grid-template-columns:1fr; }
+}
+</style>
 <!-- Optimización local de PDFs; la app no depende de Internet. -->
 <script src="CODEX/pdf-lib.min.js"></script>
 </head>
@@ -4074,15 +4176,21 @@ if ('serviceWorker' in navigator) {
         <div>España</div>
       </div>
     </div>
-    <div class="search-box">
-      <span>🔍</span>
-      <input type="text" placeholder="Buscar..." id="search-input" oninput="handleSearch()">
-      <button id="search-clear-btn" onclick="clearSearch()" style="display:none;border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:0;line-height:1;touch-action:manipulation;">✕</button>
+    <div class="home-actions-grid">
+      <div class="home-tools-grid">
+        <div class="search-box home-tool home-search">
+          <span>🔍</span>
+          <input type="text" placeholder="Buscar..." id="search-input" oninput="handleSearch()">
+          <button id="search-clear-btn" onclick="clearSearch()" style="display:none;border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:0;line-height:1;touch-action:manipulation;">✕</button>
+        </div>
+        <div id="fb-pill" class="fb-pill home-tool home-database"><span id="fb-dot" class="fb-dot"></span><span id="fb-txt">Base de datos local</span></div>
+        <button class="home-tool" id="home-sound-button" type="button" onclick="toggleAppSound()"><span>🔇</span><span class="home-sound-label">Sonido: no</span></button>
+        <button class="home-tool" id="home-theme-button" type="button" onclick="openHomeThemePicker()"><span>🎨</span><span class="home-theme-label">Temas</span></button>
+      </div>
+      <button class="btn btn-primary home-new-project" onclick="openNewModal()" id="btn-nuevo" title="Nuevo proyecto">
+        <span>＋</span> <span id="btn-nuevo-text">Nuevo proyecto</span>
+      </button>
     </div>
-    <div id="fb-pill" class="fb-pill"><span id="fb-dot" class="fb-dot"></span><span id="fb-txt">Sin conexión</span></div>
-    <button class="btn btn-primary" onclick="openNewModal()" id="btn-nuevo">
-      <span>＋</span> <span id="btn-nuevo-text">Nuevo proyecto</span>
-    </button>
   </div>
 
   <!-- FILTER BAR (solo visible en proyectos) -->
@@ -4163,11 +4271,12 @@ if ('serviceWorker' in navigator) {
     <div class="view" id="view-detalle">
       <div class="detail-header">
         <div class="detail-heading-row">
-          <button class="back-btn" onclick="handleBackBtn()">←</button>
+          <button class="back-btn" onclick="handleBackBtn()"><span>←</span><span>Inicio</span></button>
           <div class="detail-title-block">
             <div style="font-size:12px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;" id="detail-tipo"></div>
             <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--bark);" id="detail-nombre">—</h2>
             <span id="detail-status-badge" class="project-card-status"></span>
+            <span id="detail-origin-badge" class="detail-origin-badge"></span>
           </div>
         </div>
         <div class="shared-project-notice" id="shared-project-notice">
@@ -4451,7 +4560,7 @@ if ('serviceWorker' in navigator) {
         <select id="theme-select" onchange="applyTheme(this.value)"
           style="width:100%;padding:12px 16px;font-size:15px;font-family:'Lato',sans-serif;border:2px solid var(--cream-dark);border-radius:var(--radius);background:var(--warm-white);color:var(--text-main);cursor:pointer;outline:none;">
                     <optgroup label="─── Cálidos ───────────────">
-            <option value="">🍂 Marrón tostado</option>
+            <option value="">🍂 Predeterminado</option>
             <option value="melocoton">🍑 Melocotón</option>
             <option value="otono">🍁 Otoño</option>
             <option value="hibisco">🌺 Hibisco</option>
@@ -4467,6 +4576,7 @@ if ('serviceWorker' in navigator) {
             <option value="negro">⬛ Negro elegante</option>
           </optgroup>
           <optgroup label="─── Alegres pastel ────────">
+            <option value="mixpastel">🎨 Mixpastel</option>
             <option value="fiesta">🌈 Fiesta pastel multicolor</option>
             <option value="confeti">🎉 Confeti luminoso</option>
             <option value="arcoirisPastel">🌈 Arcoiris suave</option>
@@ -4811,6 +4921,30 @@ service cloud.firestore {<br>
   </div>
 </div>
 
+<!-- ═══════════════ MODAL: TEMAS DE INICIO ═══════════════ -->
+<div class="modal-overlay" id="modal-home-themes">
+  <div class="modal" style="max-width:620px; width:95%;">
+    <div class="modal-header">
+      <h2>🎨 Temas de colores</h2>
+      <button class="modal-close" onclick="closeModal('modal-home-themes')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0 0 16px;color:var(--text-soft);">Elige un tema para toda la app. El cambio se guarda automáticamente.</p>
+      <div class="theme-picker-grid" id="home-theme-picker">
+        <button class="theme-choice" type="button" data-theme="" onclick="chooseHomeTheme('')"><span class="theme-swatch" style="background:linear-gradient(90deg,#FFF7EE,#D98463,#6E4A3A)"></span>Predeterminado</button>
+        <button class="theme-choice" type="button" data-theme="pizarra" onclick="chooseHomeTheme('pizarra')"><span class="theme-swatch" style="background:linear-gradient(90deg,#EFF8FF,#A8D3F2,#74A9D8)"></span>Azul pastel</button>
+        <button class="theme-choice" type="button" data-theme="salvia" onclick="chooseHomeTheme('salvia')"><span class="theme-swatch" style="background:linear-gradient(90deg,#F2FAF1,#B6DDBE,#83B98F)"></span>Verde pastel</button>
+        <button class="theme-choice" type="button" data-theme="rosa" onclick="chooseHomeTheme('rosa')"><span class="theme-swatch" style="background:linear-gradient(90deg,#FFF3F8,#F8BED4,#E895B5)"></span>Rosa pastel</button>
+        <button class="theme-choice" type="button" data-theme="violeta" onclick="chooseHomeTheme('violeta')"><span class="theme-swatch" style="background:linear-gradient(90deg,#F7F2FF,#D1C3FA,#AA93E8)"></span>Violeta pastel</button>
+        <button class="theme-choice" type="button" data-theme="mixpastel" onclick="chooseHomeTheme('mixpastel')"><span class="theme-swatch" style="background:linear-gradient(90deg,#F7CDE2,#CDEBDD,#CADBFA,#F8E6AF)"></span>Mixpastel</button>
+        <button class="theme-choice" type="button" data-theme="blanco" onclick="chooseHomeTheme('blanco')"><span class="theme-swatch" style="background:linear-gradient(90deg,#fff,#eee,#d8d8d8)"></span>Blanco suave</button>
+        <button class="theme-choice" type="button" data-theme="negro" onclick="chooseHomeTheme('negro')"><span class="theme-swatch" style="background:linear-gradient(90deg,#111,#333,#777)"></span>Negro difuminado</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal('modal-home-themes')">Cerrar</button></div>
+  </div>
+</div>
+
 <!-- ═══════════════ MODAL: INSTRUCCIONES ═══════════════ -->
 <div class="modal-overlay" id="modal-instrucciones">
   <div class="modal" style="max-width:700px; width:95%;">
@@ -4821,7 +4955,19 @@ service cloud.firestore {<br>
       </h2>
       <button class="modal-close" onclick="closeModal('modal-instrucciones')">✕</button>
     </div>
-    <div class="modal-body" data-manual-version="66" style="padding: 20px; max-height: 70dvh;">
+    <div class="modal-body" data-manual-version="74" style="padding: 20px; max-height: 70dvh; scroll-behavior:smooth;">
+      <nav class="manual-index" aria-label="Índice del manual">
+        <h3>Índice</h3>
+        <div class="manual-index-grid">
+          <a href="#manual-empezar">1. Empezar una labor</a>
+          <a href="#manual-proyecto">2. Dentro del proyecto</a>
+          <a href="#manual-inventario">3. Inventario</a>
+          <a href="#manual-medidas">4. Medidas y calculadora</a>
+          <a href="#manual-compartir">5. Compartir proyectos</a>
+          <a href="#manual-configuracion">6. Configuración y copias</a>
+          <a href="#manual-instalar">7. Instalar la app</a>
+        </div>
+      </nav>
       <div class="manual-hero">
         <div class="manual-hero-icon">🧶</div>
         <h3>Tu taller de labores, paso a paso</h3>
@@ -4833,19 +4979,20 @@ service cloud.firestore {<br>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-empezar">
         <h3 class="inst-title">🧵 Empezar una labor</h3>
         <div class="inst-content">
           <div class="manual-steps">
             <div class="manual-step"><span class="manual-step-number">1</span><p>Pulsa <strong>Nuevo proyecto</strong> y escribe nombre, tipo, estado, fechas y notas.</p></div>
             <div class="manual-step"><span class="manual-step-number">2</span><p>Abre su tarjeta. En <strong>General</strong> puedes cambiar datos, añadir notas, fotos de evolución, patrón PDF, materiales y una ficha de medidas.</p></div>
-            <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Guardar</strong> después de modificar la ficha. La flecha <strong>←</strong> vuelve a Inicio.</p></div>
+            <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Guardar</strong> después de modificar la ficha. El botón grande <strong>← Inicio</strong> vuelve a la página principal.</p></div>
           </div>
+          <p><strong>En Inicio:</strong> Buscar localiza proyectos, Base de datos indica si el guardado local está disponible, Sonido activa o desactiva los sonidos de botones y Temas cambia los colores de toda la app.</p>
           <div class="manual-chip-row"><span class="manual-chip">🔍 Lupa: ampliar</span><span class="manual-chip">🗑 Papelera: borrar</span><span class="manual-chip">⧉ Duplicar ficha</span></div>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-proyecto">
         <h3 class="inst-title">📚 Todo lo que hay dentro del proyecto</h3>
         <div class="inst-content">
           <ul>
@@ -4859,7 +5006,7 @@ service cloud.firestore {<br>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-inventario">
         <h3 class="inst-title">🧶 Lanas, agujas y accesorios</h3>
         <div class="inst-content">
           <ul>
@@ -4871,7 +5018,7 @@ service cloud.firestore {<br>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-medidas">
         <h3 class="inst-title">📏 Medidas y calculadora rápida</h3>
         <div class="inst-content">
           <ul>
@@ -4882,7 +5029,7 @@ service cloud.firestore {<br>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-compartir">
         <h3 class="inst-title">🤝 Enviar o recibir un proyecto</h3>
         <div class="inst-content">
           <div class="manual-steps">
@@ -4890,11 +5037,12 @@ service cloud.firestore {<br>
             <div class="manual-step"><span class="manual-step-number">2</span><p>Para recibir: en Inicio pulsa la barra alargada <strong>Compartidos</strong> y después <strong>Importar proyecto</strong>.</p></div>
             <div class="manual-step"><span class="manual-step-number">3</span><p>Se añade como otra labor, sin borrar nada. Viajan fotos, PDF, tiempo, contadores, cálculos, finanzas, notas, medidas y materiales.</p></div>
           </div>
+          <p>Los proyectos recibidos muestran <strong>Compartido por…</strong>. Si los pasas a Mis Proyectos, esa etiqueta se conserva para recordar quién te los envió.</p>
           <div class="manual-tip">👥 Al final del proyecto verás de forma compacta quién lo envió o a quién se lo has enviado.</div>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-configuracion">
         <h3 class="inst-title">⚙️ Configuración y copias</h3>
         <div class="inst-content">
           <ul>
@@ -4906,12 +5054,17 @@ service cloud.firestore {<br>
         </div>
       </div>
 
-      <div class="inst-section">
+      <div class="inst-section" id="manual-instalar">
         <h3 class="inst-title">📱 Instalar como una app</h3>
         <div class="inst-content">
           <p><strong>iPhone/iPad:</strong> abre el enlace con Safari, pulsa Compartir ⬆️ y <strong>Añadir a pantalla de inicio</strong>.</p>
           <p><strong>Android:</strong> abre el enlace con Chrome, pulsa ⋮ y elige <strong>Instalar aplicación</strong> o <strong>Añadir a pantalla de inicio</strong>.</p>
         </div>
+      </div>
+
+      <div class="manual-contact">
+        <strong>¿Tienes una sugerencia o una mejora?</strong><br>
+        Puedes escribir a <a href="mailto:lisaltarriba@gmail.com">lisaltarriba@gmail.com</a>.
       </div>
 
     </div>
@@ -5961,7 +6114,7 @@ window.addEventListener('DOMContentLoaded', () => {
   resolvePageMedia();
   
   // Custom edits are versioned so an older saved manual cannot hide a new built-in guide.
-  const savedManual = localStorage.getItem('labores_manual_html_v66');
+  const savedManual = localStorage.getItem('labores_manual_html_v74');
   if (savedManual) {
     const modalBody = document.querySelector('#modal-instrucciones .modal-body');
     if (modalBody) {
@@ -6780,6 +6933,8 @@ window.copySharedProjectToMine = async function(status) {
   copy.creadoEn = new Date().toISOString();
   copy.actualizadoEn = copy.creadoEn;
   copy.copiadoDeCompartidoId = source.id;
+  copy.compartidoCopiaPor = source.compartidoPor || source.compartidoCopiaPor || 'Otra persona';
+  copy.compartidoCopiaFecha = source.compartidoRecibidoEn || source.compartidoCopiaFecha || new Date().toISOString();
   copy.medidasPersonaId = '';
   delete copy.compartidoRecibido;
   delete copy.compartidoPor;
@@ -7933,18 +8088,33 @@ function playCalcKeySound() {
 
 function updateCalculatorSoundButton() {
   const button = document.getElementById('calc-sound');
-  if (!button) return;
-  button.textContent = calcSoundEnabled ? '🔊' : '🔇';
-  button.title = calcSoundEnabled ? 'Desactivar sonido' : 'Activar sonido';
-  button.setAttribute('aria-label', button.title);
+  if (button) {
+    button.textContent = calcSoundEnabled ? '🔊' : '🔇';
+    button.title = calcSoundEnabled ? 'Desactivar sonido' : 'Activar sonido';
+    button.setAttribute('aria-label', button.title);
+  }
+  const homeButton = document.getElementById('home-sound-button');
+  if (homeButton) {
+    homeButton.querySelector('span:first-child').textContent = calcSoundEnabled ? '🔊' : '🔇';
+    homeButton.querySelector('.home-sound-label').textContent = calcSoundEnabled ? 'Sonido: sí' : 'Sonido: no';
+    homeButton.setAttribute('aria-pressed', calcSoundEnabled ? 'true' : 'false');
+  }
 }
 
-window.toggleCalculatorSound = function() {
+window.toggleAppSound = function() {
   calcSoundEnabled = !calcSoundEnabled;
   localStorage.setItem('labores_calc_sound', calcSoundEnabled ? '1' : '0');
   updateCalculatorSoundButton();
   playCalcKeySound();
 }
+window.toggleCalculatorSound = window.toggleAppSound;
+
+document.addEventListener('click', function(event) {
+  if (!calcSoundEnabled) return;
+  const control = event.target.closest('button, .nav-item, .detail-tab, .filter-chip, .stat-card, .shared-projects-bar');
+  if (!control || control.closest('.calculator-shell') || control.id === 'home-sound-button') return;
+  playCalcKeySound();
+});
 
 function parseCalcToolNumber(value) {
   const normalized = String(value || '').trim().replace(/\s/g, '').replace(',', '.');
@@ -8366,7 +8536,7 @@ function projectCardHTML(p) {
     </div>
     <div class="project-card-body">
       <div class="project-card-title">${p.nombre}</div>
-      ${p.compartidoRecibido ? `<div class="project-shared-badge">🤝 Compartido por ${escapeAttr(p.compartidoPor || 'otra persona')}</div>` : ''}
+      ${(p.compartidoRecibido || p.compartidoCopiaPor) ? `<div class="project-shared-badge">🤝 Compartido por ${escapeAttr(p.compartidoPor || p.compartidoCopiaPor || 'otra persona')}</div>` : ''}
       <div class="project-card-meta">
         <span>${normalizeTechnique(p.tecnica)}</span>
         <span>${p.para ? '👤 ' + p.para : ''}</span>
@@ -8736,6 +8906,12 @@ function renderDetail() {
   const badge = document.getElementById('detail-status-badge');
   badge.textContent = projectStatusLabels[p.estado] || '—';
   badge.className = 'project-card-status status-' + (p.estado||'pendiente');
+  const originBadge = document.getElementById('detail-origin-badge');
+  const originName = p.compartidoPor || p.compartidoCopiaPor || '';
+  if (originBadge) {
+    originBadge.textContent = originName ? `🤝 Compartido por ${originName}` : '';
+    originBadge.classList.toggle('visible', Boolean(originName));
+  }
 
   // general info
   const info = document.getElementById('detail-info-grid');
@@ -8788,19 +8964,21 @@ function renderProjectSharingPanel() {
   const panel = document.getElementById('project-sharing-panel');
   if (!panel || !currentProject) return;
   const history = Array.isArray(currentProject.compartidoCon) ? currentProject.compartidoCon : [];
-  const senderName = escapeAttr(currentProject.compartidoPor || 'otra persona');
+  const senderName = escapeAttr(currentProject.compartidoPor || currentProject.compartidoCopiaPor || 'otra persona');
   let summary = '🤝 Sin compartir';
   if (currentProject.compartidoRecibido && history.length) {
     summary = `🤝 Recibido de ${senderName} · enviado a ${history.length}`;
   } else if (currentProject.compartidoRecibido) {
     summary = `🤝 Recibido de ${senderName}`;
+  } else if (currentProject.compartidoCopiaPor) {
+    summary = `🤝 Copia de un proyecto compartido por ${senderName}`;
   } else if (history.length === 1) {
     summary = `🤝 Enviado a ${escapeAttr(history[0].nombre || '1 persona')}`;
   } else if (history.length > 1) {
     summary = `🤝 Enviado a ${history.length} personas`;
   }
-  const received = currentProject.compartidoRecibido
-    ? `<div class="sharing-history-row"><strong>Recibido de ${senderName}</strong><span>${currentProject.compartidoRecibidoEn ? new Date(currentProject.compartidoRecibidoEn).toLocaleDateString('es-ES') : ''}</span></div>`
+  const received = (currentProject.compartidoRecibido || currentProject.compartidoCopiaPor)
+    ? `<div class="sharing-history-row"><strong>${currentProject.compartidoRecibido ? 'Recibido de' : 'Compartido originalmente por'} ${senderName}</strong><span>${(currentProject.compartidoRecibidoEn || currentProject.compartidoCopiaFecha) ? new Date(currentProject.compartidoRecibidoEn || currentProject.compartidoCopiaFecha).toLocaleDateString('es-ES') : ''}</span></div>`
     : '';
   const rows = history.length
     ? history.slice().reverse().map(item => `<div class="sharing-history-row"><strong>Enviado a ${escapeAttr(item.nombre || 'Sin nombre')}</strong><span>${item.fecha ? new Date(item.fecha).toLocaleDateString('es-ES') : ''}</span></div>`).join('')
@@ -13396,7 +13574,7 @@ window.copyInstructionsCode = function() {
 
 window.restoreOriginalInstructions = function() {
   if (confirm("¿Seguro que quieres borrar tus cambios y restaurar el manual original?")) {
-    localStorage.removeItem('labores_manual_html_v66');
+    localStorage.removeItem('labores_manual_html_v74');
     location.reload();
   }
 };
@@ -13409,7 +13587,7 @@ function saveInstructionsEdit() {
   modalBody.contentEditable = "false";
   modalBody.removeAttribute('contenteditable');
   const cleanHtml = modalBody.innerHTML;
-  localStorage.setItem('labores_manual_html_v66', cleanHtml);
+  localStorage.setItem('labores_manual_html_v74', cleanHtml);
   
   document.getElementById('lock-btn').textContent = "🔒";
   document.getElementById('lock-btn').title = "Editar instrucciones";
@@ -14016,7 +14194,7 @@ async function createCurrentReportPdfWithFallback() {
 
 function prepareCurrentProjectReportPdf() {
   if (currentReportPdfBlob) {
-    updateCurrentReportShareButton('📄 Enviar PDF');
+    updateCurrentReportShareButton('📄 WhatsApp / email');
     return Promise.resolve(currentReportPdfBlob);
   }
   if (currentReportPdfPromise) return currentReportPdfPromise;
@@ -14025,7 +14203,7 @@ function prepareCurrentProjectReportPdf() {
   currentReportPdfPromise = createCurrentReportPdfWithFallback()
     .then(blob => {
       currentReportPdfBlob = blob;
-      updateCurrentReportShareButton('📄 Enviar PDF');
+      updateCurrentReportShareButton('📄 WhatsApp / email');
       return blob;
     })
     .catch(error => {
@@ -14059,33 +14237,47 @@ window.shareCurrentProjectReport = function() {
   }
   if (!currentReportPdfBlob) {
     if (currentReportPdfError) prepareCurrentProjectReportPdf();
-    showNotification(currentReportPdfError ? 'Reintentando preparar el PDF…' : 'El PDF todavía se está preparando…');
+    alert(currentReportPdfError ? 'Estoy reintentando preparar el PDF. Espera a que el botón diga “WhatsApp / email”.' : 'El PDF todavía se está preparando. Espera a que el botón diga “WhatsApp / email”.');
     return;
   }
-  const file = new File([currentReportPdfBlob], currentReportShareFileName || 'informe-proyecto.pdf', {type:'application/pdf'});
+  let file;
+  try {
+    file = new File([currentReportPdfBlob], currentReportShareFileName || 'informe-proyecto.pdf', {type:'application/pdf'});
+  } catch (error) {
+    console.error('No se pudo preparar el archivo para compartir.', error);
+    alert('No se pudo preparar el archivo PDF. Pulsa de nuevo para reintentarlo.');
+    currentReportPdfBlob = null;
+    prepareCurrentProjectReportPdf();
+    return;
+  }
   if (currentReportForceDownload) {
     downloadCurrentReportPdf(file);
     return;
   }
-  const canSharePdf = navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}));
-  if (canSharePdf) {
+  if (typeof navigator.share === 'function') {
     try {
+      updateCurrentReportShareButton('Abriendo…', true);
       const shareResult = navigator.share({
         title: currentReportShareTitle || 'Informe Proyecto',
         files: [file]
       });
       Promise.resolve(shareResult)
-        .then(() => showNotification('PDF enviado o compartido'))
+        .then(() => {
+          updateCurrentReportShareButton('📄 WhatsApp / email');
+          showNotification('PDF enviado o compartido');
+        })
         .catch(error => {
+          updateCurrentReportShareButton('📄 WhatsApp / email');
           if (error && error.name === 'AbortError') return;
           console.warn('No se pudo abrir el menú para enviar el informe:', error);
           currentReportForceDownload = true;
           updateCurrentReportShareButton('⬇️ Descargar PDF');
-          alert('Safari no pudo abrir el menú de compartir. Pulsa Descargar PDF para guardar el archivo y adjuntarlo en WhatsApp o Mail.');
+          alert('No se pudo abrir el menú de compartir. Pulsa “Descargar PDF” y podrás adjuntarlo en WhatsApp o Mail.');
         });
       return;
     } catch (error) {
       console.warn('No se pudo abrir el menú para enviar el informe:', error);
+      updateCurrentReportShareButton('📄 WhatsApp / email');
     }
   }
   downloadCurrentReportPdf(file);
@@ -14297,9 +14489,9 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
   const reportToolbarHTML = `<div class="no-print report-action-bar">
     <span class="report-action-title">📄 ${reportTitle}</span>
     <div class="report-action-buttons">
-      <button id="report-share-button" class="report-action-btn report-share-btn" onclick="window.shareCurrentProjectReport()" aria-busy="true">⏳ Preparando PDF…</button>
-      <button class="report-action-btn report-print-btn" onclick="window.print()">🖨️ Imprimir</button>
-      <button class="report-action-btn report-close-btn" onclick="window.closeReportOverlay()">✕ Cerrar</button>
+      <button type="button" id="report-share-button" class="report-action-btn report-share-btn" onclick="window.shareCurrentProjectReport()" aria-busy="true">⏳ Preparando PDF…</button>
+      <button type="button" class="report-action-btn report-print-btn" onclick="window.print()">🖨️ Imprimir</button>
+      <button type="button" class="report-action-btn report-close-btn" onclick="window.closeReportOverlay()">✕ Cerrar</button>
     </div>
   </div>`;
 
@@ -14595,8 +14787,9 @@ ${reportToolbarHTML}
 };
 
 window._themes = {"":{"--terracota":"#D98463","--terracota-l":"#F0A98B","--terracota-d":"#B96546","--bark":"#6E4A3A","--bark-l":"#8A6250","--camel":"#D7B36F","--camel-l":"#F2D99B","--cream":"#FFF7EE","--cream-dark":"#F3E4D4","--warm-white":"#FFFCF7","--text-main":"#34231C","--text-soft":"#7B5C50","--text-muted":"#AA8C80","--shadow-sm":"0 2px 8px rgba(110,74,58,.10)","--shadow-md":"0 6px 24px rgba(110,74,58,.14)","--shadow-lg":"0 16px 48px rgba(110,74,58,.16)"},"melocoton":{"--terracota":"#F09A7A","--terracota-l":"#FFC2A9","--terracota-d":"#D97857","--bark":"#7A4A3A","--bark-l":"#9A6755","--camel":"#F2BD7E","--camel-l":"#FFE0B1","--cream":"#FFF3EA","--cream-dark":"#F8DECC","--warm-white":"#FFFBF7","--text-main":"#332018","--text-soft":"#7A5748","--text-muted":"#B58A78","--shadow-sm":"0 2px 8px rgba(122,74,58,.10)","--shadow-md":"0 6px 24px rgba(122,74,58,.14)","--shadow-lg":"0 16px 48px rgba(122,74,58,.16)"},"otono":{"--terracota":"#E6A35F","--terracota-l":"#F7C986","--terracota-d":"#C7803E","--bark":"#765038","--bark-l":"#946B4F","--camel":"#D9C66E","--camel-l":"#F2E6A3","--cream":"#FFF8E9","--cream-dark":"#F3E5C8","--warm-white":"#FFFDF6","--text-main":"#302415","--text-soft":"#746044","--text-muted":"#A99570","--shadow-sm":"0 2px 8px rgba(118,80,56,.10)","--shadow-md":"0 6px 24px rgba(118,80,56,.14)","--shadow-lg":"0 16px 48px rgba(118,80,56,.16)"},"hibisco":{"--terracota":"#E87D98","--terracota-l":"#F5AFC0","--terracota-d":"#C85E78","--bark":"#71394C","--bark-l":"#93556A","--camel":"#F0B6A7","--camel-l":"#FFD8CE","--cream":"#FFF1F5","--cream-dark":"#F7D7E0","--warm-white":"#FFFAFB","--text-main":"#311923","--text-soft":"#7A4C5A","--text-muted":"#B98294","--shadow-sm":"0 2px 8px rgba(113,57,76,.10)","--shadow-md":"0 6px 24px rgba(113,57,76,.14)","--shadow-lg":"0 16px 48px rgba(113,57,76,.16)"},"pizarra":{"--terracota":"#74A9D8","--terracota-l":"#A8D3F2","--terracota-d":"#4F86B8","--bark":"#345B74","--bark-l":"#527893","--camel":"#9FD5CF","--camel-l":"#C9EEE9","--cream":"#EFF8FF","--cream-dark":"#D8EAF6","--warm-white":"#FAFDFF","--text-main":"#122635","--text-soft":"#49697C","--text-muted":"#7EA0B4","--shadow-sm":"0 2px 8px rgba(52,91,116,.10)","--shadow-md":"0 6px 24px rgba(52,91,116,.14)","--shadow-lg":"0 16px 48px rgba(52,91,116,.16)"},"medianoche":{"--terracota":"#8B9BE8","--terracota-l":"#BDC6FF","--terracota-d":"#6878C8","--bark":"#45466F","--bark-l":"#626596","--camel":"#9EC7F2","--camel-l":"#CDE4FF","--cream":"#F3F5FF","--cream-dark":"#DEE4FA","--warm-white":"#FBFCFF","--text-main":"#181A34","--text-soft":"#555A86","--text-muted":"#8B92BE","--shadow-sm":"0 2px 8px rgba(69,70,111,.10)","--shadow-md":"0 6px 24px rgba(69,70,111,.14)","--shadow-lg":"0 16px 48px rgba(69,70,111,.16)"},"salvia":{"--terracota":"#83B98F","--terracota-l":"#B6DDBE","--terracota-d":"#5F9770","--bark":"#41644D","--bark-l":"#5F816A","--camel":"#C7CF80","--camel-l":"#E7EDB0","--cream":"#F2FAF1","--cream-dark":"#DCEFD9","--warm-white":"#FBFEFA","--text-main":"#142819","--text-soft":"#506B56","--text-muted":"#82A088","--shadow-sm":"0 2px 8px rgba(65,100,77,.10)","--shadow-md":"0 6px 24px rgba(65,100,77,.14)","--shadow-lg":"0 16px 48px rgba(65,100,77,.16)"},"niebla":{"--terracota":"#9BB3C6","--terracota-l":"#C5D7E6","--terracota-d":"#7898AE","--bark":"#516777","--bark-l":"#6C8392","--camel":"#B6C7B3","--camel-l":"#DDE8DA","--cream":"#F4F8FA","--cream-dark":"#E2EBF0","--warm-white":"#FCFEFF","--text-main":"#1D2A31","--text-soft":"#5C707A","--text-muted":"#8EA1AA","--shadow-sm":"0 2px 8px rgba(81,103,119,.09)","--shadow-md":"0 6px 24px rgba(81,103,119,.12)","--shadow-lg":"0 16px 48px rgba(81,103,119,.14)"},"rosa":{"--terracota":"#E895B5","--terracota-l":"#F8BED4","--terracota-d":"#C97296","--bark":"#74435C","--bark-l":"#95627A","--camel":"#F0C3A5","--camel-l":"#FFE3CC","--cream":"#FFF3F8","--cream-dark":"#F8DBE8","--warm-white":"#FFFBFD","--text-main":"#321B28","--text-soft":"#79576A","--text-muted":"#AD8498","--shadow-sm":"0 2px 8px rgba(116,67,92,.10)","--shadow-md":"0 6px 24px rgba(116,67,92,.14)","--shadow-lg":"0 16px 48px rgba(116,67,92,.16)"},"violeta":{"--terracota":"#AA93E8","--terracota-l":"#D1C3FA","--terracota-d":"#8870C9","--bark":"#5A4B7E","--bark-l":"#75659A","--camel":"#F0AFC9","--camel-l":"#FBD5E5","--cream":"#F7F2FF","--cream-dark":"#E7DCF8","--warm-white":"#FDFBFF","--text-main":"#241A38","--text-soft":"#63547E","--text-muted":"#9688B0","--shadow-sm":"0 2px 8px rgba(90,75,126,.10)","--shadow-md":"0 6px 24px rgba(90,75,126,.14)","--shadow-lg":"0 16px 48px rgba(90,75,126,.16)"},"fiesta":{"--terracota":"#FF7FA3","--terracota-l":"#FFC4DA","--terracota-d":"#E85E87","--bark":"#5B4A86","--bark-l":"#7F6CC0","--camel":"#63DDF2","--camel-l":"#B9F6FF","--cream":"#FFF7FD","--cream-dark":"#F7DDF4","--warm-white":"#FFFFFB","--text-main":"#282044","--text-soft":"#6D5B8E","--text-muted":"#A38EC2","--shadow-sm":"0 2px 8px rgba(91,74,134,.10)","--shadow-md":"0 6px 24px rgba(91,74,134,.14)","--shadow-lg":"0 16px 48px rgba(91,74,134,.16)"},"limon":{"--terracota":"#F2C94C","--terracota-l":"#FFE88A","--terracota-d":"#D6A900","--bark":"#5F5A25","--bark-l":"#807A3B","--camel":"#98E66E","--camel-l":"#D8FFC2","--cream":"#FFFCEB","--cream-dark":"#F6EDB8","--warm-white":"#FFFFFA","--text-main":"#2C2A13","--text-soft":"#6E6731","--text-muted":"#A59A49","--shadow-sm":"0 2px 8px rgba(95,90,37,.10)","--shadow-md":"0 6px 24px rgba(95,90,37,.14)","--shadow-lg":"0 16px 48px rgba(95,90,37,.16)"},"turquesa":{"--terracota":"#46CFE3","--terracota-l":"#A8F4FF","--terracota-d":"#25AFC5","--bark":"#245E6D","--bark-l":"#3B8294","--camel":"#7CE7C9","--camel-l":"#C4FFF0","--cream":"#F0FEFF","--cream-dark":"#CFF4F7","--warm-white":"#FBFFFF","--text-main":"#102C33","--text-soft":"#3D6C76","--text-muted":"#75A6B0","--shadow-sm":"0 2px 8px rgba(36,94,109,.10)","--shadow-md":"0 6px 24px rgba(36,94,109,.14)","--shadow-lg":"0 16px 48px rgba(36,94,109,.16)"},"frambuesa":{"--terracota":"#FF72A8","--terracota-l":"#FFB9D5","--terracota-d":"#E94F8A","--bark":"#713757","--bark-l":"#9A5377","--camel":"#FFB56F","--camel-l":"#FFE0B5","--cream":"#FFF5FA","--cream-dark":"#F9D6E8","--warm-white":"#FFFCFE","--text-main":"#351724","--text-soft":"#7B4E64","--text-muted":"#B87C9A","--shadow-sm":"0 2px 8px rgba(113,55,87,.10)","--shadow-md":"0 6px 24px rgba(113,55,87,.14)","--shadow-lg":"0 16px 48px rgba(113,55,87,.16)"},"lila":{"--terracota":"#B989FF","--terracota-l":"#DEC8FF","--terracota-d":"#9565DE","--bark":"#58427F","--bark-l":"#7961A7","--camel":"#84B8FF","--camel-l":"#CFE3FF","--cream":"#FAF6FF","--cream-dark":"#EADFFF","--warm-white":"#FEFCFF","--text-main":"#25183B","--text-soft":"#62517D","--text-muted":"#9B87BA","--shadow-sm":"0 2px 8px rgba(88,66,127,.10)","--shadow-md":"0 6px 24px rgba(88,66,127,.14)","--shadow-lg":"0 16px 48px rgba(88,66,127,.16)"},"confeti":{"--terracota":"#FF6FAE","--terracota-l":"#FFC2E0","--terracota-d":"#DE4E91","--bark":"#4C4A93","--bark-l":"#6E6DCC","--camel":"#FFD166","--camel-l":"#FFF0A8","--cream":"#FDFBFF","--cream-dark":"#DDF7FF","--warm-white":"#FFFFFF","--text-main":"#241B4A","--text-soft":"#645C96","--text-muted":"#9285C2","--shadow-sm":"0 2px 8px rgba(76,74,147,.10)","--shadow-md":"0 6px 24px rgba(76,74,147,.14)","--shadow-lg":"0 16px 48px rgba(76,74,147,.17)"},"sorbete":{"--terracota":"#FF8A7A","--terracota-l":"#FFC9BD","--terracota-d":"#E66B5B","--bark":"#5F557E","--bark-l":"#8275AE","--camel":"#8FE8D0","--camel-l":"#C9FFF1","--cream":"#FFF8F2","--cream-dark":"#FCE4D8","--warm-white":"#FFFFFC","--text-main":"#30213A","--text-soft":"#746080","--text-muted":"#A78BA7","--shadow-sm":"0 2px 8px rgba(95,85,126,.10)","--shadow-md":"0 6px 24px rgba(95,85,126,.14)","--shadow-lg":"0 16px 48px rgba(95,85,126,.16)"},"algodon":{"--terracota":"#86C5FF","--terracota-l":"#CDE9FF","--terracota-d":"#5CA8EC","--bark":"#6F5798","--bark-l":"#9074C4","--camel":"#FFB3D1","--camel-l":"#FFE1EE","--cream":"#F8FCFF","--cream-dark":"#E4F2FF","--warm-white":"#FFFFFF","--text-main":"#253050","--text-soft":"#687196","--text-muted":"#9AA6C7","--shadow-sm":"0 2px 8px rgba(111,87,152,.10)","--shadow-md":"0 6px 24px rgba(111,87,152,.14)","--shadow-lg":"0 16px 48px rgba(111,87,152,.16)"},"jardin":{"--terracota":"#7DDFA0","--terracota-l":"#C1F4D0","--terracota-d":"#55C47C","--bark":"#3E705B","--bark-l":"#5A987C","--camel":"#F7C76B","--camel-l":"#FFE8A7","--cream":"#F7FFF6","--cream-dark":"#DDF5DC","--warm-white":"#FFFFFB","--text-main":"#173421","--text-soft":"#557462","--text-muted":"#86AA96","--shadow-sm":"0 2px 8px rgba(62,112,91,.10)","--shadow-md":"0 6px 24px rgba(62,112,91,.14)","--shadow-lg":"0 16px 48px rgba(62,112,91,.16)"},"chuches":{"--terracota":"#FF7FD5","--terracota-l":"#FFC4F0","--terracota-d":"#E45DB8","--bark":"#6242A0","--bark-l":"#8A68D2","--camel":"#7FF0FF","--camel-l":"#C9FAFF","--cream":"#FFF6FE","--cream-dark":"#F2D9FF","--warm-white":"#FFFFFF","--text-main":"#2B1747","--text-soft":"#6B5590","--text-muted":"#A088C4","--shadow-sm":"0 2px 8px rgba(98,66,160,.10)","--shadow-md":"0 6px 24px rgba(98,66,160,.14)","--shadow-lg":"0 16px 48px rgba(98,66,160,.17)"},"playa":{"--terracota":"#4FCFE8","--terracota-l":"#ABF2FF","--terracota-d":"#24AFCB","--bark":"#2E6878","--bark-l":"#4B8EA0","--camel":"#FFD88A","--camel-l":"#FFF0C4","--cream":"#F5FDFF","--cream-dark":"#D7F3F8","--warm-white":"#FFFFFA","--text-main":"#12323A","--text-soft":"#52737A","--text-muted":"#85A9AF","--shadow-sm":"0 2px 8px rgba(46,104,120,.10)","--shadow-md":"0 6px 24px rgba(46,104,120,.14)","--shadow-lg":"0 16px 48px rgba(46,104,120,.16)"},"amanecer":{"--terracota":"#FF9C6E","--terracota-l":"#FFD2BC","--terracota-d":"#E57C4F","--bark":"#7A4F76","--bark-l":"#A56B9B","--camel":"#FFE172","--camel-l":"#FFF2B0","--cream":"#FFF9F0","--cream-dark":"#FCE5D2","--warm-white":"#FFFFFB","--text-main":"#3A2130","--text-soft":"#7E5C70","--text-muted":"#B48AA0","--shadow-sm":"0 2px 8px rgba(122,79,118,.10)","--shadow-md":"0 6px 24px rgba(122,79,118,.14)","--shadow-lg":"0 16px 48px rgba(122,79,118,.16)"},"arcoirisPastel":{"--terracota":"#FF7A8A","--terracota-l":"#FFCCD4","--terracota-d":"#E65B6C","--bark":"#4C5CA8","--bark-l":"#7585DF","--camel":"#8BE78B","--camel-l":"#D5FFD5","--cream":"#FFFBF4","--cream-dark":"#E7E8FF","--warm-white":"#FFFFFF","--text-main":"#20264D","--text-soft":"#5D6596","--text-muted":"#929BD0","--shadow-sm":"0 2px 8px rgba(76,92,168,.10)","--shadow-md":"0 6px 24px rgba(76,92,168,.14)","--shadow-lg":"0 16px 48px rgba(76,92,168,.17)"}};
-window._themes.blanco = {"--terracota":"#111111","--terracota-l":"#e6e6e6","--terracota-d":"#000000","--bark":"#111111","--bark-l":"#333333","--camel":"#666666","--camel-l":"#eeeeee","--cream":"#ffffff","--cream-dark":"#d8d8d8","--warm-white":"#ffffff","--text-main":"#111111","--text-soft":"#444444","--text-muted":"#777777","--shadow-sm":"0 2px 8px rgba(0,0,0,.06)","--shadow-md":"0 6px 24px rgba(0,0,0,.10)","--shadow-lg":"0 16px 48px rgba(0,0,0,.13)"};
-window._themes.negro = {"--terracota":"#ffffff","--terracota-l":"#3a3a3a","--terracota-d":"#d8d8d8","--bark":"#ffffff","--bark-l":"#d0d0d0","--camel":"#a8a8a8","--camel-l":"#2a2a2a","--cream":"#080808","--cream-dark":"#2f2f2f","--warm-white":"#111111","--text-main":"#f7f7f7","--text-soft":"#d0d0d0","--text-muted":"#9a9a9a","--shadow-sm":"0 2px 8px rgba(0,0,0,.35)","--shadow-md":"0 6px 24px rgba(0,0,0,.48)","--shadow-lg":"0 16px 48px rgba(0,0,0,.58)"};
+window._themes.blanco = {"--terracota":"#8B929B","--terracota-l":"#ECEDEF","--terracota-d":"#737A83","--bark":"#555B63","--bark-l":"#747A82","--camel":"#A4A9AF","--camel-l":"#F0F1F2","--cream":"#F8F8F6","--cream-dark":"#E1E2E3","--warm-white":"#FFFFFF","--text-main":"#3F444A","--text-soft":"#686E75","--text-muted":"#969BA1","--shadow-sm":"0 2px 8px rgba(70,75,82,.06)","--shadow-md":"0 6px 24px rgba(70,75,82,.10)","--shadow-lg":"0 16px 48px rgba(70,75,82,.13)"};
+window._themes.negro = {"--terracota":"#C7B9D8","--terracota-l":"#57515F","--terracota-d":"#A99AB9","--bark":"#EEEAF2","--bark-l":"#CBC5D1","--camel":"#9EA7AE","--camel-l":"#3B3E44","--cream":"#282A2F","--cream-dark":"#41444A","--warm-white":"#222429","--text-main":"#F2EFF4","--text-soft":"#CBC7CF","--text-muted":"#9E9AA4","--shadow-sm":"0 2px 8px rgba(0,0,0,.22)","--shadow-md":"0 6px 24px rgba(0,0,0,.32)","--shadow-lg":"0 16px 48px rgba(0,0,0,.42)"};
+window._themes.mixpastel = {"--terracota":"#D790B7","--terracota-l":"#F3C7DD","--terracota-d":"#B76F99","--bark":"#5C567B","--bark-l":"#7C769C","--camel":"#A8DCCB","--camel-l":"#D9F2E8","--cream":"#FFF8EF","--cream-dark":"#E6E0F4","--warm-white":"#FFFCF8","--text-main":"#332F49","--text-soft":"#6E6886","--text-muted":"#9892AC","--shadow-sm":"0 2px 8px rgba(92,86,123,.10)","--shadow-md":"0 6px 24px rgba(92,86,123,.14)","--shadow-lg":"0 16px 48px rgba(92,86,123,.16)"};
 window._defaultVars = {"--terracota":"#D98463","--terracota-l":"#F0A98B","--terracota-d":"#B96546","--bark":"#6E4A3A","--bark-l":"#8A6250","--camel":"#D7B36F","--camel-l":"#F2D99B","--cream":"#FFF7EE","--cream-dark":"#F3E4D4","--warm-white":"#FFFCF7","--text-main":"#34231C","--text-soft":"#7B5C50","--text-muted":"#AA8C80","--shadow-sm":"0 2px 8px rgba(110,74,58,.10)","--shadow-md":"0 6px 24px rgba(110,74,58,.14)","--shadow-lg":"0 16px 48px rgba(110,74,58,.16)"};
 window.applyTheme = function(theme) {
   var aliases = { lavanda:'violeta', menta:'salvia', cielo:'pizarra', noche:'medianoche', bosque:'salvia', coral:'hibisco', sol:'melocoton', fresa:'hibisco', chicle:'rosa', mandarina:'otono', arcoiris:'otono' };
@@ -14621,10 +14814,27 @@ window.applyTheme = function(theme) {
 
   var sel = document.getElementById('theme-select');
   if (sel) sel.value = theme;
+  var themeNames = {'':'Predeterminado',pizarra:'Azul pastel',salvia:'Verde pastel',rosa:'Rosa pastel',violeta:'Violeta pastel',mixpastel:'Mixpastel',blanco:'Blanco suave',negro:'Negro difuminado'};
+  var homeThemeLabel = document.querySelector('.home-theme-label');
+  if (homeThemeLabel) homeThemeLabel.textContent = themeNames[theme] || 'Temas';
+  document.querySelectorAll('#home-theme-picker .theme-choice').forEach(function(button) {
+    button.classList.toggle('active', (button.dataset.theme || '') === theme);
+  });
   var msg = document.getElementById('theme-confirm');
   if (msg) { msg.style.display='block'; setTimeout(function(){ msg.style.display='none'; },1600); }
 };
 window.setTheme = function(btn) { window.applyTheme(btn ? (btn.dataset.theme||'') : ''); };
+window.openHomeThemePicker = function() {
+  var current = localStorage.getItem('labores_theme') || '';
+  document.querySelectorAll('#home-theme-picker .theme-choice').forEach(function(button) {
+    button.classList.toggle('active', (button.dataset.theme || '') === current);
+  });
+  openModal('modal-home-themes');
+};
+window.chooseHomeTheme = function(theme) {
+  window.applyTheme(theme || '');
+  showNotification('Tema aplicado a toda la app');
+};
 (function() {
   var t = localStorage.getItem('labores_theme') || '';
   setTimeout(function(){
@@ -14664,6 +14874,7 @@ function installNoDoubleTapZoom() {
 
 /* ─── INIT ───────────────────────────────────────────────── */
 installNoDoubleTapZoom();
+updateCalculatorSoundButton();
 updateBadges();
 renderProjects();
 renderProjectTypeOptions();
@@ -14690,7 +14901,7 @@ window._fbReady = false;
       p.style.color='var(--text-muted)';
       p.style.borderColor='var(--cream-dark)';
       if(d) d.style.background='#10B981';
-      if(t) t.textContent='Base de datos local (Offline)';
+      if(t) t.textContent='Base de datos local';
     }
   }, 100);
 })();
