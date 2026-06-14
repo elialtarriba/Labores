@@ -1071,3 +1071,12 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 
 ### Cambios realizados
 - **Botones perfectamente iguales**: Se ha retirado el símbolo "＋" y recortado el texto a "Insertar Proyecto" en la página principal para móviles. Al ocupar menos espacio y caber en una sola línea, la cuadrícula ya no se ve forzada a estirarse y los tres botones de esa fila (Sonido, Temas, Insertar) miden exactamente lo mismo.
+
+## Corrección del 14 de junio de 2026 - Altura de Botones de Inicio (Versión 98)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Sincronización exacta de alturas**: Se ha forzado a que el botón "Insertar Proyecto" y los botones de la misma fila ("Sonido", "Temas") tengan exactamente la misma altura (52px), el mismo modelo de caja (border-box) y los mismos márgenes. Ahora la fila es un bloque uniforme al milímetro.
