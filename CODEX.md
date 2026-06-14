@@ -940,3 +940,24 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 - **Botón de Micrófono en Notas**: Se añadió un nuevo botón `🎙️` en la sección "Notas del proyecto" junto al botón "Añadir".
 - **Nueva Ventana (Modal Dictation)**: Se inyectó un nuevo modal y hoja de estilos (animación pulse roja) dedicados exclusivamente a mostrar la captura de audio en tiempo real y permitir al usuario revisar y editar lo transcrito antes de guardarlo.
 - **Implementación de SpeechRecognition**: Se implementó una lógica completa de captura de voz utilizando `webkitSpeechRecognition` / `SpeechRecognition` nativo del navegador, garantizando que todo funcione localmente sin servidores externos. Soporta resultados en tránsito (`interimResults = true`), pausas manuales, detección de errores y anexado de texto.
+
+## Mejoras del 14 de junio de 2026 - Actualización del Manual (Versión 85)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Rediseño del Índice del Manual**: Se le dio un formato visual mucho más atractivo y estructurado (como una botonera) a los enlaces del índice. Ahora, al pulsarlos, hacen *scroll* suavemente hacia la sección deseada dentro del propio panel de instrucciones, mejorando drásticamente la usabilidad del manual.
+- **Sección de Dictado por Voz**: Se incluyó en el manual (sección 5) toda la explicación sobre cómo utilizar la nueva función de "Dictado por Voz", destacándola como herramienta de accesibilidad para tejedores.
+
+## Mejoras del 14 de junio de 2026 - Limpieza de Barra Superior (Versión 86)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Contextualidad en la barra superior**: Se programó la interfaz para que detecte si estás en Inicio (Proyectos) o dentro del Inventario/Medidas.
+- **Ocultación de botones**: Si entras a Lanas, Agujas, Accesorios o Medidas, los botones de "Base de datos", "Sonido" y "Temas" desaparecen automáticamente para no saturar la pantalla.
+- **Nuevo botón Volver**: En su lugar, aparece un flamante botón oscuro y 3D de "← Inicio" junto a la barra de "Buscar", facilitando la vuelta a la pantalla principal sin confusiones. El botón "Añadir" de la derecha se mantiene intacto.

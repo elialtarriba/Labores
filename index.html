@@ -4395,7 +4395,39 @@ if ('serviceWorker' in navigator) {
     padding-bottom: 0 !important;
   }
 </style>
+
+<!-- CSS PARA VISTAS SECUNDARIAS -->
+<style id="view-fixes-v86">
+  body:not(.view-proyectos) .home-database,
+  body:not(.view-proyectos) #home-sound-button,
+  body:not(.view-proyectos) #home-theme-button {
+    display: none !important;
+  }
+  
+  body:not(.view-proyectos) .home-tools-grid {
+    display: flex !important;
+    gap: 10px;
+  }
+  
+  body:not(.view-proyectos) .home-search {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  body:not(.view-proyectos) #topbar-back-btn {
+    display: flex !important;
+    flex: 0 0 auto;
+    padding: 0 16px !important;
+    justify-content: center !important;
+  }
+  
+  #topbar-back-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #4a3026, 0 2px 4px rgba(110,74,58,.2) !important;
+  }
+</style>
 </head>
+
 <body>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
@@ -4459,6 +4491,7 @@ if ('serviceWorker' in navigator) {
     </div>
     <div class="home-actions-grid">
       <div class="home-tools-grid">
+        <button id="topbar-back-btn" class="home-tool" onclick="showView('proyectos')" style="display:none;background:var(--bark);color:#fff;border-color:var(--bark-l);box-shadow:0 5px 0 #4a3026, 0 9px 18px rgba(110,74,58,.2);"><span style="font-size:18px;margin-right:4px;">←</span> Inicio</button>
         <div class="search-box home-tool home-search">
           <span>🔍</span>
           <input type="text" placeholder="Buscar..." id="search-input" oninput="handleSearch()">
@@ -5245,16 +5278,17 @@ service cloud.firestore {<br>
       <button class="modal-close" onclick="closeModal('modal-instrucciones')">✕</button>
     </div>
     <div class="modal-body" data-manual-version="74" style="padding: 20px; max-height: 70dvh; scroll-behavior:smooth;">
-      <nav class="manual-index" aria-label="Índice del manual">
-        <h3>Índice</h3>
-        <div class="manual-index-grid">
-          <a href="#manual-empezar">1. Empezar una labor</a>
-          <a href="#manual-proyecto">2. Dentro del proyecto</a>
-          <a href="#manual-inventario">3. Inventario</a>
-          <a href="#manual-medidas">4. Medidas y calculadora</a>
-          <a href="#manual-compartir">5. Compartir proyectos</a>
-          <a href="#manual-configuracion">6. Configuración y copias</a>
-          <a href="#manual-instalar">7. Instalar la app</a>
+      <nav class="manual-index" aria-label="Índice del manual" style="background:var(--cream);border:1.5px solid var(--cream-dark);border-radius:16px;padding:16px;margin-bottom:20px;">
+        <h3 style="margin-top:0;margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:6px;">📑 Índice del Manual</h3>
+        <div class="manual-index-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:8px;">
+          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">1. Empezar una labor</a>
+          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Dentro del proyecto</a>
+          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Inventario</a>
+          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Medidas / calculadora</a>
+          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Dictado por voz 🎙️</a>
+          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Compartir proyectos</a>
+          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Configuración / Copias</a>
+          <a href="#" onclick="document.getElementById('manual-instalar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Instalar la app</a>
         </div>
       </nav>
       <div class="manual-hero">
@@ -5315,6 +5349,19 @@ service cloud.firestore {<br>
             <li>Después puedes vincular una ficha al proyecto y consultarla sin volver a escribirla.</li>
             <li>La tarjeta <strong>🧮 Calculadora</strong> de Inicio sirve para un cálculo rápido; la calculadora interior guarda el cálculo en la labor abierta.</li>
           </ul>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-dictado">
+        <h3 class="inst-title" style="color:var(--terracota-d);">🎙️ Dictado por voz (¡NUEVO!)</h3>
+        <div class="inst-content">
+          <p>Apunta tu progreso o ideas sin soltar las agujas, simplemente usando tu voz.</p>
+          <div class="manual-steps">
+            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">1</span><p>Dentro de un proyecto, ve a <strong>Notas del proyecto</strong> y pulsa el botón con el icono de micrófono (🎙️).</p></div>
+            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">2</span><p>La primera vez tu navegador pedirá permiso. Cuando el piloto parpadee ("Escuchando..."), <strong>empieza a hablar</strong>. Verás las palabras escribirse solas.</p></div>
+            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">3</span><p>Revisa el texto y pulsa <strong>Guardar Nota</strong>. Todo se procesa de forma segura en tu propio móvil, respetando tu privacidad.</p></div>
+          </div>
+          <div class="manual-tip">💡 <strong>Consejo:</strong> Si el reconocimiento se equivoca en alguna palabra, puedes tocar el recuadro y corregirla manualmente con el teclado antes de guardarla.</div>
         </div>
       </div>
 
