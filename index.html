@@ -4112,6 +4112,72 @@ if ('serviceWorker' in navigator) {
   .theme-picker-grid, .manual-index-grid { grid-template-columns:1fr; }
 }
 </style>
+<style id="home-v75-styles">
+  .detail-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+  }
+  .detail-top-actions .back-btn {
+    flex: 0 0 auto;
+    margin: 0;
+  }
+  .detail-top-actions .share-guardar-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .detail-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .detail-trash-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 12px;
+  }
+  @media (max-width: 700px) {
+    .detail-top-actions {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      gap: 8px;
+    }
+    .detail-top-actions .back-btn {
+      width: auto;
+      min-height: 44px;
+      padding: 0 14px;
+    }
+    .detail-top-actions .share-guardar-btn {
+      min-height: 44px;
+      font-size: 12px;
+    }
+    .shared-project-mode .detail-top-actions {
+      grid-template-columns: auto 1fr 1fr;
+    }
+    .detail-title-row {
+      align-items: center;
+    }
+    .detail-trash-btn {
+      width: 38px;
+      height: 38px;
+    }
+  }
+</style>
 <!-- Optimización local de PDFs; la app no depende de Internet. -->
 <script src="CODEX/pdf-lib.min.js"></script>
 </head>
@@ -4270,24 +4336,26 @@ if ('serviceWorker' in navigator) {
     <!-- ══════════ VIEW: DETALLE PROYECTO ══════════ -->
     <div class="view" id="view-detalle">
       <div class="detail-header">
-        <div class="detail-heading-row">
+        <div class="detail-top-actions">
           <button class="back-btn" onclick="handleBackBtn()"><span>←</span><span>Inicio</span></button>
-          <div class="detail-title-block">
-            <div style="font-size:12px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;" id="detail-tipo"></div>
-            <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--bark);" id="detail-nombre">—</h2>
-            <span id="detail-status-badge" class="project-card-status"></span>
-            <span id="detail-origin-badge" class="detail-origin-badge"></span>
-          </div>
+          <button class="btn btn-secondary share-guardar-btn" onclick="openShareProjectModal()">🤝 Compartir proyecto</button>
+          <button class="btn btn-secondary shared-convert-btn share-guardar-btn" type="button" onclick="openSharedProjectCopyModal()">📥 Pasar a mis proyectos</button>
+          <button class="btn btn-secondary share-guardar-btn" onclick="saveDetailChanges()">💾 Guardar</button>
         </div>
         <div class="shared-project-notice" id="shared-project-notice">
           <span>Este proyecto compartido es independiente: sus materiales no usan ni modifican tu inventario.</span>
           <button class="btn btn-secondary" type="button" onclick="openSharedProjectCopyModal()">Crear una copia en Mis Proyectos</button>
         </div>
-        <div class="detail-header-actions">
-          <button class="btn btn-secondary" onclick="openShareProjectModal()">🤝 Compartir proyecto</button>
-          <button class="btn btn-secondary shared-convert-btn" type="button" onclick="openSharedProjectCopyModal()">📥 Pasar a mis proyectos</button>
-          <button class="btn btn-primary" onclick="saveDetailChanges()">💾 Guardar</button>
-          <button class="btn btn-danger btn-delete-quiet" onclick="deleteCurrentProject()" title="Borrar proyecto">🗑</button>
+        <div class="detail-heading-row">
+          <div class="detail-title-block">
+            <div style="font-size:12px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;" id="detail-tipo"></div>
+            <div class="detail-title-row">
+              <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--bark);margin:0;flex:1;" id="detail-nombre">—</h2>
+              <button class="btn btn-danger btn-delete-quiet detail-trash-btn" onclick="deleteCurrentProject()" title="Borrar proyecto">🗑</button>
+            </div>
+            <span id="detail-status-badge" class="project-card-status"></span>
+            <span id="detail-origin-badge" class="detail-origin-badge"></span>
+          </div>
         </div>
       </div>
 
