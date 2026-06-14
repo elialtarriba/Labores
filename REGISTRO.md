@@ -930,3 +930,23 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 - **Espacios en blanco de las Notas**: Se arregló un fallo técnico por el cual el código invisible de espaciado creaba saltos de línea inútiles en las Notas del proyecto. Ahora el texto queda ajustado y el espacio se aprovecha al máximo.
 - **Botón de Inicio**: Se le ha devuelto su efecto 3D característico (el hundimiento y sombreado). Además, se ha ajustado el tamaño de la letra y se le permite dividirse en dos líneas, de forma que "Insertar nuevo proyecto" cabe perfectamente sin descuadrarse.
 - **Cuadrícula en versión Móvil**: Se aplicó una reestructuración de la cuadrícula superior exclusiva para móviles. Ahora, al entrar en Lanas, Agujas, etc., la pantalla de tu móvil pondrá el botón "← Inicio" a la izquierda, el botón "Añadir..." a la derecha, y **la barra de Buscar pasará a ocupar toda la segunda línea**, haciendo que ningún botón se corte y quede todo de lo más profesional.
+
+## Corrección del 14 de junio de 2026 - Arreglo del Botón Inicio en Móvil (Versión 94)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Reestructuración de la pantalla de Inicio ("Mis Proyectos") en móviles**: Antes, el botón "+ Insertar nuevo proyecto" intentaba encajarse a la fuerza a la derecha de los 4 botones pequeños (Buscar, Base de datos, etc), quedando horriblemente aplastado y cortado. 
+- **Solución**: Ahora, al detectar que la pantalla es de móvil, la cuadrícula pone los 4 botones pequeños en la parte superior y **el botón "+ Insertar nuevo proyecto" baja a una nueva línea ocupando todo el ancho de la pantalla**. Esto permite que el texto se lea gigante, claro, y que luzca su espectacular diseño 3D sin estrecheces.
+
+## Corrección del 14 de junio de 2026 - Ajuste visual de la barra de Notas (Versión 95)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Barra de Notas más fina**: Se ha reducido la altura del recuadro "Escribe una nota..." para que solo ocupe 1 línea de alto por defecto, haciendo que toda esa zona se vea mucho más recogida y estéticamente bonita.
+- **Botones uniformes**: El botón del micrófono y el de "Añadir" de las notas ahora tienen exactamente el mismo tamaño, forma cuadrada con bordes redondeados, y ambos comparten ese color madera oscuro y el efecto 3D que pediste. Ahora toda la franja encaja visualmente a la perfección.
