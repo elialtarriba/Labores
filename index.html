@@ -842,6 +842,32 @@ if ('serviceWorker' in navigator) {
     padding-left: 52px;
     flex-wrap: wrap;
   }
+  .shared-project-notice {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--radius-sm);
+    background: var(--cream);
+    color: var(--text-soft);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .shared-project-mode .shared-project-notice { display: flex; }
+  .shared-project-mode .detail-header-actions .shared-convert-btn { display: inline-flex; }
+  .shared-convert-btn { display: none; }
+  .shared-resource-note {
+    margin-bottom: 14px;
+    padding: 11px 13px;
+    border-radius: 11px;
+    background: var(--cream);
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.45;
+  }
   .detail-header .back-btn {
     background: var(--cream); border: 1.5px solid var(--cream-dark);
     border-radius: var(--radius-sm); padding: 8px 12px;
@@ -1868,6 +1894,23 @@ if ('serviceWorker' in navigator) {
     color: var(--text-soft);
     font-weight: 800;
     text-align: center;
+  }
+  .pdf-viewer-fallback {
+    display: none;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background: #fff;
+  }
+  .pdf-viewer-fallback.visible { display: block; }
+  .pdf-viewer-fallback iframe,
+  .pdf-viewer-fallback object {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    overflow: hidden;
   }
   #modal-pdf-viewer {
     padding: 0;
@@ -3084,9 +3127,15 @@ if ('serviceWorker' in navigator) {
     .stat-card { padding: 16px 10px; min-width: 0; align-items: center; text-align: center; }
     .projects-grid { grid-template-columns: 1fr; }
     .detail-header { gap: 10px; }
+    .detail-heading-row { display:grid; grid-template-columns:auto minmax(0,1fr); align-items:start; }
     .detail-heading-row .back-btn { flex: 0 0 auto; }
+    .detail-title-block { width:100%; }
+    .detail-header h2 { font-size:clamp(27px,9vw,38px) !important; line-height:1.03; overflow-wrap:normal; word-break:keep-all; }
     .detail-header-actions { padding-left: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+    .shared-project-mode .detail-header-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .detail-header .btn { padding: 10px 15px; }
+    .shared-project-notice { align-items:stretch; flex-direction:column; }
+    .shared-project-notice .btn { width:100%; justify-content:center; }
 
     /* Ajustes generales de botones para móvil */
     .btn {
@@ -4116,13 +4165,18 @@ if ('serviceWorker' in navigator) {
         <div class="detail-heading-row">
           <button class="back-btn" onclick="handleBackBtn()">←</button>
           <div class="detail-title-block">
-          <div style="font-size:12px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;" id="detail-tipo"></div>
-          <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--bark);" id="detail-nombre">—</h2>
+            <div style="font-size:12px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;" id="detail-tipo"></div>
+            <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--bark);" id="detail-nombre">—</h2>
+            <span id="detail-status-badge" class="project-card-status"></span>
           </div>
-          <span id="detail-status-badge" class="project-card-status"></span>
+        </div>
+        <div class="shared-project-notice" id="shared-project-notice">
+          <span>Este proyecto compartido es independiente: sus materiales no usan ni modifican tu inventario.</span>
+          <button class="btn btn-secondary" type="button" onclick="openSharedProjectCopyModal()">Crear una copia en Mis Proyectos</button>
         </div>
         <div class="detail-header-actions">
           <button class="btn btn-secondary" onclick="openShareProjectModal()">🤝 Compartir proyecto</button>
+          <button class="btn btn-secondary shared-convert-btn" type="button" onclick="openSharedProjectCopyModal()">📥 Pasar a mis proyectos</button>
           <button class="btn btn-primary" onclick="saveDetailChanges()">💾 Guardar</button>
           <button class="btn btn-danger btn-delete-quiet" onclick="deleteCurrentProject()" title="Borrar proyecto">🗑</button>
         </div>
@@ -5034,6 +5088,7 @@ service cloud.firestore {<br>
     <div class="modal-body">
       <div class="pdf-viewer-stage">
         <div id="pdf-viewer-pages" class="pdf-viewer-pages" aria-label="Páginas del PDF"></div>
+        <div id="pdf-viewer-fallback" class="pdf-viewer-fallback" aria-label="Visor alternativo del PDF"></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -5666,6 +5721,22 @@ service cloud.firestore {<br>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="cancelProjectTypeAdd()">Cancelar</button>
       <button class="btn btn-primary" onclick="saveQuickProjectType()">➕ Añadir y seleccionar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-copy-shared-project" style="z-index:180;">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h2>📥 Pasar a Mis Proyectos</h2>
+      <button class="modal-close" onclick="closeModal('modal-copy-shared-project')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0;color:var(--text-soft);line-height:1.55;">Se creará una copia independiente. El proyecto recibido seguirá guardado en Compartidos y la copia ya podrá usar tus listas, lanas, agujas y accesorios.</p>
+    </div>
+    <div class="modal-footer" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="btn btn-secondary" type="button" onclick="copySharedProjectToMine('pendiente')">💡 Crear como idea</button>
+      <button class="btn btn-primary" type="button" onclick="copySharedProjectToMine('en-curso')">🧶 Crear como proyecto</button>
     </div>
   </div>
 </div>
@@ -6671,6 +6742,63 @@ async function importSharedProjectPayload(payload) {
   return project;
 }
 
+window.openSharedProjectCopyModal = function() {
+  if (!currentProject || !currentProject.compartidoRecibido) return;
+  openModal('modal-copy-shared-project');
+};
+
+async function duplicateSharedMediaForPersonalCopy(source, copy) {
+  const keyMap = new Map();
+  async function duplicateKey(oldKey, label) {
+    if (!oldKey || oldKey.startsWith('http://') || oldKey.startsWith('https://') || oldKey.startsWith('data:')) return oldKey;
+    if (keyMap.has(oldKey)) return keyMap.get(oldKey);
+    const media = await getMediaItem(oldKey);
+    if (!media) return '';
+    const newKey = `proyectos_${copy.id}_${label}_${uid()}`;
+    await setMediaItem(newKey, media instanceof Blob ? media.slice(0, media.size, media.type) : media);
+    keyMap.set(oldKey, newKey);
+    return newKey;
+  }
+  copy.fotoKey = await duplicateKey(source.fotoKey, 'foto');
+  copy.pdfKey = await duplicateKey(source.pdfKey, 'pdf');
+  for (let i = 0; i < (copy.pdfs || []).length; i += 1) {
+    copy.pdfs[i].key = await duplicateKey(source.pdfs?.[i]?.key || copy.pdfs[i].key, 'pdf');
+  }
+  for (let i = 0; i < (copy.galeria || []).length; i += 1) {
+    copy.galeria[i].key = await duplicateKey(source.galeria?.[i]?.key || copy.galeria[i].key, 'galeria');
+  }
+}
+
+window.copySharedProjectToMine = async function(status) {
+  if (!currentProject || !currentProject.compartidoRecibido) return;
+  const source = currentProject;
+  const copy = JSON.parse(JSON.stringify(source));
+  regenerateSharedProjectIds(copy);
+  copy.estado = status === 'pendiente' ? 'pendiente' : 'en-curso';
+  copy.timerRunning = false;
+  copy.timerStartedAt = '';
+  copy.creadoEn = new Date().toISOString();
+  copy.actualizadoEn = copy.creadoEn;
+  copy.copiadoDeCompartidoId = source.id;
+  copy.medidasPersonaId = '';
+  delete copy.compartidoRecibido;
+  delete copy.compartidoPor;
+  delete copy.compartidoRecibidoEn;
+  delete copy.compartidoOrigenId;
+  delete copy.compartidoCon;
+  try {
+    await duplicateSharedMediaForPersonalCopy(source, copy);
+    db.proyectos.push(copy);
+    save();
+    closeModal('modal-copy-shared-project');
+    showNotification(copy.estado === 'pendiente' ? 'Idea creada en Mis Proyectos' : 'Proyecto creado en Mis Proyectos');
+    openProject(copy.id);
+  } catch (error) {
+    console.error(error);
+    alert('No se pudo crear la copia completa. Comprueba que las fotos y los PDF sigan disponibles.');
+  }
+};
+
 window.importSharedProject = function(input) {
   const file = input && input.files ? input.files[0] : null;
   if (!file) return;
@@ -7083,6 +7211,7 @@ let pdfViewerObjectUrl = '';
 let pdfViewerCurrentKey = '';
 let pdfViewerBlob = null;
 let pdfViewerDocument = null;
+let pdfViewerLoadingTask = null;
 let pdfViewerRenderToken = 0;
 let pdfJsModulePromise = null;
 let pdfResizeTimer = null;
@@ -7158,6 +7287,7 @@ window.openPdfPreview = async function(kind, id, pdfId) {
     return;
   }
   const pages = document.getElementById('pdf-viewer-pages');
+  const fallback = document.getElementById('pdf-viewer-fallback');
   const title = document.getElementById('pdf-viewer-title');
   if (pdfViewerObjectUrl) URL.revokeObjectURL(pdfViewerObjectUrl);
   
@@ -7173,6 +7303,8 @@ window.openPdfPreview = async function(kind, id, pdfId) {
   
   if (title) title.textContent = '🔍 ' + ((entry && entry.nombre) || 'Vista previa del PDF');
   if (pages) pages.innerHTML = '<div class="pdf-viewer-loading">Cargando el PDF…</div>';
+  if (pages) pages.style.display = '';
+  if (fallback) { fallback.classList.remove('visible'); fallback.innerHTML = ''; }
   openModal('modal-pdf-viewer');
   const stage = document.querySelector('#modal-pdf-viewer .pdf-viewer-stage');
   if (stage) stage.scrollTop = 0;
@@ -7181,8 +7313,20 @@ window.openPdfPreview = async function(kind, id, pdfId) {
     await renderPdfViewerPages();
   } catch (error) {
     console.error('No se pudo mostrar el PDF:', error);
-    if (pages) pages.innerHTML = '<div class="pdf-viewer-loading">No se pudo dibujar este PDF. Cierra el visor y vuelve a intentarlo.</div>';
+    showPdfViewerFallback();
   }
+}
+
+function showPdfViewerFallback() {
+  const pages = document.getElementById('pdf-viewer-pages');
+  const fallback = document.getElementById('pdf-viewer-fallback');
+  if (!fallback || !pdfViewerObjectUrl) {
+    if (pages) pages.innerHTML = '<div class="pdf-viewer-loading">No se pudo abrir este PDF.</div>';
+    return;
+  }
+  if (pages) { pages.innerHTML = ''; pages.style.display = 'none'; }
+  fallback.innerHTML = `<iframe src="${pdfViewerObjectUrl}#view=FitH&toolbar=0&navpanes=0" title="PDF completo" scrolling="yes"></iframe>`;
+  fallback.classList.add('visible');
 }
 
 async function getPdfJsModule() {
@@ -7197,21 +7341,24 @@ async function getPdfJsModule() {
 
 async function loadPdfViewerDocument(blob) {
   pdfViewerRenderToken += 1;
-  if (pdfViewerDocument) {
-    try { await pdfViewerDocument.destroy(); } catch (error) { console.warn(error); }
-    pdfViewerDocument = null;
+  if (pdfViewerLoadingTask) {
+    try { await pdfViewerLoadingTask.destroy(); } catch (error) { console.warn(error); }
+    pdfViewerLoadingTask = null;
   }
+  pdfViewerDocument = null;
   const pdfjs = await getPdfJsModule();
   const data = new Uint8Array(await blob.arrayBuffer());
   const baseUrl = new URL('./CODEX/', window.location.href);
-  const loadingTask = pdfjs.getDocument({
+  pdfViewerLoadingTask = pdfjs.getDocument({
     data,
     cMapUrl: new URL('cmaps/', baseUrl).href,
     cMapPacked: true,
     standardFontDataUrl: new URL('standard_fonts/', baseUrl).href,
-    wasmUrl: new URL('wasm/', baseUrl).href
+    wasmUrl: new URL('wasm/', baseUrl).href,
+    useWorkerFetch: false,
+    isEvalSupported: false
   });
-  pdfViewerDocument = await loadingTask.promise;
+  pdfViewerDocument = await pdfViewerLoadingTask.promise;
 }
 
 async function renderPdfViewerPages() {
@@ -7220,8 +7367,9 @@ async function renderPdfViewerPages() {
   if (!pages || !documentToRender) return;
   const token = ++pdfViewerRenderToken;
   pages.innerHTML = '';
-  const availableWidth = Math.max(240, pages.clientWidth - 16);
-  const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+  const stage = pages.closest('.pdf-viewer-stage');
+  const availableWidth = Math.max(240, (stage?.clientWidth || pages.clientWidth) - 18);
+  const outputScale = Math.min(window.devicePixelRatio || 1, window.innerWidth <= 700 ? 1.25 : 1.6);
   for (let pageNumber = 1; pageNumber <= documentToRender.numPages; pageNumber += 1) {
     if (token !== pdfViewerRenderToken || documentToRender !== pdfViewerDocument) return;
     const page = await documentToRender.getPage(pageNumber);
@@ -8034,6 +8182,7 @@ const btnTexts = {
 
 window.showView = function(v) {
   restoreAppScrolling();
+  if (v !== 'detalle') document.body.classList.remove('shared-project-mode');
   document.body.classList.remove('view-proyectos','view-llanas','view-agujas','view-accesorios','view-medidas','view-configuracion','view-detalle');
   document.body.classList.add('view-' + v);
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
@@ -8093,7 +8242,8 @@ window.handleBackBtn = function() {
 }
 
 function updateBadges() {
-  document.getElementById('badge-proyectos').textContent = db.proyectos.length;
+  const ownProjects = db.proyectos.filter(p => !p.compartidoRecibido);
+  document.getElementById('badge-proyectos').textContent = ownProjects.length;
   document.getElementById('badge-llanas').textContent    = db.llanas.length;
   document.getElementById('badge-agujas').textContent    = db.agujas.length;
   document.getElementById('badge-accesorios').textContent= db.accesorios.length;
@@ -8101,12 +8251,12 @@ function updateBadges() {
   if (medidasBadge) medidasBadge.textContent = (db.medidasPersonas || []).length;
 
   // stats
-  document.getElementById('stat-total').textContent     = db.proyectos.length;
-  document.getElementById('stat-curso').textContent     = db.proyectos.filter(p=>p.estado==='en-curso').length;
-  document.getElementById('stat-terminados').textContent= db.proyectos.filter(p=>p.estado==='terminado').length;
+  document.getElementById('stat-total').textContent     = ownProjects.length;
+  document.getElementById('stat-curso').textContent     = ownProjects.filter(p=>p.estado==='en-curso').length;
+  document.getElementById('stat-terminados').textContent= ownProjects.filter(p=>p.estado==='terminado').length;
   const ideas = document.getElementById('stat-ideas');
-  if (ideas) ideas.textContent = db.proyectos.filter(p=>p.estado==='pendiente').length;
-  document.getElementById('stat-pausa').textContent     = db.proyectos.filter(p=>p.estado==='en-pausa').length;
+  if (ideas) ideas.textContent = ownProjects.filter(p=>p.estado==='pendiente').length;
+  document.getElementById('stat-pausa').textContent     = ownProjects.filter(p=>p.estado==='en-pausa').length;
   const shared = document.getElementById('stat-compartidos');
   if (shared) shared.textContent = db.proyectos.filter(p=>p.compartidoRecibido).length;
 }
@@ -8163,9 +8313,12 @@ function renderProjects() {
     return;
   }
 
-  let list = db.proyectos;
+  const ownProjects = db.proyectos.filter(p => !p.compartidoRecibido);
+  let list = activeFilter === 'compartidos'
+    ? db.proyectos.filter(p => p.compartidoRecibido)
+    : ownProjects;
   if (activeFilter === 'compartidos') {
-    list = list.filter(p => p.compartidoRecibido);
+    // Los proyectos recibidos solo aparecen en su apartado independiente.
   } else if (activeFilter !== 'todos') {
     list = list.filter(p => p.estado === activeFilter);
   }
@@ -8178,7 +8331,7 @@ function renderProjects() {
     if (activeFilter === 'compartidos') {
       title.textContent = 'Aún no tienes proyectos compartidos';
       text.textContent = 'Pulsa “Importar proyecto” cuando una amiga te envíe uno.';
-    } else if (db.proyectos.length === 0) {
+    } else if (ownProjects.length === 0) {
       title.textContent = 'Aún no tienes proyectos';
       text.textContent = 'Empieza añadiendo tu primer jersey, amigurumi o calcetín.';
     } else {
@@ -8193,7 +8346,7 @@ function renderProjects() {
 }
 
 function projectCardHTML(p) {
-  const emoji = typeEmojis[p.tipo] || '✨';
+  const emoji = projectTypeEmoji(p.tipo);
   const colorClass = typeColors[p.tipo] || 'type-otro';
   const statusClass = 'status-' + (p.estado || 'pendiente');
   const statusLabel = projectStatusLabels[p.estado] || '—';
@@ -8208,7 +8361,7 @@ function projectCardHTML(p) {
   <div class="project-card" onclick="openProject('${p.id}')">
     <div class="project-card-image ${colorClass}">
       ${hasMedia(p,'foto') ? `<img data-media-key="${getMediaKey(p,'foto')}" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 1 1'%2F%3E" alt="${escapeAttr(p.nombre)}">` : `<span>${emoji}</span>`}
-      <span class="type-badge">${(p.tipo||'otro').toUpperCase()}</span>
+      <span class="type-badge">${escapeAttr(findProjectType(p.tipo)?.name || String(p.tipo || 'Otro').replace(/-/g, ' '))}</span>
       <span class="project-card-status ${statusClass}">${statusLabel}</span>
     </div>
     <div class="project-card-body">
@@ -8565,6 +8718,7 @@ window.confirmDeleteProject = function() {
 window.openProject = function(id) {
   currentProject = db.proyectos.find(p => p.id === id);
   if (!currentProject) return;
+  document.body.classList.toggle('shared-project-mode', !!currentProject.compartidoRecibido);
   renderDetail();
   showView('detalle');
   const title = document.getElementById('topbar-title');
@@ -8575,8 +8729,10 @@ window.openProject = function(id) {
 
 function renderDetail() {
   const p = currentProject;
+  const shared = !!p.compartidoRecibido;
+  document.body.classList.toggle('shared-project-mode', shared);
   document.getElementById('detail-nombre').textContent = p.nombre;
-  document.getElementById('detail-tipo').textContent = (p.tipo||'').toUpperCase() + ' · ' + normalizeTechnique(p.tecnica);
+  document.getElementById('detail-tipo').textContent = projectTypeLabel(p.tipo) + ' · ' + normalizeTechnique(p.tecnica);
   const badge = document.getElementById('detail-status-badge');
   badge.textContent = projectStatusLabels[p.estado] || '—';
   badge.className = 'project-card-status status-' + (p.estado||'pendiente');
@@ -8584,14 +8740,14 @@ function renderDetail() {
   // general info
   const info = document.getElementById('detail-info-grid');
   info.innerHTML = `
-    <div class="form-group"><label>Nombre del proyecto</label><input type="text" value="${escapeAttr(p.nombre||'')}" onchange="updateField('nombre',this.value)"></div>
+    <div class="form-group"><label>Nombre del proyecto</label><input type="text" value="${escapeAttr(p.nombre||'')}" onchange="updateField('nombre',this.value)" ${shared ? 'readonly' : ''}></div>
     <div class="form-group"><label>Tipo</label>
-      <select id="detail-project-type" data-project-detail="true" onfocus="rememberProjectTypeSelection(this)" onchange="handleProjectTypeChange(this)">
+      <select id="detail-project-type" data-project-detail="true" onfocus="rememberProjectTypeSelection(this)" onchange="handleProjectTypeChange(this)" ${shared ? 'disabled' : ''}>
         ${projectTypeOptionsHTML(p.tipo)}
       </select>
     </div>
     <div class="form-group"><label>Técnica</label>
-      <select onchange="updateField('tecnica',this.value)">
+      <select onchange="updateField('tecnica',this.value)" ${shared ? 'disabled' : ''}>
         ${[
           { value: 'Punto', label: '🔵 Punto' },
           { value: 'Ganchillo', label: '🟠 Ganchillo' },
@@ -8601,11 +8757,11 @@ function renderDetail() {
           `<option value="${t.value}" ${normalizeTechnique(p.tecnica)===t.value?'selected':''}>${t.label}</option>`).join('')}
       </select>
     </div>
-    <div class="form-group"><label>Medidas</label><button type="button" class="btn btn-secondary measure-button" onclick="openProjectMeasuresModal()">📏 Buscar ficha</button>${projectPersonSummaryHTML(p)}</div>
-    <div class="form-group"><label>Para quién</label><input type="text" value="${p.para||''}" onchange="updateField('para',this.value)"></div>
-    <div class="form-group"><label>Patrón</label><input type="text" value="${p.patron||''}" onchange="updateField('patron',this.value)"></div>
+    <div class="form-group"><label>Medidas</label><button type="button" class="btn btn-secondary measure-button" onclick="${shared ? 'openMeasurementsModalForProjectLegacy()' : 'openProjectMeasuresModal()'}">${shared ? '📏 Ver ficha' : '📏 Buscar ficha'}</button>${projectPersonSummaryHTML(p)}</div>
+    <div class="form-group"><label>Para quién</label><input type="text" value="${escapeAttr(p.para||'')}" onchange="updateField('para',this.value)" ${shared ? 'readonly' : ''}></div>
+    <div class="form-group"><label>Patrón</label><input type="text" value="${escapeAttr(p.patron||'')}" onchange="updateField('patron',this.value)" ${shared ? 'readonly' : ''}></div>
     <div class="form-group"><label>Estado</label>
-      <select onchange="updateField('estado',this.value)">
+      <select onchange="updateField('estado',this.value)" ${shared ? 'disabled' : ''}>
         ${projectStatusOptions.map(s =>
           `<option value="${s.value}" ${p.estado===s.value?'selected':''}>${s.label}</option>`).join('')}
       </select>
@@ -8664,7 +8820,7 @@ function updateField(field, val) {
   save();
   if (field === 'nombre' || field === 'tipo' || field === 'tecnica') {
     document.getElementById('detail-nombre').textContent = currentProject.nombre || '—';
-    document.getElementById('detail-tipo').textContent = (currentProject.tipo||'').toUpperCase() + ' · ' + normalizeTechnique(currentProject.tecnica);
+    document.getElementById('detail-tipo').textContent = projectTypeLabel(currentProject.tipo) + ' · ' + normalizeTechnique(currentProject.tecnica);
     const topbarTitle = document.getElementById('topbar-title');
     if (topbarTitle) topbarTitle.innerHTML = `<span>${escapeAttr(currentProject.nombre || 'Proyecto')}</span>`;
     renderProjects();
@@ -9793,6 +9949,25 @@ function renderProjectResourcesPanel() {
   p.agujasUsadas = mergeProjectResourceList(p.agujasUsadas, 'agujaId');
   p.materiales = mergeProjectResourceList(p.materiales, 'llanaId');
   p.accesoriosSlots = mergeProjectResourceList(p.accesoriosSlots, 'accesorioId');
+  if (p.compartidoRecibido) {
+    const staticRows = (items, kind) => items.length ? items.map(item => {
+      const qty = parseInt(item.cantidad, 10) || 1;
+      const unit = kind === 'Lana o hilo' ? 'ovillo(s)' : 'ud.';
+      const price = item.precio ? formatPrice(item.precio, item.divisa) : '';
+      const detail = [item.tipo, item.marca, item.numero, item.tienda, item.notas, price].filter(Boolean).map(escapeAttr).join(' · ');
+      return `<div class="resource-used-card">
+        <div class="resource-used-icon">${kind === 'Aguja' ? '🔧' : kind === 'Lana o hilo' ? '🧶' : '✂️'}</div>
+        <div><div class="resource-used-name">${escapeAttr(item.nombre || kind)}</div><div class="resource-used-meta">${detail || 'Incluido en el proyecto compartido'}</div></div>
+        <div class="resource-used-side"><span class="resource-qty-pill">${qty} ${unit}</span></div>
+      </div>`;
+    }).join('') : `<p style="font-size:13px;color:var(--text-muted);">Sin ${kind.toLowerCase()} registrados.</p>`;
+    panel.innerHTML = `
+      <div class="shared-resource-note">Estos datos pertenecen a quien compartió el proyecto. Se muestran completos, pero no descuentan ni añaden existencias en tus listas.</div>
+      <div class="resource-block"><h4>🔧 Agujas del proyecto compartido</h4><div class="resource-used-list">${staticRows(p.agujasUsadas, 'Aguja')}</div></div>
+      <div class="resource-block"><h4>🧶 Lanas o hilos del proyecto compartido</h4><div class="resource-used-list">${staticRows(p.materiales, 'Lana o hilo')}</div></div>
+      <div class="resource-block"><h4>✂️ Accesorios del proyecto compartido</h4><div class="resource-used-list">${staticRows(p.accesoriosSlots, 'Accesorio')}</div></div>`;
+    return;
+  }
   const needleOptions = db.agujas.map(a => `<option value="${a.id}">${escapeAttr(needleLabel(a))} (${parseInt(a.cantidad)||0})</option>`).join('');
   const yarnOptions = db.llanas.map(l => `<option value="${l.id}">${escapeAttr(l.nombre||l.marca||'Lana o hilo')} · ${escapeAttr(l.color||'sin color')} (${parseInt(l.cantidad)||0})</option>`).join('');
   const accOptions = db.accesorios.map(a => `<option value="${a.id}">${escapeAttr(accessoryLabel(a))} (${parseInt(a.cantidad)||0})</option>`).join('');
@@ -10828,6 +11003,21 @@ function renderMateriales() {
   if (!p.accesoriosUsados) p.accesoriosUsados = [];
   if (!p.accesoriosSlots) p.accesoriosSlots = [];
   p.accesoriosSlots = p.accesoriosSlots.filter(Boolean).map(ac => ({ ...ac, id: ac.id || uid() }));
+  if (p.compartidoRecibido) {
+    const rows = [
+      ...p.materiales.map(item => ({...item, icon:'🧶', unit:'ovillo(s)'})),
+      ...p.accesoriosSlots.map(item => ({...item, icon:'✂️', unit:'ud.'})),
+      ...p.accesoriosUsados.map(item => ({...item, icon:'✂️', unit:'ud.'}))
+    ];
+    list.innerHTML = rows.length ? rows.map(item => `<div class="material-row">
+      <div class="yarn-swatch" style="background:${item.color || 'var(--cream)'}">${item.color ? '' : item.icon}</div>
+      <strong style="font-size:14px;flex:1;">${escapeAttr(item.nombre || item.tipo || 'Material')}</strong>
+      <span style="font-size:13px;color:var(--text-muted);">${parseInt(item.cantidad, 10) || 1} ${item.unit}</span>
+      <span style="font-size:13px;color:var(--text-muted);">${escapeAttr(item.notas || item.tienda || '')}</span>
+    </div>`).join('') : '<p style="font-size:14px;color:var(--text-muted);">Sin materiales registrados.</p>';
+    controls.innerHTML = '<div class="shared-resource-note">El inventario de este proyecto compartido es independiente. Crea una copia en Mis Proyectos para asignarle tus propias listas.</div>';
+    return;
+  }
   if (p.materiales.length === 0) {
     list.innerHTML = '<p style="font-size:14px;color:var(--text-muted);">Sin materiales asignados aún.</p>';
   } else {
@@ -11445,8 +11635,28 @@ window.addShop = function() {
 const PROJECT_TYPE_ADD_VALUE = '__add_project_type__';
 let pendingProjectTypeSelect = null;
 
+const projectTypeLegacyValues = {
+  'jersey sueter': 'jersey',
+  'cardigan': 'cardi',
+  'amigurumi': 'amigurumi',
+  'calcetines': 'calcetines',
+  'manton chal': 'manton',
+  'gorro': 'gorro',
+  'bolso cesta': 'bolso',
+  'manta': 'manta',
+  'otro': 'otro'
+};
+
+function normalizedProjectTypeText(value) {
+  return String(value || '').trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
 function projectTypeValue(item) {
-  return String(item?.name || item || '').trim().toLowerCase().replace(/\s+/g, '-');
+  const name = String(item?.name || item || '').trim();
+  const normalized = normalizedProjectTypeText(name);
+  return projectTypeLegacyValues[normalized] || normalized.replace(/\s+/g, '-');
 }
 
 function projectTypeOptionsHTML(currentValue, includeEmpty = false) {
@@ -11469,7 +11679,23 @@ function fillProjectTypeSelect(select, currentValue, includeEmpty = true) {
 
 function findProjectType(value) {
   const wanted = String(value || '').trim().toLowerCase();
-  return projectTypes.find(item => String(item?.name || '').trim().toLowerCase() === wanted || projectTypeValue(item) === wanted);
+  const normalizedWanted = normalizedProjectTypeText(wanted);
+  return projectTypes.find(item => {
+    const name = String(item?.name || '').trim().toLowerCase();
+    const normalizedName = normalizedProjectTypeText(name);
+    return name === wanted || normalizedName === normalizedWanted || projectTypeValue(item) === wanted || projectTypeValue(item) === normalizedWanted;
+  });
+}
+
+function projectTypeLabel(value) {
+  const type = findProjectType(value);
+  if (!type) return String(value || 'Otro').replace(/-/g, ' ');
+  return `${type.emoji ? type.emoji + ' ' : ''}${type.name}`.trim();
+}
+
+function projectTypeEmoji(value) {
+  const type = findProjectType(value);
+  return type?.emoji || typeEmojis[value] || '✨';
 }
 
 function renderProjectTypeOptions(currentValue) {
@@ -13217,12 +13443,15 @@ window.closeModal = function(id) {
     pdfViewerRenderToken += 1;
     clearTimeout(pdfResizeTimer);
     const pages = document.getElementById('pdf-viewer-pages');
-    if (pages) pages.innerHTML = '';
-    if (pdfViewerDocument) {
-      const documentToDestroy = pdfViewerDocument;
-      pdfViewerDocument = null;
-      documentToDestroy.destroy().catch(error => console.warn(error));
+    if (pages) { pages.innerHTML = ''; pages.style.display = ''; }
+    const fallback = document.getElementById('pdf-viewer-fallback');
+    if (fallback) { fallback.classList.remove('visible'); fallback.innerHTML = ''; }
+    if (pdfViewerLoadingTask) {
+      const taskToDestroy = pdfViewerLoadingTask;
+      pdfViewerLoadingTask = null;
+      taskToDestroy.destroy().catch(error => console.warn(error));
     }
+    pdfViewerDocument = null;
     if (pdfViewerObjectUrl) {
       URL.revokeObjectURL(pdfViewerObjectUrl);
       pdfViewerObjectUrl = '';
@@ -13571,6 +13800,7 @@ let currentReportShareHtml = '';
 let currentReportShareTitle = '';
 let currentReportShareFileName = '';
 let currentReportShareText = '';
+let currentReportPdfBlob = null;
 
 function buildCurrentReportShareText() {
   const page = document.querySelector('#report-overlay .page');
@@ -13581,25 +13811,182 @@ function buildCurrentReportShareText() {
   return `${currentReportShareTitle || 'Informe Proyecto'}\n\n${content}`.trim();
 }
 
+function pdfSafeText(value) {
+  return String(value || '')
+    .replace(/€/g, ' EUR')
+    .replace(/[–—]/g, '-')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[^\x09\x0A\x0D\x20-\xFF]/g, '')
+    .replace(/[ \t]+/g, ' ')
+    .trim();
+}
+
+function pdfColorFromCss(value, fallback) {
+  const hex = String(value || fallback || '#6E4A3A').trim().replace('#', '');
+  const normalized = hex.length === 3 ? hex.split('').map(char => char + char).join('') : hex.padEnd(6, '0').slice(0, 6);
+  return window.PDFLib.rgb(
+    parseInt(normalized.slice(0, 2), 16) / 255,
+    parseInt(normalized.slice(2, 4), 16) / 255,
+    parseInt(normalized.slice(4, 6), 16) / 255
+  );
+}
+
+async function reportImageBytesForPdf(src) {
+  const response = await fetch(src);
+  const blob = await response.blob();
+  if (blob.type === 'image/jpeg' || blob.type === 'image/png') return {bytes: await blob.arrayBuffer(), type: blob.type};
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement('canvas');
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  canvas.getContext('2d').drawImage(bitmap, 0, 0);
+  bitmap.close?.();
+  const converted = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+  return {bytes: await converted.arrayBuffer(), type: 'image/jpeg'};
+}
+
+async function buildCurrentReportPdfBlob() {
+  if (currentReportPdfBlob) return currentReportPdfBlob;
+  if (!window.PDFLib?.PDFDocument) throw new Error('La biblioteca PDF no está disponible.');
+  const pageElement = document.querySelector('#report-overlay .page');
+  if (!pageElement) throw new Error('No se encuentra el informe abierto.');
+
+  const {PDFDocument, StandardFonts} = window.PDFLib;
+  const pdfDoc = await PDFDocument.create();
+  const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const bark = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--bark'), '#6E4A3A');
+  const terracota = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--terracota'), '#D98463');
+  const muted = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--text-soft'), '#7B5C50');
+  const black = window.PDFLib.rgb(0.14, 0.10, 0.08);
+  const pageSize = [595.28, 841.89];
+  const margin = 44;
+  const maxWidth = pageSize[0] - margin * 2;
+  let page;
+  let y;
+
+  function newPage() {
+    page = pdfDoc.addPage(pageSize);
+    y = pageSize[1] - margin;
+    page.drawText(pdfSafeText(currentReportShareTitle || 'Informe Proyecto'), {x:margin, y, size:18, font:bold, color:terracota});
+    y -= 28;
+  }
+
+  function ensureSpace(height) {
+    if (!page || y - height < margin + 18) newPage();
+  }
+
+  function wrappedLines(text, font, size) {
+    const result = [];
+    String(text || '').split(/\n+/).forEach(paragraph => {
+      const words = pdfSafeText(paragraph).split(/\s+/).filter(Boolean);
+      if (!words.length) return;
+      let line = '';
+      words.forEach(word => {
+        const candidate = line ? line + ' ' + word : word;
+        if (font.widthOfTextAtSize(candidate, size) <= maxWidth) line = candidate;
+        else { if (line) result.push(line); line = word; }
+      });
+      if (line) result.push(line);
+    });
+    return result;
+  }
+
+  function drawBlock(text, options = {}) {
+    const font = options.bold ? bold : regular;
+    const size = options.size || 10;
+    const color = options.color || black;
+    const lineHeight = options.lineHeight || size + 4;
+    const lines = wrappedLines(text, font, size);
+    if (!lines.length) return;
+    ensureSpace(lines.length * lineHeight + (options.gap || 0));
+    lines.forEach(line => {
+      ensureSpace(lineHeight);
+      page.drawText(line, {x:margin, y, size, font, color});
+      y -= lineHeight;
+    });
+    y -= options.gap || 4;
+  }
+
+  newPage();
+  const reportCopy = pageElement.cloneNode(true);
+  reportCopy.querySelectorAll('.no-print, script, style, img').forEach(element => element.remove());
+  const lines = String(reportCopy.innerText || reportCopy.textContent || '').split('\n').map(line => line.trim()).filter(Boolean);
+  lines.forEach(line => {
+    const section = /^\d+\.\s/.test(line);
+    const total = /total|coste de producci/i.test(line);
+    drawBlock(line, {
+      bold: section || total,
+      size: section ? 13 : total ? 11 : 9.5,
+      color: section ? bark : total ? terracota : black,
+      lineHeight: section ? 18 : 13,
+      gap: section ? 4 : 1
+    });
+  });
+
+  const imageSources = Array.from(pageElement.querySelectorAll('.cover-img, .gallery-item img'))
+    .map(img => img.currentSrc || img.src)
+    .filter(Boolean);
+  if (imageSources.length) {
+    newPage();
+    drawBlock('Fotografias del informe', {bold:true, size:13, color:bark, lineHeight:18, gap:8});
+    for (const src of imageSources) {
+      try {
+        const imageData = await reportImageBytesForPdf(src);
+        const embedded = imageData.type === 'image/png' ? await pdfDoc.embedPng(imageData.bytes) : await pdfDoc.embedJpg(imageData.bytes);
+        const maxImageWidth = maxWidth;
+        const maxImageHeight = 300;
+        const scale = Math.min(maxImageWidth / embedded.width, maxImageHeight / embedded.height, 1);
+        const width = embedded.width * scale;
+        const height = embedded.height * scale;
+        ensureSpace(height + 18);
+        page.drawImage(embedded, {x:margin + (maxWidth - width) / 2, y:y - height, width, height});
+        y -= height + 18;
+      } catch (error) {
+        console.warn('No se pudo incluir una foto en el PDF del informe.', error);
+      }
+    }
+  }
+
+  const pages = pdfDoc.getPages();
+  pages.forEach((pdfPage, index) => {
+    const footer = `Labores · ${index + 1} / ${pages.length}`;
+    pdfPage.drawText(footer, {x:margin, y:22, size:8, font:regular, color:muted});
+  });
+  const bytes = await pdfDoc.save();
+  currentReportPdfBlob = new Blob([bytes], {type:'application/pdf'});
+  return currentReportPdfBlob;
+}
+
 window.shareCurrentProjectReport = async function() {
   if (!currentReportShareHtml) {
     alert('Primero genera el informe.');
     return;
   }
-  if (navigator.share) {
+  let pdfBlob;
+  try {
+    pdfBlob = await buildCurrentReportPdfBlob();
+  } catch (error) {
+    console.error(error);
+    alert('No se pudo crear el PDF del informe. Vuelve a generar el informe e inténtalo otra vez.');
+    return;
+  }
+  const file = new File([pdfBlob], currentReportShareFileName || 'informe-proyecto.pdf', {type:'application/pdf'});
+  if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
     try {
       await navigator.share({
         title: currentReportShareTitle || 'Informe Proyecto',
-        text: currentReportShareText || buildCurrentReportShareText()
+        text: 'Informe del proyecto en PDF.',
+        files: [file]
       });
-      showNotification('Informe preparado para enviar');
+      showNotification('PDF preparado para enviar');
       return;
     } catch (error) {
       if (error && error.name === 'AbortError') return;
       console.warn('No se pudo abrir el menú para enviar el informe:', error);
     }
   }
-  const file = new File([currentReportShareHtml], currentReportShareFileName || 'informe-proyecto.html', {type:'text/html'});
   const url = URL.createObjectURL(file);
   const link = document.createElement('a');
   link.href = url;
@@ -13608,7 +13995,7 @@ window.shareCurrentProjectReport = async function() {
   link.click();
   link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
-  alert('El informe se ha descargado. Ya puedes adjuntarlo en WhatsApp o en un correo.');
+  alert('El PDF del informe se ha descargado. Ya puedes adjuntarlo en WhatsApp o en un correo.');
 };
 
 window.generateProjectFinancePDF = async function(isComplete = true) {
@@ -13616,7 +14003,8 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
     const p = currentProject;
     if (!p) { alert('No hay ningún proyecto activo.'); return; }
     const reportTitle = isComplete ? 'Informe Proyecto Completo' : 'Informe Proyecto';
-    const reportFileName = `${safeSharedFileName(reportTitle)}-${safeSharedFileName(p.nombre || 'proyecto')}.html`;
+    const reportFileName = `${safeSharedFileName(reportTitle)}-${safeSharedFileName(p.nombre || 'proyecto')}.pdf`;
+    currentReportPdfBlob = null;
 
     // Create loading overlay inside the same window
     let overlay = document.getElementById('report-overlay');
@@ -13813,7 +14201,7 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
   const reportToolbarHTML = `<div class="no-print report-action-bar">
     <span class="report-action-title">📄 ${reportTitle}</span>
     <div class="report-action-buttons">
-      <button class="report-action-btn report-share-btn" onclick="window.shareCurrentProjectReport()">📤 WhatsApp / email</button>
+      <button class="report-action-btn report-share-btn" onclick="window.shareCurrentProjectReport()">📄 Enviar PDF</button>
       <button class="report-action-btn report-print-btn" onclick="window.print()">🖨️ Imprimir</button>
       <button class="report-action-btn report-close-btn" onclick="window.closeReportOverlay()">✕ Cerrar</button>
     </div>
@@ -14027,7 +14415,7 @@ ${reportToolbarHTML}
       <div class="col-right">
         <div class="info-grid">
           ${infoRow('Nombre', p.nombre)}
-          ${infoRow('Tipo', p.tipo ? (p.tipo.charAt(0).toUpperCase()+p.tipo.slice(1).replace(/-/g,' ')) : '')}
+          ${infoRow('Tipo', p.tipo ? projectTypeLabel(p.tipo) : '')}
           ${infoRow('Técnica', p.tecnica)}
           ${infoRow('Estado', statusLabel)}
           ${infoRow('Para quién', p.para)}
