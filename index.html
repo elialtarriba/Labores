@@ -1019,7 +1019,7 @@ if ('serviceWorker' in navigator) {
     border-radius: 0 !important;
     margin: 0 !important;
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
   }
   #modal-note-zoom .modal-body {
     flex: 1 !important;
@@ -4575,14 +4575,12 @@ if ('serviceWorker' in navigator) {
     }
     
     body.view-proyectos #btn-nuevo span:first-child {
-      font-size: 14px !important;
-      line-height: 1 !important;
-      display: block !important;
+      display: none !important; /* Esconde el + */
     }
     
     body.view-proyectos #btn-nuevo-text {
-      font-size: 9px !important;
-      white-space: normal !important;
+      font-size: 11px !important;
+      white-space: nowrap !important;
       line-height: 1.1 !important;
       text-align: center !important;
       margin-left: 0 !important;
@@ -4670,7 +4668,7 @@ if ('serviceWorker' in navigator) {
         <button class="home-tool" id="home-theme-button" type="button" onclick="openHomeThemePicker()"><span>🎨</span><span class="home-theme-label">Temas</span></button>
       </div>
       <button class="btn btn-primary home-new-project" onclick="openNewModal()" id="btn-nuevo" title="Nuevo proyecto">
-        <span>＋</span> <span id="btn-nuevo-text">Nuevo proyecto</span>
+        <span>＋</span> <span id="btn-nuevo-text">Insertar Proyecto</span>
       </button>
     </div>
   </div>
@@ -8871,7 +8869,7 @@ const viewTitles = {
   detalle:       ['', ''],
 };
 const btnTexts = {
-  proyectos:'Insertar nuevo proyecto', llanas:'Añadir lanas',
+  proyectos:'Insertar Proyecto', llanas:'Añadir lanas',
   agujas:'Añadir agujas', accesorios:'Añadir accesorios', medidas:'Añadir medidas', configuracion:null
 };
 

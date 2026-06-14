@@ -960,3 +960,12 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 ### Cambios realizados
 - **Botón Insertar recogido y oscuro**: El botón "+ Insertar nuevo proyecto" de la página principal de "Mis Proyectos" ahora adopta el mismo color madera oscurito que tanto te gustaba en los otros botones de añadir.
 - **Cuadrícula de 2 y 3 botones**: Se ha reconstruido el puzzle de botones de la cabecera en los móviles. Ahora la fila 1 contiene "Buscar" y "Base de datos" repartiéndose la mitad de la pantalla cada uno. La fila 2 contiene "Sonido", "Temas" y "+ Insertar" compartiendo la pantalla a partes iguales (un tercio cada uno). El texto y el + se han rediseñado para que quepan de maravilla sin estorbar.
+
+## Corrección del 14 de junio de 2026 - Ajuste de Texto en Botón Inicio (Versión 97)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botones perfectamente iguales**: Se ha retirado el símbolo "＋" y recortado el texto a "Insertar Proyecto" en la página principal para móviles. Al ocupar menos espacio y caber en una sola línea, la cuadrícula ya no se ve forzada a estirarse y los tres botones de esa fila (Sonido, Temas, Insertar) miden exactamente lo mismo.
