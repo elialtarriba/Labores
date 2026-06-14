@@ -13814,12 +13814,35 @@ function buildCurrentReportShareText() {
 function pdfSafeText(value) {
   return String(value || '')
     .replace(/€/g, ' EUR')
+    .replace(/£/g, ' GBP')
     .replace(/[–—]/g, '-')
+    .replace(/…/g, '...')
+    .replace(/[•·]/g, '-')
     .replace(/[“”]/g, '"')
     .replace(/[‘’]/g, "'")
-    .replace(/[^\x09\x0A\x0D\x20-\xFF]/g, '')
+    .replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g, '')
     .replace(/[ \t]+/g, ' ')
     .trim();
+}
+
+async function ensureReportPdfLibrary() {
+  if (window.PDFLib?.PDFDocument) return window.PDFLib;
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-report-pdf-library]');
+    if (existing) {
+      existing.addEventListener('load', resolve, {once:true});
+      existing.addEventListener('error', reject, {once:true});
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'CODEX/pdf-lib.min.js?v=72';
+    script.dataset.reportPdfLibrary = 'true';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('No se pudo cargar la biblioteca PDF.'));
+    document.head.appendChild(script);
+  });
+  if (!window.PDFLib?.PDFDocument) throw new Error('La biblioteca PDF no está disponible.');
+  return window.PDFLib;
 }
 
 function pdfColorFromCss(value, fallback) {
@@ -13833,33 +13856,44 @@ function pdfColorFromCss(value, fallback) {
 }
 
 async function reportImageBytesForPdf(src) {
-  const response = await fetch(src);
-  const blob = await response.blob();
-  if (blob.type === 'image/jpeg' || blob.type === 'image/png') return {bytes: await blob.arrayBuffer(), type: blob.type};
-  const bitmap = await createImageBitmap(blob);
+  const image = await new Promise((resolve, reject) => {
+    const element = new Image();
+    if (/^https?:/i.test(src)) element.crossOrigin = 'anonymous';
+    element.onload = () => resolve(element);
+    element.onerror = () => reject(new Error('No se pudo cargar una foto del informe.'));
+    element.src = src;
+  });
+  const sourceWidth = image.naturalWidth || image.width;
+  const sourceHeight = image.naturalHeight || image.height;
+  if (!sourceWidth || !sourceHeight) throw new Error('La foto del informe no tiene dimensiones válidas.');
+  const maxSide = 1400;
+  const scale = Math.min(maxSide / sourceWidth, maxSide / sourceHeight, 1);
   const canvas = document.createElement('canvas');
-  canvas.width = bitmap.width;
-  canvas.height = bitmap.height;
-  canvas.getContext('2d').drawImage(bitmap, 0, 0);
-  bitmap.close?.();
-  const converted = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+  canvas.width = Math.max(1, Math.round(sourceWidth * scale));
+  canvas.height = Math.max(1, Math.round(sourceHeight * scale));
+  const context = canvas.getContext('2d', {alpha:false});
+  context.fillStyle = '#ffffff';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const converted = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.82));
+  if (!converted) throw new Error('No se pudo optimizar una foto del informe.');
   return {bytes: await converted.arrayBuffer(), type: 'image/jpeg'};
 }
 
-async function buildCurrentReportPdfBlob() {
+async function buildCurrentReportPdfBlob(includeImages = true) {
   if (currentReportPdfBlob) return currentReportPdfBlob;
-  if (!window.PDFLib?.PDFDocument) throw new Error('La biblioteca PDF no está disponible.');
+  const pdfLibrary = await ensureReportPdfLibrary();
   const pageElement = document.querySelector('#report-overlay .page');
   if (!pageElement) throw new Error('No se encuentra el informe abierto.');
 
-  const {PDFDocument, StandardFonts} = window.PDFLib;
+  const {PDFDocument, StandardFonts} = pdfLibrary;
   const pdfDoc = await PDFDocument.create();
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const bark = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--bark'), '#6E4A3A');
   const terracota = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--terracota'), '#D98463');
   const muted = pdfColorFromCss(getComputedStyle(document.documentElement).getPropertyValue('--text-soft'), '#7B5C50');
-  const black = window.PDFLib.rgb(0.14, 0.10, 0.08);
+  const black = pdfLibrary.rgb(0.14, 0.10, 0.08);
   const pageSize = [595.28, 841.89];
   const margin = 44;
   const maxWidth = pageSize[0] - margin * 2;
@@ -13925,9 +13959,9 @@ async function buildCurrentReportPdfBlob() {
     });
   });
 
-  const imageSources = Array.from(pageElement.querySelectorAll('.cover-img, .gallery-item img'))
+  const imageSources = includeImages ? Array.from(pageElement.querySelectorAll('.cover-img, .gallery-item img'))
     .map(img => img.currentSrc || img.src)
-    .filter(Boolean);
+    .filter(Boolean) : [];
   if (imageSources.length) {
     newPage();
     drawBlock('Fotografias del informe', {bold:true, size:13, color:bark, lineHeight:18, gap:8});
@@ -13968,16 +14002,22 @@ window.shareCurrentProjectReport = async function() {
   try {
     pdfBlob = await buildCurrentReportPdfBlob();
   } catch (error) {
-    console.error(error);
-    alert('No se pudo crear el PDF del informe. Vuelve a generar el informe e inténtalo otra vez.');
-    return;
+    console.warn('No se pudo crear el PDF con fotos; se reintenta sin ellas.', error);
+    currentReportPdfBlob = null;
+    try {
+      pdfBlob = await buildCurrentReportPdfBlob(false);
+    } catch (fallbackError) {
+      console.error('No se pudo crear el PDF del informe.', fallbackError);
+      alert('No se pudo crear el PDF del informe. Cierra el informe, vuelve a generarlo e inténtalo otra vez.');
+      return;
+    }
   }
   const file = new File([pdfBlob], currentReportShareFileName || 'informe-proyecto.pdf', {type:'application/pdf'});
-  if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
+  const canSharePdf = navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}));
+  if (canSharePdf) {
     try {
       await navigator.share({
         title: currentReportShareTitle || 'Informe Proyecto',
-        text: 'Informe del proyecto en PDF.',
         files: [file]
       });
       showNotification('PDF preparado para enviar');
