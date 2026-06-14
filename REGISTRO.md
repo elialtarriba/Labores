@@ -729,3 +729,23 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 
 - No se han borrado funciones previas.
 - Las funciones de cambio de tema, mute, búsqueda y base de datos local siguen intactas, solo se ha modificado la capa visual (CSS).
+
+## Mejoras del 14 de junio de 2026 - Versión 77 (Corrección de errores: PDF y Visor)
+
+### Archivos modificados
+
+- `index.html`
+- `LaboresV15.html` (copia)
+- `sw.js`
+- `CODEX.md`
+- `REGISTRO.md`
+
+### Cambios realizados
+
+- **Corrección de bloqueo al preparar PDF:** Se corrigió la ruta de la biblioteca `pdf-lib.min.js`, que apuntaba erróneamente a la carpeta CODEX. Al no encontrar el archivo, la aplicación se quedaba atascada esperando. Ahora el PDF se genera correctamente y el botón cambia a 'WhatsApp / email' sin quedarse bloqueado.
+- **Corrección del visor de PDF (lupa):** Se forzó mediante CSS que el documento PDF renderizado se encaje estrictamente al ancho de la pantalla del dispositivo. Esto elimina el molesto rebote o desplazamiento horizontal al intentar hacer scroll vertical.
+
+### Comportamiento protegido
+
+- No se han modificado las lógicas internas de guardado ni de cálculos financieros.
+- La exportación de datos sigue intacta y los documentos se generan con total privacidad de forma local.

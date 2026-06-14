@@ -4250,8 +4250,25 @@ if ('serviceWorker' in navigator) {
   }
 </style>
 
+
+<style id="home-v77-styles">
+  /* Evitar scroll horizontal en el visor de PDFs (encajado a lo ancho) */
+  .pdf-viewer-stage {
+    overflow-x: hidden !important;
+  }
+  .pdf-viewer-pages {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .pdf-viewer-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+</style>
 <!-- Optimización local de PDFs; la app no depende de Internet. -->
-<script src="CODEX/pdf-lib.min.js"></script>
+<script src="pdf-lib.min.js"></script>
 </head>
 <body>
 
@@ -14156,7 +14173,7 @@ async function ensureReportPdfLibrary() {
       return;
     }
     const script = document.createElement('script');
-    script.src = 'CODEX/pdf-lib.min.js?v=72';
+    script.src = 'pdf-lib.min.js?v=72';
     script.dataset.reportPdfLibrary = 'true';
     script.onload = resolve;
     script.onerror = () => reject(new Error('No se pudo cargar la biblioteca PDF.'));
