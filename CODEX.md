@@ -1052,3 +1052,13 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 ### Cambios realizados
 - **Barra de Notas más fina**: Se ha reducido la altura del recuadro "Escribe una nota..." para que solo ocupe 1 línea de alto por defecto, haciendo que toda esa zona se vea mucho más recogida y estéticamente bonita.
 - **Botones uniformes**: El botón del micrófono y el de "Añadir" de las notas ahora tienen exactamente el mismo tamaño, forma cuadrada con bordes redondeados, y ambos comparten ese color madera oscuro y el efecto 3D que pediste. Ahora toda la franja encaja visualmente a la perfección.
+
+## Corrección del 14 de junio de 2026 - Cuadrícula Superior de Inicio (Versión 96)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botón Insertar recogido y oscuro**: El botón "+ Insertar nuevo proyecto" de la página principal de "Mis Proyectos" ahora adopta el mismo color madera oscurito que tanto te gustaba en los otros botones de añadir.
+- **Cuadrícula de 2 y 3 botones**: Se ha reconstruido el puzzle de botones de la cabecera en los móviles. Ahora la fila 1 contiene "Buscar" y "Base de datos" repartiéndose la mitad de la pantalla cada uno. La fila 2 contiene "Sonido", "Temas" y "+ Insertar" compartiendo la pantalla a partes iguales (un tercio cada uno). El texto y el + se han rediseñado para que quepan de maravilla sin estorbar.

@@ -4529,35 +4529,64 @@ if ('serviceWorker' in navigator) {
   }
 </style>
 
-<!-- CSS PARA FIX INICIO MOVIL v94 -->
-<style id="final-fixes-v94">
+<!-- CSS PARA FIX INICIO MOVIL v96 -->
+<style id="final-fixes-v96">
   /* Fix Home Button Mobile Layout */
   @media (max-width: 700px) {
     body.view-proyectos .home-actions-grid {
-      grid-template-columns: 1fr !important; /* Force stacking: tools top, button bottom */
-      gap: 12px !important;
+      display: grid !important;
+      grid-template-columns: repeat(6, 1fr) !important;
+      gap: 8px !important;
+    }
+    body.view-proyectos .home-tools-grid {
+      display: contents !important;
+    }
+    body.view-proyectos .home-search,
+    body.view-proyectos .home-database {
+      grid-column: span 3 !important;
+    }
+    body.view-proyectos #home-sound-button,
+    body.view-proyectos #home-theme-button,
+    body.view-proyectos #btn-nuevo {
+      grid-column: span 2 !important;
+      width: 100% !important;
+      min-width: 0 !important;
     }
     
     body.view-proyectos #btn-nuevo {
-      width: 100% !important;
-      min-height: 54px !important;
-      height: 54px !important;
-      padding: 0 20px !important;
+      min-height: 50px !important;
+      height: 50px !important;
+      padding: 4px !important;
       border-radius: 16px !important;
-      /* Restoring the 3D terracota look explicitly for mobile */
-      background: var(--terracota) !important;
-      box-shadow: 0 5px 0 #9e5538, 0 9px 18px rgba(110,74,58,.2) !important;
+      /* "del color este tan bonito que pones al añadir" -> var(--bark) */
+      background: var(--bark) !important;
+      color: #fff !important;
+      border: 1.5px solid var(--bark-l) !important;
+      box-shadow: 0 5px 0 #4a3026, 0 9px 18px rgba(110,74,58,.2) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 2px !important;
     }
     body.view-proyectos #btn-nuevo:active {
       transform: translateY(4px) !important;
-      box-shadow: 0 1px 0 #9e5538, 0 2px 4px rgba(110,74,58,.2) !important;
+      box-shadow: 0 1px 0 #4a3026, 0 2px 4px rgba(110,74,58,.2) !important;
+    }
+    
+    body.view-proyectos #btn-nuevo span:first-child {
+      font-size: 14px !important;
+      line-height: 1 !important;
+      display: block !important;
     }
     
     body.view-proyectos #btn-nuevo-text {
-      font-size: 16px !important; /* Can be bigger since it's full width now! */
-      white-space: nowrap !important;
-      margin-left: 8px !important;
-      display: inline-block !important;
+      font-size: 9px !important;
+      white-space: normal !important;
+      line-height: 1.1 !important;
+      text-align: center !important;
+      margin-left: 0 !important;
+      display: block !important;
     }
   }
 </style>
