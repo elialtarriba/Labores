@@ -961,3 +961,12 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 - **Contextualidad en la barra superior**: Se programó la interfaz para que detecte si estás en Inicio (Proyectos) o dentro del Inventario/Medidas.
 - **Ocultación de botones**: Si entras a Lanas, Agujas, Accesorios o Medidas, los botones de "Base de datos", "Sonido" y "Temas" desaparecen automáticamente para no saturar la pantalla.
 - **Nuevo botón Volver**: En su lugar, aparece un flamante botón oscuro y 3D de "← Inicio" junto a la barra de "Buscar", facilitando la vuelta a la pantalla principal sin confusiones. El botón "Añadir" de la derecha se mantiene intacto.
+
+## Corrección del 14 de junio de 2026 - Arreglo de Error de Código Visible (Versión 87)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Resolución de Error Crítico de Sintaxis**: Se detectó y solucionó un error por el cual el código fuente de la función del Dictado por Voz se había inyectado por accidente dentro de la función generadora de informes PDF, rompiendo la estructura de la aplicación y mostrando código de programación directamente en la pantalla de inicio del usuario. El código defectuoso se ha eliminado y restaurado a su correcta posición al final del documento.
