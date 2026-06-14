@@ -929,3 +929,14 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 ### Cambios realizados
 - **Botón de Borrar en Medidas**: Se corrigió la falta de la clase CSS base (`.inventory-duplicate-btn`) que hacía que el botón de borrar en la lista de medidas no tuviera el estilo 3D de píldora que se esperaba.
 - **Cuadrícula de Herramientas de Inicio**: Se forzó mediante CSS que todos los botones de la cuadrícula superior (`home-tool` y `fb-pill`) tengan exactamente el mismo padding, margen nulo, bordes redondeados idénticos (`16px`), y que el contenido esté alineado rígidamente a la izquierda (`justify-content: flex-start`). Esto unifica completamente el diseño y tamaño del botón "Base de datos local" con el botón "Temas", dejándolos simétricos y homogéneos.
+
+## Mejoras del 14 de junio de 2026 - Dictado por Voz Nativo (Versión 84)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botón de Micrófono en Notas**: Se añadió un nuevo botón `🎙️` en la sección "Notas del proyecto" junto al botón "Añadir".
+- **Nueva Ventana (Modal Dictation)**: Se inyectó un nuevo modal y hoja de estilos (animación pulse roja) dedicados exclusivamente a mostrar la captura de audio en tiempo real y permitir al usuario revisar y editar lo transcrito antes de guardarlo.
+- **Implementación de SpeechRecognition**: Se implementó una lógica completa de captura de voz utilizando `webkitSpeechRecognition` / `SpeechRecognition` nativo del navegador, garantizando que todo funcione localmente sin servidores externos. Soporta resultados en tránsito (`interimResults = true`), pausas manuales, detección de errores y anexado de texto.
