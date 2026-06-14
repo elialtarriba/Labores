@@ -4416,7 +4416,9 @@ if ('serviceWorker' in navigator) {
   
   body:not(.view-proyectos) #topbar-back-btn {
     display: flex !important;
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
+    width: max-content !important; /* OVERRIDE .home-tool 100% width */
+    max-width: max-content !important;
     padding: 0 16px !important;
     justify-content: center !important;
   }
@@ -4428,27 +4430,44 @@ if ('serviceWorker' in navigator) {
 </style>
 
 <!-- CSS PARA BOTON AÑADIR -->
-<style id="add-btn-v88">
-  body:not(.view-proyectos) .home-actions-grid {
-    grid-template-columns: minmax(150px, 1fr) auto !important;
+<style id="add-btn-v91">
+  /* Hacer que el texto del botón se vea siempre y no se oculte */
+  #btn-nuevo-text {
+    display: inline !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
   }
+  
+  /* Arreglar la cuadrícula solo en PC/Tablets, en móvil (max-width: 700) debe saltar abajo */
+  @media (min-width: 701px) {
+    .home-actions-grid {
+      grid-template-columns: 1fr auto !important;
+    }
+  }
+
+  /* Estilos específicos cuando NO estamos en la vista Proyectos (Lanas, Agujas, etc) */
   body:not(.view-proyectos) #btn-nuevo {
     background: var(--bark) !important;
     color: #fff !important;
     border: 1.5px solid var(--bark-l) !important;
     box-shadow: 0 5px 0 #4a3026, 0 9px 18px rgba(110,74,58,.2) !important;
     border-radius: 16px !important;
-    padding: 0 16px !important;
+    padding: 0 32px !important; /* MUCH WIDER */
+    min-width: 220px !important; /* FORCE LONGER WIDTH */
+    justify-content: center !important;
   }
   body:not(.view-proyectos) #btn-nuevo:active {
     transform: translateY(4px) !important;
     box-shadow: 0 1px 0 #4a3026, 0 2px 4px rgba(110,74,58,.2) !important;
   }
-  body:not(.view-proyectos) #btn-nuevo-text {
-    font-size: 14px !important;
+  body:not(.view-proyectos) #btn-nuevo span:first-child {
+    display: none !important; /* Ocultar el + en las páginas que no son inicio */
   }
 </style>
+
+
 </head>
+
 
 
 <body>
@@ -8705,7 +8724,7 @@ const viewTitles = {
   detalle:       ['', ''],
 };
 const btnTexts = {
-  proyectos:'Nuevo proyecto', llanas:'Añadir lanas',
+  proyectos:'Insertar nuevo proyecto', llanas:'Añadir lanas',
   agujas:'Añadir agujas', accesorios:'Añadir accesorios', medidas:'Añadir medidas', configuracion:null
 };
 

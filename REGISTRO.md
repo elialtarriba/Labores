@@ -879,3 +879,43 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 - **Textos de Botón Personalizados**: Se actualizaron los textos del botón flotante/principal para que al entrar a los apartados ponga exactamente "Añadir lanas", "Añadir agujas", "Añadir accesorios" y "Añadir medidas", tal y como se solicitó.
 - **Armonía Visual (Diseño Oscurito 3D)**: Se inyectó CSS dinámico para que, cuando estés dentro de estos apartados, este botón de "Añadir" cambie su color terracota original por el color madera oscuro (`var(--bark)`) con efecto 3D pronunciado, igualándose exactamente en estética y color al nuevo botón de "← Inicio".
 - **Ajuste de anchuras**: La cuadrícula superior ahora permite que el botón "Añadir" se expanda lo suficiente para mostrar los textos largos sin aplastarlos, y el botón de inicio mantiene un tamaño compacto a su lado.
+
+## Corrección del 14 de junio de 2026 - Texto en Botón Añadir (Versión 89)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Visibilidad del texto**: Se forzó la aparición del texto ("Añadir lanas", "Añadir agujas", etc.) en el botón principal, ya que una antigua regla CSS lo mantenía oculto.
+- **Ocultar icono +**: Se eliminó el símbolo `+` para que el texto sea el protagonista absoluto y el botón coincida estéticamente al 100% con el botón "← Inicio".
+
+## Mejoras del 14 de junio de 2026 - Rediseño del Botón de Inicio (Versión 90)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botón "Insertar nuevo proyecto"**: En la pantalla principal, se cambió el texto del botón de "+ Nuevo proyecto" a "+ Insertar nuevo proyecto", forzando que el texto se mantenga siempre visible junto al símbolo +.
+- **Unificación de Diseño Visual**: Se ha aplicado la paleta de color "oscurita" (madera, `var(--bark)`) con su respectivo sombreado 3D a este botón principal para que haya coherencia absoluta de diseño en todas las secciones de la app.
+
+## Corrección del 14 de junio de 2026 - Restauración del Diseño en Inicio (Versión 91)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Restauración de Color Original**: Se corrigió el error por el cual el botón de "Insertar nuevo proyecto" en la página principal se había vuelto oscuro por error. Ahora vuelve a lucir su precioso color terracota original, mientras que en las páginas de herramientas ("Lanas", etc.) sigue siendo oscuro.
+- **Arreglo de Cuadrícula en Móvil**: El botón se veía aplastado en la captura de pantalla porque se forzó a estar en la misma línea en pantallas pequeñas. Se ha ajustado para que en el móvil ocupe su propia fila y se lea a la perfección "＋ Insertar nuevo proyecto".
+
+## Corrección del 14 de junio de 2026 - Proporción de Botones (Versión 92)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Botón Inicio más compacto**: Se forzó al botón "← Inicio" a ocupar estrictamente el ancho necesario para su texto, anulando una regla general que intentaba estirarlo al máximo. Ahora es una píldora corta y elegante.
+- **Botón Añadir más largo**: Se le asignó un ancho mínimo mayor (`220px`) y más relleno lateral (`32px`) al botón de "Añadir" en las vistas de herramientas. Ahora es el botón dominante de la derecha, luciendo un aspecto más estirado y profesional, con la barra de búsqueda equilibrando el espacio central.
