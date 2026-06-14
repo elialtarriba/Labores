@@ -773,3 +773,28 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 - Se han añadido dos temas nuevos basados en paletas pastel: "Elibi 1" y "Elibi 2".
 - Los colores se extrajeron de capturas de calculadoras.
 - Se agregaron las opciones al selector de temas de la interfaz de inicio.
+
+## Mejoras del 14 de junio de 2026 - Ajustes de UI y PDF (Versión 79)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Nombres de Temas**: Se actualizó `applyTheme` para cambiar el texto del botón `🎨 Temas` al nombre del tema activo.
+- **Temas Elibi**: Se inyectaron las variables CSS correctas de los temas `elibi1` y `elibi2` en `window._themes` para que funcionen correctamente.
+- **Grilla de botones**: Se forzó la grilla a `1fr 1fr` estrictos y se igualó la altura del botón "+" para encajar exactamente en el bloque 2x2.
+- **Scroll de PDF en iOS**: Se añadió bloqueo total en el `body` (`position: fixed`, `overflow: hidden`) al abrir el PDF.
+- **Fallback de WhatsApp**: Si `navigator.share` falla al compartir el PDF en iOS, se captura el error y se ejecuta una descarga directa del archivo como plan de contingencia.
+
+## Mejoras del 14 de junio de 2026 - Rediseño de Inventario (Versión 80)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Intercambio visual en Lanas, Agujas y Accesorios**: Se reestructuró la maquetación HTML de las tarjetas de inventario.
+- **Stock reubicado**: La información de "STOCK: X" se ha movido a la esquina superior derecha (antiguo lugar de la basura) y se le ha dado formato de "medalla/badge" para destacar visualmente.
+- **Botones de acción agrupados**: El botón redondo de basura se ha eliminado. En su lugar, se ha añadido un botón de borrar ("🗑 Borrar") con la misma forma "chiclet" y estilo visual que el botón "⧉ Duplicar". Ambos botones se han agrupado en la parte inferior izquierda de la tarjeta.
+- **Limpieza del pie de tarjeta**: El pie inferior (`inventory-card-footer`) ahora aloja los botones de acción a la izquierda y el precio (si lo hay) a la derecha de forma más estructurada y balanceada mediante flexbox.

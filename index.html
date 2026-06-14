@@ -4298,6 +4298,21 @@ if ('serviceWorker' in navigator) {
   }
 
   /* Bloquear completamente scroll lateral en visor PDF iOS Safari */
+  body.pdf-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  #report-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
   .pdf-viewer-modal {
     touch-action: pan-y !important;
   }
@@ -4317,6 +4332,42 @@ if ('serviceWorker' in navigator) {
 </style>
 <!-- Optimización local de PDFs; la app no depende de Internet. -->
 <script src="pdf-lib.min.js"></script>
+<style id="inventory-v79-styles">
+  .item-stock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--cream);
+    border: 1.5px solid var(--cream-dark);
+    color: var(--text-soft);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(110,74,58,.08);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+  }
+  .item-stock-badge span {
+    font-size: 13px;
+    color: var(--bark);
+  }
+  .inventory-card-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .inventory-card-footer-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .inventory-action-btn.delete-btn {
+    color: var(--terracota-d) !important;
+  }
+</style>
 </head>
 <body>
 
@@ -12228,7 +12279,7 @@ function renderLlanas() {
   }
   grid.innerHTML = items.map((l, i) => `
     <div class="item-card" onclick="editLlana('${l.id}')">
-      <button class="item-delete-btn" title="Borrar lana o hilo" onclick="deleteInventoryItem('llanas','${l.id}',event)">🗑</button>
+      <div class="item-stock-badge">STOCK <span>${stockQuantity(l.cantidad, 0)}</span></div>
       ${!q ? `
         <button class="item-order-btn item-order-up" title="Subir" ${i === 0 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('llanas','${l.id}',-1,event)">▲</button>
         <button class="item-order-btn item-order-down" title="Bajar" ${i === items.length - 1 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('llanas','${l.id}',1,event)">▼</button>
@@ -12259,10 +12310,10 @@ function renderLlanas() {
       ` : ''}
       ${pdfPreviewHTML(l, 'llana', l.pdfNombre || l.nombre || l.marca || 'PDF de lana', 'inventory') /* PDF eliminado – compatibilidad con datos antiguos */}
       <div class="inventory-card-footer">
-        <span style="font-size: 12px; color: var(--text-soft); font-weight: 500;">
-          <strong>STOCK:</strong> <span style="font-size: 14px; font-weight: 800; color: var(--bark);">${stockQuantity(l.cantidad, 0)}</span> ovillos
-        </span>
-        <button class="inventory-duplicate-btn" title="Duplicar lana o hilo" onclick="duplicateInventoryItem('llanas','${l.id}',event)">⧉ Duplicar</button>
+        <div class="inventory-card-footer-actions">
+          <button class="inventory-duplicate-btn inventory-action-btn delete-btn" title="Borrar lana o hilo" onclick="deleteInventoryItem('llanas','${l.id}',event)">🗑 Borrar</button>
+          <button class="inventory-duplicate-btn inventory-action-btn" title="Duplicar lana o hilo" onclick="duplicateInventoryItem('llanas','${l.id}',event)">⧉ Duplicar</button>
+        </div>
         ${l.precio ? `<span class="inventory-card-price" style="font-size: 13px; font-weight: 700; color: var(--terracota-d);">${formatPrice(l.precio, l.divisa)}</span>` : '<span></span>'}
       </div>
     </div>`).join('');
@@ -12845,7 +12896,7 @@ function renderAgujas() {
   }
   grid.innerHTML = items.map((a, i) => `
     <div class="item-card" onclick="editAguja('${a.id}')">
-      <button class="item-delete-btn" title="Borrar aguja" onclick="deleteInventoryItem('agujas','${a.id}',event)">🗑</button>
+      <div class="item-stock-badge">STOCK <span>${stockQuantity(a.cantidad, 0)}</span></div>
       ${!q ? `
         <button class="item-order-btn item-order-up" title="Subir" ${i === 0 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('agujas','${a.id}',-1,event)">▲</button>
         <button class="item-order-btn item-order-down" title="Bajar" ${i === items.length - 1 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('agujas','${a.id}',1,event)">▼</button>
@@ -12864,10 +12915,10 @@ function renderAgujas() {
         ${a.ubicacion ? `<span class="tag">Ubicación: ${escapeAttr(a.ubicacion)}</span>` : ''}
       </div>
       <div class="inventory-card-footer">
-        <span style="font-size: 12px; color: var(--text-soft); font-weight: 500;">
-          <strong>STOCK:</strong> <span style="font-size: 14px; font-weight: 800; color: var(--bark);">${stockQuantity(a.cantidad, 0)}</span>
-        </span>
-        <button class="inventory-duplicate-btn" title="Duplicar aguja" onclick="duplicateInventoryItem('agujas','${a.id}',event)">⧉ Duplicar</button>
+        <div class="inventory-card-footer-actions">
+          <button class="inventory-duplicate-btn inventory-action-btn delete-btn" title="Borrar aguja" onclick="deleteInventoryItem('agujas','${a.id}',event)">🗑 Borrar</button>
+          <button class="inventory-duplicate-btn inventory-action-btn" title="Duplicar aguja" onclick="duplicateInventoryItem('agujas','${a.id}',event)">⧉ Duplicar</button>
+        </div>
         ${a.precio ? `<span class="inventory-card-price" style="font-size: 13px; font-weight: 700; color: var(--terracota-d);">${formatPrice(a.precio, a.divisa)}</span>` : '<span></span>'}
       </div>
     </div>`).join('');
@@ -13091,7 +13142,7 @@ function renderAccesorios() {
   }
   grid.innerHTML = items.map((ac, i) => `
     <div class="item-card" onclick="editAccesorio('${ac.id}')">
-      <button class="item-delete-btn" title="Borrar accesorio" onclick="deleteInventoryItem('accesorios','${ac.id}',event)">🗑</button>
+      <div class="item-stock-badge">STOCK <span>${stockQuantity(ac.cantidad, 0)}</span></div>
       ${!q ? `
         <button class="item-order-btn item-order-up" title="Subir" ${i === 0 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('accesorios','${ac.id}',-1,event)">▲</button>
         <button class="item-order-btn item-order-down" title="Bajar" ${i === items.length - 1 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('accesorios','${ac.id}',1,event)">▼</button>
@@ -13109,10 +13160,10 @@ function renderAccesorios() {
 
       ${ac.notas ? `<p style="font-size:13px;color:var(--text-soft);margin-top:8px;">${escapeAttr(ac.notas)}</p>` : ''}
       <div class="inventory-card-footer">
-        <span style="font-size: 12px; color: var(--text-soft); font-weight: 500;">
-          <strong>STOCK:</strong> <span style="font-size: 14px; font-weight: 800; color: var(--bark);">${stockQuantity(ac.cantidad, 0)}</span>
-        </span>
-        <button class="inventory-duplicate-btn" title="Duplicar accesorio" onclick="duplicateInventoryItem('accesorios','${ac.id}',event)">⧉ Duplicar</button>
+        <div class="inventory-card-footer-actions">
+          <button class="inventory-duplicate-btn inventory-action-btn delete-btn" title="Borrar accesorio" onclick="deleteInventoryItem('accesorios','${ac.id}',event)">🗑 Borrar</button>
+          <button class="inventory-duplicate-btn inventory-action-btn" title="Duplicar accesorio" onclick="duplicateInventoryItem('accesorios','${ac.id}',event)">⧉ Duplicar</button>
+        </div>
         ${ac.precio ? `<span class="inventory-card-price" style="font-size: 13px; font-weight: 700; color: var(--terracota-d);">${formatPrice(ac.precio, ac.divisa)}</span>` : '<span></span>'}
       </div>
     </div>`).join('');
@@ -15049,6 +15100,42 @@ td.num{text-align:right;font-weight:700;}
   }
 }
 </style>
+<style id="inventory-v79-styles">
+  .item-stock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--cream);
+    border: 1.5px solid var(--cream-dark);
+    color: var(--text-soft);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(110,74,58,.08);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+  }
+  .item-stock-badge span {
+    font-size: 13px;
+    color: var(--bark);
+  }
+  .inventory-card-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .inventory-card-footer-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .inventory-action-btn.delete-btn {
+    color: var(--terracota-d) !important;
+  }
+</style>
 </head>
 <body>
 ${reportToolbarHTML}
@@ -15165,6 +15252,9 @@ window._themes = {"":{"--terracota":"#D98463","--terracota-l":"#F0A98B","--terra
 window._themes.blanco = {"--terracota":"#8B929B","--terracota-l":"#ECEDEF","--terracota-d":"#737A83","--bark":"#555B63","--bark-l":"#747A82","--camel":"#A4A9AF","--camel-l":"#F0F1F2","--cream":"#F8F8F6","--cream-dark":"#E1E2E3","--warm-white":"#FFFFFF","--text-main":"#3F444A","--text-soft":"#686E75","--text-muted":"#969BA1","--shadow-sm":"0 2px 8px rgba(70,75,82,.06)","--shadow-md":"0 6px 24px rgba(70,75,82,.10)","--shadow-lg":"0 16px 48px rgba(70,75,82,.13)"};
 window._themes.negro = {"--terracota":"#C7B9D8","--terracota-l":"#57515F","--terracota-d":"#A99AB9","--bark":"#EEEAF2","--bark-l":"#CBC5D1","--camel":"#9EA7AE","--camel-l":"#3B3E44","--cream":"#282A2F","--cream-dark":"#41444A","--warm-white":"#222429","--text-main":"#F2EFF4","--text-soft":"#CBC7CF","--text-muted":"#9E9AA4","--shadow-sm":"0 2px 8px rgba(0,0,0,.22)","--shadow-md":"0 6px 24px rgba(0,0,0,.32)","--shadow-lg":"0 16px 48px rgba(0,0,0,.42)"};
 window._themes.mixpastel = {"--terracota":"#D790B7","--terracota-l":"#F3C7DD","--terracota-d":"#B76F99","--bark":"#5C567B","--bark-l":"#7C769C","--camel":"#A8DCCB","--camel-l":"#D9F2E8","--cream":"#FFF8EF","--cream-dark":"#E6E0F4","--warm-white":"#FFFCF8","--text-main":"#332F49","--text-soft":"#6E6886","--text-muted":"#9892AC","--shadow-sm":"0 2px 8px rgba(92,86,123,.10)","--shadow-md":"0 6px 24px rgba(92,86,123,.14)","--shadow-lg":"0 16px 48px rgba(92,86,123,.16)"};
+window._themes.elibi1 = {"--terracota":"#F2AFA9","--terracota-l":"#F9D6D2","--terracota-d":"#D99C96","--bark":"#829A66","--bark-l":"#CFE5B5","--camel":"#F5D982","--camel-l":"#FCECC0","--cream":"#FAF5D9","--cream-dark":"#E8E2BE","--warm-white":"#FDFCEF","--text-main":"#2D281C","--text-soft":"#5A523A","--text-muted":"#8F866A","--shadow-sm":"0 2px 8px rgba(130,154,102,.10)","--shadow-md":"0 6px 24px rgba(130,154,102,.14)","--shadow-lg":"0 16px 48px rgba(130,154,102,.16)"};
+window._themes.elibi2 = {"--terracota":"#DFA283","--terracota-l":"#F0C1A7","--terracota-d":"#C48968","--bark":"#4A6B7C","--bark-l":"#C4D8E2","--camel":"#F2AFA9","--camel-l":"#F9D6D2","--cream":"#F8EBEA","--cream-dark":"#E6D5D3","--warm-white":"#FDF6F5","--text-main":"#2A1E1C","--text-soft":"#554441","--text-muted":"#8C7571","--shadow-sm":"0 2px 8px rgba(74,107,124,.10)","--shadow-md":"0 6px 24px rgba(74,107,124,.14)","--shadow-lg":"0 16px 48px rgba(74,107,124,.16)"};
+
 window._defaultVars = {"--terracota":"#D98463","--terracota-l":"#F0A98B","--terracota-d":"#B96546","--bark":"#6E4A3A","--bark-l":"#8A6250","--camel":"#D7B36F","--camel-l":"#F2D99B","--cream":"#FFF7EE","--cream-dark":"#F3E4D4","--warm-white":"#FFFCF7","--text-main":"#34231C","--text-soft":"#7B5C50","--text-muted":"#AA8C80","--shadow-sm":"0 2px 8px rgba(110,74,58,.10)","--shadow-md":"0 6px 24px rgba(110,74,58,.14)","--shadow-lg":"0 16px 48px rgba(110,74,58,.16)"};
 window.applyTheme = function(theme) {
   var aliases = { lavanda:'violeta', menta:'salvia', cielo:'pizarra', noche:'medianoche', bosque:'salvia', coral:'hibisco', sol:'melocoton', fresa:'hibisco', chicle:'rosa', mandarina:'otono', arcoiris:'otono' };
@@ -15189,9 +15279,9 @@ window.applyTheme = function(theme) {
 
   var sel = document.getElementById('theme-select');
   if (sel) sel.value = theme;
-  var themeNames = {'':'Predeterminado',pizarra:'Azul pastel',salvia:'Verde pastel',rosa:'Rosa pastel',violeta:'Violeta pastel',mixpastel:'Mixpastel',blanco:'Blanco suave',negro:'Negro difuminado'};
+  var themeNames = {'':'Predeterminado',pizarra:'Azul pastel',salvia:'Verde pastel',rosa:'Rosa pastel',violeta:'Violeta pastel',mixpastel:'Mixpastel',blanco:'Blanco suave',negro:'Negro difuminado',elibi1:'Elibi 1',elibi2:'Elibi 2'};
   var homeThemeLabel = document.querySelector('.home-theme-label');
-  if (homeThemeLabel) homeThemeLabel.textContent = themeNames[theme] || 'Temas';
+  if (homeThemeLabel) homeThemeLabel.textContent = themeNames[theme] || (theme ? theme.charAt(0).toUpperCase() + theme.slice(1) : 'Predeterminado');
   document.querySelectorAll('#home-theme-picker .theme-choice').forEach(function(button) {
     button.classList.toggle('active', (button.dataset.theme || '') === theme);
   });
