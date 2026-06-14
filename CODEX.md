@@ -1021,3 +1021,14 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 ### Cambios realizados
 - **Botón Inicio más compacto**: Se forzó al botón "← Inicio" a ocupar estrictamente el ancho necesario para su texto, anulando una regla general que intentaba estirarlo al máximo. Ahora es una píldora corta y elegante.
 - **Botón Añadir más largo**: Se le asignó un ancho mínimo mayor (`220px`) y más relleno lateral (`32px`) al botón de "Añadir" en las vistas de herramientas. Ahora es el botón dominante de la derecha, luciendo un aspecto más estirado y profesional, con la barra de búsqueda equilibrando el espacio central.
+
+## Corrección del 14 de junio de 2026 - Pulido de Interfaz y Móvil (Versión 93)
+
+### Archivos modificados
+- `index.html`
+- `LaboresV15.html`
+
+### Cambios realizados
+- **Espacios en blanco de las Notas**: Se arregló un fallo técnico por el cual el código invisible de espaciado creaba saltos de línea inútiles en las Notas del proyecto. Ahora el texto queda ajustado y el espacio se aprovecha al máximo.
+- **Botón de Inicio**: Se le ha devuelto su efecto 3D característico (el hundimiento y sombreado). Además, se ha ajustado el tamaño de la letra y se le permite dividirse en dos líneas, de forma que "Insertar nuevo proyecto" cabe perfectamente sin descuadrarse.
+- **Cuadrícula en versión Móvil**: Se aplicó una reestructuración de la cuadrícula superior exclusiva para móviles. Ahora, al entrar en Lanas, Agujas, etc., la pantalla de tu móvil pondrá el botón "← Inicio" a la izquierda, el botón "Añadir..." a la derecha, y **la barra de Buscar pasará a ocupar toda la segunda línea**, haciendo que ningún botón se corte y quede todo de lo más profesional.

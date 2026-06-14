@@ -4466,7 +4466,70 @@ if ('serviceWorker' in navigator) {
 </style>
 
 
+
+<!-- CSS PARA FIX FINAL v93 -->
+<style id="final-fixes-v93">
+  /* 1. Fix Home Button 3D and Text */
+  body.view-proyectos #btn-nuevo {
+    background: var(--terracota) !important;
+    color: #fff !important;
+    border: 1.5px solid var(--terracota-d) !important;
+    box-shadow: 0 5px 0 #9e5538, 0 9px 18px rgba(110,74,58,.2) !important;
+    border-radius: 16px !important;
+    padding: 0 16px !important;
+    min-height: auto !important;
+    height: 50px !important; /* same height as other tools */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  body.view-proyectos #btn-nuevo:active {
+    transform: translateY(4px) !important;
+    box-shadow: 0 1px 0 #9e5538, 0 2px 4px rgba(110,74,58,.2) !important;
+  }
+  body.view-proyectos #btn-nuevo-text {
+    font-size: 11px !important; /* Smaller to fit */
+    white-space: normal !important; /* Allow 2 lines if needed */
+    line-height: 1.2 !important;
+    text-align: left !important;
+  }
+  
+  /* 2. Fix Mobile layout for inner views (Search bar below) */
+  @media (max-width: 700px) {
+    body:not(.view-proyectos) .home-actions-grid {
+      display: grid !important;
+      grid-template-areas: 
+        "inicio anadir"
+        "buscar buscar" !important;
+      grid-template-columns: auto 1fr !important;
+      gap: 12px !important;
+    }
+    body:not(.view-proyectos) .home-tools-grid {
+      display: contents !important;
+    }
+    body:not(.view-proyectos) #topbar-back-btn {
+      grid-area: inicio;
+      min-width: 0 !important;
+    }
+    body:not(.view-proyectos) #btn-nuevo {
+      grid-area: anadir;
+      width: 100% !important;
+      min-width: 0 !important;
+      padding: 0 16px !important; /* Reduce padding so text fits */
+    }
+    body:not(.view-proyectos) #btn-nuevo-text {
+      font-size: 13px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    body:not(.view-proyectos) .home-search {
+      grid-area: buscar;
+    }
+  }
+</style>
 </head>
+
 
 
 
@@ -11784,10 +11847,7 @@ function renderNotas() {
     timeline.innerHTML = p.apuntes.slice().reverse().map(n => `
       <div class="timeline-entry">
         <div class="timeline-dot"></div>
-        <div class="timeline-text">
-          ${n.texto}
-          <div class="timeline-date">${n.fecha}</div>
-        </div>
+        <div class="timeline-text">${n.texto}<div class="timeline-date">${n.fecha}</div></div>
         <button onclick="removeNota('${n.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">🗑</button>
       </div>`).join('');
   }
