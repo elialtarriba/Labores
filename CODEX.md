@@ -809,3 +809,25 @@ Cada nuevo encargo debe anadirse debajo con fecha, archivos tocados, cambios exa
 - [x] Cabecera visual de `index.html` y estructura `display: grid` en la media query.
 - [x] Posicionamiento correcto y formato 3D en los botones de Compartir y Guardar.
 - [x] Service worker actualizado correctamente.
+
+## Mejoras del 14 de junio de 2026 - Versión 76 (Ajuste visual botones inicio y cabecera)
+
+### Archivos modificados
+
+- `index.html`
+- `LaboresV15.html` (copia)
+- `sw.js`
+- `CODEX.md`
+- `REGISTRO.md`
+
+### Cambios realizados
+
+- Al entrar en un proyecto (vista detalle), se ocultan completamente los botones de la cabecera general (`Buscar`, `Base de datos local`, `Sonido`, `Temas`) para dejar la interfaz más limpia.
+- Se ha reducido la altura de los botones de la barra superior (Buscar, Base de datos, Sonido, Temas) para que ocupen menos espacio vertical.
+- El botón `+ Nuevo proyecto` ahora es perfectamente cuadrado (chiclet 3D), dejando de ser ovalado, y su altura coincide exactamente con la suma de las dos filas de los botones adyacentes.
+- Diseño 3D en todos los botones mencionados, con un color marrón claro oscuro/pastel (`#A88675` a `#8D6B5A`) y texto claro (`#FFF3EB`), creando una experiencia táctil satisfactoria.
+
+### Comportamiento protegido
+
+- No se han borrado funciones previas.
+- Las funciones de cambio de tema, mute, búsqueda y base de datos local siguen intactas, solo se ha modificado la capa visual (CSS).

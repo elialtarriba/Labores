@@ -4178,6 +4178,78 @@ if ('serviceWorker' in navigator) {
     }
   }
 </style>
+
+
+<style id="home-v76-styles">
+  /* Ocultar botones de inicio al entrar en proyecto */
+  body.view-detalle .topbar .home-actions-grid {
+    display: none !important;
+  }
+  
+  /* Ajustes de altura para los botones de herramientas (buscar, sonido, etc) */
+  .home-tool {
+    min-height: 38px !important;
+  }
+  
+  /* Boton + (Nuevo proyecto) cuadradito y 3D, altura de las dos filas */
+  .home-new-project {
+    border-radius: 16px !important;
+    height: 100% !important; /* Para que ocupe todo el alto disponible de las dos filas */
+    min-height: unset !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 0 var(--terracota-d), 0 12px 24px rgba(110,74,58,.25), inset 0 2px 4px rgba(255,255,255,.3) !important;
+    transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  }
+  .home-new-project:active {
+    transform: translateY(6px) !important;
+    box-shadow: 0 0 0 var(--terracota-d), 0 4px 8px rgba(110,74,58,.2), inset 0 2px 4px rgba(0,0,0,.1) !important;
+  }
+
+  /* Botones 3D color marron pastel oscurito */
+  .home-tool,
+  .detail-top-actions .back-btn,
+  .detail-top-actions .share-guardar-btn {
+    background: linear-gradient(180deg, #A88675 0%, #8D6B5A 100%) !important;
+    color: #FFF3EB !important;
+    border: 1.5px solid rgba(255,255,255,0.15) !important;
+    box-shadow: 0 5px 0 #68483B, 0 8px 15px rgba(110,74,58,0.2), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+    border-radius: 12px !important;
+    transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  }
+  
+  /* Efecto al pulsar */
+  .home-tool:active,
+  .detail-top-actions .back-btn:active,
+  .detail-top-actions .share-guardar-btn:active {
+    transform: translateY(5px) !important;
+    box-shadow: 0 0 0 #68483B, 0 3px 6px rgba(110,74,58,0.1), inset 0 2px 4px rgba(0,0,0,0.2) !important;
+  }
+
+  /* Ajustes de visibilidad de texto e iconos para el nuevo fondo oscuro */
+  .search-box input {
+    color: #FFF3EB !important;
+  }
+  .search-box input::placeholder {
+    color: rgba(255, 243, 235, 0.7) !important;
+  }
+  #search-clear-btn {
+    color: #FFF3EB !important;
+  }
+  .fb-dot {
+    border-color: #FFF3EB !important;
+  }
+  
+  @media (max-width: 700px) {
+    /* En movil asegurarnos de que el layout del grid esté alineado arriba */
+    .home-actions-grid {
+      align-items: stretch !important;
+    }
+  }
+</style>
+
 <!-- Optimización local de PDFs; la app no depende de Internet. -->
 <script src="CODEX/pdf-lib.min.js"></script>
 </head>
