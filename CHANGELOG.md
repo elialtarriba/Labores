@@ -34,3 +34,10 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 - **Botón de Instrucciones:** Se ha modificado el botón con el icono de libro 📖 (Instrucciones) para que tenga forma cuadrada con cantos redondeados (12px) y comparta la misma altura que el título superior ("Mis Proyectos").
 - **Importación de Copias de Seguridad:** Se ha añadido un tiempo de espera seguro (2 segundos) al importar una copia de seguridad local. Esto garantiza que Safari en iOS termine de escribir los datos en memoria permanente (`localStorage`) antes de recargar la aplicación, evitando la pérdida de datos al cerrar la app poco después.
 - **Manejo de Errores de Base de Datos:** Se han fortalecido las funciones internas de guardado asíncrono (IndexedDB). Se han integrado comprobaciones (`try...catch`) para interceptar fallos del sistema al crear o leer archivos (el error de "Promesa rechazada: null"), impidiendo que cuelguen la app. Ahora, si algo falla, se muestra un aviso de error pero el resto del proyecto se crea y se guarda con normalidad.
+
+## [V5] - 2026-06-29
+
+### Arreglos y Ajustes Visuales
+- **Botones de herramientas:** Se ha corregido el color de los botones del menú de inicio (Buscar, Base de datos local, Sonido, Temas, Insertar Proyecto y el botón de Instrucciones). Ahora todos se adaptan dinámicamente al tema elegido utilizando los colores intensos de la paleta actual en lugar de quedarse marrones de forma estática, mejorando además la legibilidad con texto en blanco y aplicando sombras a juego.
+- **Botón de Instrucciones:** Se ha modificado el título superior "Mis Proyectos" para que pueda encogerse de manera elástica en pantallas móviles. Esto garantiza que el botón de instrucciones (📖) tenga el espacio necesario para mantener su forma cuadrada perfecta en todo momento.
+- **Tipografía unificada:** Se ha estandarizado la fuente tipográfica a un mismo formato (Lato, tamaño 13px y letra extragruesa) en todo el grupo de botones principales (incluyendo la barra de búsqueda), logrando una simetría estética en todo el bloque de opciones.
