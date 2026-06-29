@@ -3888,9 +3888,11 @@ if ('serviceWorker' in navigator) {
   
   /* ─── INSTRUCTIONS MODAL ─────────────────────────────────── */
   .btn-instrucciones {
-    height: 44px;
+    height: auto;
+    align-self: stretch;
+    aspect-ratio: 1;
     border-radius: 12px;
-    width: 44px;
+    width: auto;
     padding: 0;
     justify-content: center;
     flex-shrink: 0;
@@ -3904,7 +3906,9 @@ if ('serviceWorker' in navigator) {
   }
   @media (min-width: 701px) {
     .btn-instrucciones {
-      height: 38px;
+      height: auto;
+      align-self: stretch;
+      aspect-ratio: auto;
       border-radius: 20px;
       width: auto;
       padding: 0 16px;
@@ -4631,31 +4635,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
   }
 </style>
 
-<!-- CSS PARA FIX INICIO MOVIL v96 -->
-<style id="final-fixes-v96">
-  /* Fix Home Button Mobile Layout */
-  @media (max-width: 700px) {
-    body.view-proyectos .home-actions-grid {
-      display: grid !important;
-      grid-template-columns: repeat(6, 1fr) !important;
-      gap: 8px !important;
-    }
-    body.view-proyectos .home-tools-grid {
-      display: contents !important;
-    }
-    
-    body.view-proyectos #home-sound-button,
-    body.view-proyectos #home-theme-button,
-    
-    
-    
-    
-    
-    
-    
-    
-  }
-</style>
+
 </head>
 
 
