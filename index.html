@@ -15527,6 +15527,70 @@ ${reportToolbarHTML}
   </div>
 </div>
 
+
+<style id="ultimate-tools-grid-fix">
+  /* Force the tools grid to be a 3-column grid everywhere to ensure two rows */
+  body.view-proyectos .home-actions-grid {
+    display: block !important;
+    width: 100% !important;
+  }
+  body.view-proyectos .home-tools-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 54px 1.4fr !important;
+    grid-auto-rows: minmax(48px, auto) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  body.view-proyectos .home-tools-grid > .home-search {
+    grid-column: span 2 !important;
+    grid-row: 1 !important;
+  }
+  body.view-proyectos .home-tools-grid > .home-database {
+    grid-column: span 1 !important;
+    grid-row: 1 !important;
+  }
+  body.view-proyectos .home-tools-grid > #home-sound-button {
+    grid-column: span 1 !important;
+    grid-row: 2 !important;
+  }
+  body.view-proyectos .home-tools-grid > #home-theme-button {
+    grid-column: span 1 !important;
+    grid-row: 2 !important;
+    width: 54px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+  body.view-proyectos .home-tools-grid > #btn-nuevo {
+    grid-column: span 1 !important;
+    grid-row: 2 !important;
+  }
+  
+  /* Fix instructions button height to match the title */
+  .title-profile-wrap {
+    align-items: stretch !important;
+  }
+  .topbar-title {
+    display: flex !important;
+    align-items: center !important;
+    height: auto !important;
+  }
+  .btn-instrucciones {
+    height: auto !important;
+    align-self: stretch !important;
+    aspect-ratio: 1 !important;
+    width: auto !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+    margin: 0 !important;
+  }
+  @media (min-width: 701px) {
+    .btn-instrucciones {
+      aspect-ratio: auto !important;
+      padding: 0 16px !important;
+      border-radius: 20px !important;
+    }
+  }
+</style>
 </body>
 
 </html>`;
@@ -16345,6 +16409,70 @@ function initNuevaCalculadora() {
 
 </script>
 <div id="app-version-badge" style="position: fixed; bottom: 100px; right: 20px; font-size: 14px; font-weight: 700; color: #a0a0a0; opacity: 0.5; z-index: 100; pointer-events: none; font-family: sans-serif;">V4</div>
+
+<style id="ultimate-tools-grid-fix">
+  /* Force the tools grid to be a 3-column grid everywhere to ensure two rows */
+  body.view-proyectos .home-actions-grid {
+    display: block !important;
+    width: 100% !important;
+  }
+  body.view-proyectos .home-tools-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 54px 1.4fr !important;
+    grid-auto-rows: minmax(48px, auto) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  body.view-proyectos .home-tools-grid > .home-search {
+    grid-column: span 2 !important;
+    grid-row: 1 !important;
+  }
+  body.view-proyectos .home-tools-grid > .home-database {
+    grid-column: span 1 !important;
+    grid-row: 1 !important;
+  }
+  body.view-proyectos .home-tools-grid > #home-sound-button {
+    grid-column: span 1 !important;
+    grid-row: 2 !important;
+  }
+  body.view-proyectos .home-tools-grid > #home-theme-button {
+    grid-column: span 1 !important;
+    grid-row: 2 !important;
+    width: 54px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+  body.view-proyectos .home-tools-grid > #btn-nuevo {
+    grid-column: span 1 !important;
+    grid-row: 2 !important;
+  }
+  
+  /* Fix instructions button height to match the title */
+  .title-profile-wrap {
+    align-items: stretch !important;
+  }
+  .topbar-title {
+    display: flex !important;
+    align-items: center !important;
+    height: auto !important;
+  }
+  .btn-instrucciones {
+    height: auto !important;
+    align-self: stretch !important;
+    aspect-ratio: 1 !important;
+    width: auto !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+    margin: 0 !important;
+  }
+  @media (min-width: 701px) {
+    .btn-instrucciones {
+      aspect-ratio: auto !important;
+      padding: 0 16px !important;
+      border-radius: 20px !important;
+    }
+  }
+</style>
 </body>
 
 </html>
