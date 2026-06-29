@@ -1,6 +1,6 @@
 {
-  "name": "MisLabores - Mi taller de labores",
-  "short_name": "MisLabores",
+  "name": "LaboresSinConex",
+  "short_name": "LaboresSinConex",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#FEFCE8",

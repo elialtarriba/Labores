@@ -1,18 +1,23 @@
-const CACHE_NAME = 'labores-v78-cache';
+const CACHE_NAME = 'laboresSinConex-v3-cache';
 const ASSETS = [
+  './',
   './index.html',
   './manifest.json',
-  './icon.png',
-  './logo_corrected.jpg',
-  './CODEX/pdf-lib.min.js',
-  './CODEX/pdf.min.mjs',
-  './CODEX/pdf.worker.min.mjs'
+  './icon.png'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
+      return Promise.all(
+        ASSETS.map(url => {
+          return fetch(url).then(response => {
+            if (response.ok) {
+              return cache.put(url, response);
+            }
+          }).catch(err => console.log('Error caching', url, err));
+        })
+      );
     }).then(() => self.skipWaiting())
   );
 });
