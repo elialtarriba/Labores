@@ -8894,10 +8894,7 @@ window.setCalculatorTheme = function(theme) {
 }
 
 window.openCalculator = function() {
-  const palette = document.getElementById('calculator-palette');
-  if (palette && !palette.innerHTML) {
-    palette.innerHTML = calculatorColors.map((c, i) => `<button type="button" class="calc-color" title="${escapeAttr(c.name)}" style="background:linear-gradient(135deg,${c.accent},${c.display},${c.opBottom})" onclick="setCalculatorTheme(window.calculatorColors[${i}])"></button>`).join('');
-  }
+  if (typeof renderThemes === 'function') renderThemes();
   try {
     const saved = JSON.parse(localStorage.getItem('labores_calc_theme') || '{}');
     if (saved && saved.accent) setCalculatorTheme(saved);
