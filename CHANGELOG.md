@@ -10,5 +10,27 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 ### Modificado
 - **Calculadora:** Se ha reemplazado la antigua calculadora integrada en el modal (`#modal-calculator`) por la nueva versión de la calculadora desarrollada en la carpeta `CALCULADORA`.
 - La nueva calculadora ha sido integrada directamente en el archivo `index.html`, añadiendo sus estilos CSS, estructura HTML y lógica JavaScript.
-- Se ha eliminado la opción de personalización de colores de la calculadora (el botón de edición de temas y la paleta de colores) para simplificar la interfaz, tal y como se solicitó.
+- Se ha eliminado la opción de personalización de colores de la calculadora (el botón de edición de temas) para simplificar la interfaz, tal y como se solicitó.
 - El botón "Salir" de la nueva calculadora ha sido adaptado para que ejecute la función `exitCalculator()`, permitiendo cerrar el modal correctamente y volver a la pantalla inicial de LaboresSinConex.
+
+## [V2] - 2026-06-29
+
+### Arreglos
+- **Logo EliBi:** Se ha incrustado el logo en formato base64 directamente en `index.html` para asegurar que cargue al funcionar sin conexión.
+- **Historial de la Calculadora:** Se ha corregido la superposición en dispositivos móviles, elevando el `z-index` de la ventana del historial.
+
+## [V3] - 2026-06-29
+
+### Arreglos
+- **Historial de la Calculadora:** Se ha eliminado el icono decorativo de chat (`💬`) en cada línea del historial para evitar solapamientos con los números en pantallas pequeñas.
+- **Paleta de Colores:** Se ha restaurado la paleta de selección de colores (botón `🎨` y su panel con los 30 temas predeterminados) y se ha solucionado un fallo que impedía que se cargasen correctamente los colores al hacer clic.
+- Se ha atenuado la visibilidad de la etiqueta de versión (V3) poniéndola en color gris claro.
+
+## [V4] - 2026-06-29
+
+### Arreglos y Ajustes Visuales
+- **Interfaz del botón Nuevo Proyecto:** Se ha modificado el botón "Insertar Proyecto" para que tenga el mismo tamaño, forma y comportamiento que los botones adyacentes de herramientas. Ahora se muestra perfectamente alineado en la cuadrícula inferior del encabezado y cuenta con la misma adaptación automática a móviles.
+- **Paleta de Colores:** Se ha eliminado el texto "Predetermin..." del botón de paleta de colores, dejando únicamente el icono 🎨 para ganar espacio en pantalla.
+- **Botón de Instrucciones:** Se ha modificado el botón con el icono de libro 📖 (Instrucciones) para que tenga forma cuadrada con cantos redondeados (12px) y comparta la misma altura que el título superior ("Mis Proyectos").
+- **Importación de Copias de Seguridad:** Se ha añadido un tiempo de espera seguro (2 segundos) al importar una copia de seguridad local. Esto garantiza que Safari en iOS termine de escribir los datos en memoria permanente (`localStorage`) antes de recargar la aplicación, evitando la pérdida de datos al cerrar la app poco después.
+- **Manejo de Errores de Base de Datos:** Se han fortalecido las funciones internas de guardado asíncrono (IndexedDB). Se han integrado comprobaciones (`try...catch`) para interceptar fallos del sistema al crear o leer archivos (el error de "Promesa rechazada: null"), impidiendo que cuelguen la app. Ahora, si algo falla, se muestra un aviso de error pero el resto del proyecto se crea y se guarda con normalidad.
