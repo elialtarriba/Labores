@@ -16408,7 +16408,7 @@ function initNuevaCalculadora() {
 
 
 </script>
-<div id="app-version-badge" style="position: fixed; bottom: 100px; right: 20px; font-size: 14px; font-weight: 700; color: #a0a0a0; opacity: 0.5; z-index: 100; pointer-events: none; font-family: sans-serif;">V5</div>
+<div id="app-version-badge" style="position: fixed; bottom: 100px; right: 20px; font-size: 14px; font-weight: 700; color: #a0a0a0; opacity: 0.5; z-index: 100; pointer-events: none; font-family: sans-serif;">V6</div>
 
 <style id="ultimate-tools-grid-fix">
   /* Force the tools grid to be a 3-column grid everywhere to ensure two rows */
@@ -16480,7 +16480,10 @@ function initNuevaCalculadora() {
   body .home-tools-grid .fb-pill,
   body .topbar .btn-instrucciones,
   body .detail-top-actions .back-btn,
-  body .detail-top-actions .share-guardar-btn {
+  body .detail-top-actions .share-guardar-btn,
+  body .measure-button,
+  body label.btn-secondary[for="detail-project-foto"],
+  body label.btn-secondary[for="detail-project-pdf"] {
     background: var(--terracota) !important; /* Menos intenso */
     color: #fff !important;
     border: 1.5px solid var(--terracota-d) !important;
@@ -16495,7 +16498,10 @@ function initNuevaCalculadora() {
   body .home-tools-grid .fb-pill:active,
   body .topbar .btn-instrucciones:active,
   body .detail-top-actions .back-btn:active,
-  body .detail-top-actions .share-guardar-btn:active {
+  body .detail-top-actions .share-guardar-btn:active,
+  body .measure-button:active,
+  body label.btn-secondary[for="detail-project-foto"]:active,
+  body label.btn-secondary[for="detail-project-pdf"]:active {
     transform: translateY(4px) !important;
     box-shadow: 0 0px 0 var(--terracota-d), 0 2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(0,0,0,0.2) !important;
   }
@@ -17373,7 +17379,7 @@ function initNuevaCalculadora() {
 
 
 </script>
-<div id="app-version-badge" style="position: fixed; bottom: 100px; right: 20px; font-size: 14px; font-weight: 700; color: #a0a0a0; opacity: 0.5; z-index: 100; pointer-events: none; font-family: sans-serif;">V5</div>
+<div id="app-version-badge" style="position: fixed; bottom: 100px; right: 20px; font-size: 14px; font-weight: 700; color: #a0a0a0; opacity: 0.5; z-index: 100; pointer-events: none; font-family: sans-serif;">V6</div>
 
 <style id="ultimate-tools-grid-fix">
   /* Force the tools grid to be a 3-column grid everywhere to ensure two rows */
@@ -17443,12 +17449,14 @@ function initNuevaCalculadora() {
   /* Unificar color y fuente de botones home-tool y btn-instrucciones según el tema */
   body .home-tools-grid .home-tool,
   body .home-tools-grid .fb-pill,
-  body .topbar .btn-instrucciones {
+  body .topbar .btn-instrucciones,
+  body .detail-top-actions .back-btn,
+  body .detail-top-actions .share-guardar-btn {
     background: var(--terracota) !important; /* Menos intenso */
     color: #fff !important;
     border: 1.5px solid var(--terracota-d) !important;
     box-shadow: 0 4px 0 var(--terracota-d), 0 8px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2) !important;
-    font-family: Lato, sans-serif !important;
+    font-family: 'Lato', sans-serif !important;
     font-weight: 800 !important;
     font-size: 13px !important;
     text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
@@ -17456,7 +17464,9 @@ function initNuevaCalculadora() {
   
   body .home-tools-grid .home-tool:active,
   body .home-tools-grid .fb-pill:active,
-  body .topbar .btn-instrucciones:active {
+  body .topbar .btn-instrucciones:active,
+  body .detail-top-actions .back-btn:active,
+  body .detail-top-actions .share-guardar-btn:active {
     transform: translateY(4px) !important;
     box-shadow: 0 0px 0 var(--terracota-d), 0 2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(0,0,0,0.2) !important;
   }
@@ -17464,7 +17474,7 @@ function initNuevaCalculadora() {
   body .home-tools-grid .home-tool span,
   body .home-tools-grid .fb-pill span {
     color: #fff !important;
-    font-family: Lato, sans-serif !important;
+    font-family: 'Lato', sans-serif !important;
     font-weight: 800 !important;
     font-size: 13px !important;
   }
@@ -17472,7 +17482,7 @@ function initNuevaCalculadora() {
   body .home-tools-grid .home-search input {
     background: transparent !important;
     color: #fff !important;
-    font-family: Lato, sans-serif !important;
+    font-family: 'Lato', sans-serif !important;
     font-weight: 800 !important;
     font-size: 13px !important;
   }
