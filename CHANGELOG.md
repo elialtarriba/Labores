@@ -61,3 +61,10 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 ### Modificado
 - Se ha ajustado la forma y altura de los botones de la pantalla principal (Sonido, Temas, Insertar Proyecto) para que sean idénticos (forma de píldora, 38px de altura).
 - Se ha ocultado el texto del botón de la paleta de colores para que muestre únicamente el icono 🎨.
+
+## [V8] - 2026-07-01
+
+### Arreglos
+- **Generación de PDF**: Se ha optimizado la carga de imágenes en el informe para que se haga en paralelo, reduciendo drásticamente los tiempos de espera y evitando que la pantalla de "Generando informe..." se quede bloqueada.
+- **Sintaxis**: Se ha solucionado un error de etiquetas HTML en el código de impresión de notas que causaba que el navegador cortara la carga y mostrara el código en texto plano.
+- **Limpieza**: Se han eliminado los archivos temporales de diagnóstico y pruebas para limpiar el repositorio antes de subir a GitHub.

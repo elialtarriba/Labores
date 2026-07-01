@@ -6588,14 +6588,30 @@ async function getMediaItem(key) {
     return item;
   }
   return new Promise((resolve, reject) => {
+    let resolved = false;
+    const tid = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        console.warn('getMediaItem timed out for key:', key);
+        resolve(null);
+      }
+    }, 2000);
+
     try {
       const tx = db.transaction(storeName, "readonly");
       const store = tx.objectStore(storeName);
       const request = store.get(key);
-      request.onsuccess = (e) => resolve(e.target.result);
-      tx.onerror = () => reject(tx.error);
+      request.onsuccess = (e) => {
+        if (!resolved) { resolved = true; clearTimeout(tid); resolve(e.target.result); }
+      };
+      request.onerror = (e) => {
+        if (!resolved) { resolved = true; clearTimeout(tid); reject(request.error || e); }
+      };
+      tx.onerror = () => {
+        if (!resolved) { resolved = true; clearTimeout(tid); reject(tx.error); }
+      };
     } catch (err) {
-      reject(err);
+      if (!resolved) { resolved = true; clearTimeout(tid); reject(err); }
     }
   });
 }
@@ -7792,7 +7808,7 @@ function readFileData(file) {
 }
 
 function compressImageFile(file, maxSide = 800, quality = 0.60) {
-  return new Promise(resolve => {
+  return new Promise(resolve => { let resolved = false; const tid = setTimeout(() => { if(!resolved){resolved=true; console.warn('FileReader timeout'); resolve('');} }, 3000); 
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
@@ -8320,8 +8336,8 @@ window.rotateStoredPhoto = async function(kind, id, degrees) {
       if (media instanceof Blob) {
         src = await new Promise(resolve => {
           const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () => { console.warn('Error leyendo foto:', reader.error); resolve(''); };
+          reader.onload = () => { if(!resolved){resolved=true; clearTimeout(tid); resolve(reader.result);} }
+          reader.onerror = () => { console.warn('Error leyendo foto:', reader.error); if(!resolved){resolved=true; clearTimeout(tid); resolve('');} };
           reader.readAsDataURL(media);
         });
       } else {
@@ -11702,7 +11718,7 @@ window.printNoteZoom = function() {
         <div class="content">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
         <script>
           window.onload = function() { window.print(); window.close(); }
-        </script>
+        <\/script>
       
 </body>
     </html>
@@ -14633,10 +14649,12 @@ function pdfColorFromCss(value, fallback) {
 
 async function reportImageBytesForPdf(src) {
   const image = await new Promise((resolve, reject) => {
+    let resolved = false;
+    const tid = setTimeout(() => { if (!resolved) { resolved=true; reject(new Error('Timeout cargando imagen del informe.')); } }, 4000);
     const element = new Image();
     if (/^https?:/i.test(src)) element.crossOrigin = 'anonymous';
-    element.onload = () => resolve(element);
-    element.onerror = () => reject(new Error('No se pudo cargar una foto del informe.'));
+    element.onload = () => { if (!resolved) { resolved=true; clearTimeout(tid); resolve(element); } };
+    element.onerror = () => { if (!resolved) { resolved=true; clearTimeout(tid); reject(new Error('No se pudo cargar una foto del informe.')); } };
     element.src = src;
   });
   const sourceWidth = image.naturalWidth || image.width;
@@ -14651,7 +14669,11 @@ async function reportImageBytesForPdf(src) {
   context.fillStyle = '#ffffff';
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
-  const converted = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.82));
+  const converted = await new Promise(resolve => {
+    let resolved = false;
+    const tid = setTimeout(() => { if (!resolved) { resolved=true; resolve(null); } }, 4000);
+    canvas.toBlob((blob) => { if (!resolved) { resolved=true; clearTimeout(tid); resolve(blob); } }, 'image/jpeg', 0.82);
+  });
   if (!converted) throw new Error('No se pudo optimizar una foto del informe.');
   return {bytes: await converted.arrayBuffer(), type: 'image/jpeg'};
 }
@@ -15163,10 +15185,10 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
       const media = await getMediaItem(key);
       if (media) {
         if (media instanceof Blob) {
-          coverSrc = await new Promise(resolve => {
+          coverSrc = await new Promise(resolve => { let resolved = false; const tid = setTimeout(() => { if(!resolved){resolved=true; console.warn('FileReader timeout'); resolve('');} }, 3000); 
             const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => { console.warn('Error leyendo portada:', reader.error); resolve(''); };
+            reader.onload = () => { if(!resolved){resolved=true; clearTimeout(tid); resolve(reader.result);} }
+            reader.onerror = () => { console.warn('Error leyendo portada:', reader.error); if(!resolved){resolved=true; clearTimeout(tid); resolve('');} };
             reader.readAsDataURL(media);
           });
         } else {
@@ -15176,10 +15198,10 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
     }
   }
   const galleryPhotos = [];
-  if (isComplete) {
-    for (const item of (p.galeria || [])) {
+  if (isComplete && p.galeria && p.galeria.length > 0) {
+    const photoPromises = p.galeria.map(async (item) => {
       const photoKey = item.key || item.url || '';
-      if (!photoKey) continue;
+      if (!photoKey) return null;
       let src = '';
       if (photoKey.startsWith('http://') || photoKey.startsWith('https://') || photoKey.startsWith('data:')) {
         src = photoKey;
@@ -15188,9 +15210,11 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
         if (media) {
           if (media instanceof Blob) {
             src = await new Promise(resolve => {
+              let resolved = false;
+              const tid = setTimeout(() => { if (!resolved) { resolved = true; console.warn('FileReader timeout'); resolve(''); } }, 1500);
               const reader = new FileReader();
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = () => { console.warn('Error reading media blob'); resolve(''); };
+              reader.onload = () => { if (!resolved) { resolved = true; clearTimeout(tid); resolve(reader.result); } }
+              reader.onerror = () => { console.warn('Error reading media blob'); if (!resolved) { resolved = true; clearTimeout(tid); resolve(''); } };
               reader.readAsDataURL(media);
             });
           } else {
@@ -15198,9 +15222,12 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
           }
         }
       }
-      if (src) {
-        galleryPhotos.push({ src, nombre: item.nombre || 'Foto' });
-      }
+      return src ? { src, nombre: item.nombre || 'Foto' } : null;
+    });
+
+    const results = await Promise.all(photoPromises);
+    for (const res of results) {
+      if (res) galleryPhotos.push(res);
     }
   }
 
@@ -15585,7 +15612,7 @@ ${reportToolbarHTML}
   </div>
 </div>
 
-<div id="app-version-badge" style="position:fixed; bottom:5px; right:5px; font-size:10px; color:rgba(0,0,0,0.3); z-index:9999; pointer-events:none;">V8</div>
+<div id="app-version-badge" style="position:fixed; bottom:5px; right:5px; font-size:10px; color:rgba(0,0,0,0.3); z-index:9999; pointer-events:none;">V8-FIX</div>
 </body>
 
 </html>`;
@@ -15694,6 +15721,7 @@ function installNoDoubleTapZoom() {
 }
 
 /* ─── INIT ───────────────────────────────────────────────── */
+setTimeout(() => { const overlay = document.getElementById('report-overlay'); if (overlay) overlay.remove(); }, 500);
 installNoDoubleTapZoom();
 updateCalculatorSoundButton();
 updateBadges();
@@ -15985,7 +16013,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<div id="app-version-badge" style="position:fixed; bottom:5px; right:5px; font-size:10px; color:rgba(0,0,0,0.3); z-index:9999; pointer-events:none;">V8</div>
+<div id="app-version-badge" style="position:fixed; bottom:5px; right:5px; font-size:10px; color:rgba(0,0,0,0.3); z-index:9999; pointer-events:none;">V8-FIX</div>
 <!-- ═══════════════ MODAL: VISOR DE IMAGEN ═══════════════ -->
 <div class="modal-overlay" id="modal-image-viewer" onclick="if(event.target===this) closeModal('modal-image-viewer')">
   <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
