@@ -4554,10 +4554,11 @@ if ('serviceWorker' in navigator) {
     }
     
     body.view-proyectos #btn-nuevo {
-      min-height: 50px !important;
-      height: 50px !important;
-      padding: 4px !important;
-      border-radius: 16px !important;
+      min-height: 38px !important;
+      height: 38px !important;
+      max-height: 38px !important;
+      padding: 0 4px !important;
+      border-radius: 12px !important;
       /* "del color este tan bonito que pones al añadir" -> var(--bark) */
       background: var(--bark) !important;
       color: #fff !important;
@@ -4581,11 +4582,16 @@ if ('serviceWorker' in navigator) {
     body.view-proyectos #btn-nuevo-text {
       font-size: 11px !important;
       white-space: nowrap !important;
-      line-height: 1.1 !important;
+      line-height: 38px !important;
       text-align: center !important;
       margin-left: 0 !important;
       display: block !important;
     }
+  }
+  
+  /* El de la paleta de colores que no ponga nada */
+  .home-theme-label {
+    display: none !important;
   }
 </style>
 </head>
@@ -15496,6 +15502,7 @@ ${reportToolbarHTML}
   </div>
 </div>
 
+<div id="app-version-badge" style="position:fixed; bottom:5px; right:5px; font-size:10px; color:rgba(0,0,0,0.3); z-index:9999; pointer-events:none;">V7</div>
 </body>
 
 </html>`;
@@ -15859,6 +15866,7 @@ function saveDictation() {
     margin: 0 !important;
   }
 </style>
+<div id="app-version-badge" style="position:fixed; bottom:5px; right:5px; font-size:10px; color:rgba(0,0,0,0.3); z-index:9999; pointer-events:none;">V7</div>
 </body>
 
 </html>

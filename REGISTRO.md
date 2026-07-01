@@ -1015,3 +1015,8 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 - **Manejo de Errores de Service Worker**: Al restaurar el `index.html` en el paso anterior, el registro del Service Worker (`sw.js`) generaba una ventana de error "Promesa rechazada" (Unhandled Promise Rejection) cuando la aplicación se abría en el navegador mediante el protocolo local `file://`.
 - **Solución implementada**: Se ha modificado el script de ensamblado `fix.js` para que la inyección del registro del Service Worker detecte primero si el protocolo es `file://` y en ese caso omita el registro. Además, se añadió un bloque `.catch()` para atrapar cualquier fallo futuro en el registro y evitar que interrumpa la interfaz del usuario. 
 - Con esto, al usar `node fix.js`, el `index.html` generado carga limpiamente desde disco local en cualquier navegador (Safari/Firefox) sin ventanas de error.
+
+## [V7] - 2026-07-01
+### Modificado
+- Se ha ajustado la forma y altura de los botones de la pantalla principal (Sonido, Temas, Insertar Proyecto) para que sean idénticos (forma de píldora, 38px de altura).
+- Se ha ocultado el texto del botón de la paleta de colores para que muestre únicamente el icono 🎨.

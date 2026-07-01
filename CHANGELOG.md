@@ -56,3 +56,8 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 
 ### Arreglos
 - **Arranque local**: Se ha corregido el molesto mensaje de error 'Promesa rechazada' que saltaba al abrir la aplicación localmente en el navegador, omitiendo y atrapando de forma silenciosa el registro del modo sin conexión (Service Worker) cuando se ejecuta directamente desde los archivos locales.
+
+## [V7] - 2026-07-01
+### Modificado
+- Se ha ajustado la forma y altura de los botones de la pantalla principal (Sonido, Temas, Insertar Proyecto) para que sean idénticos (forma de píldora, 38px de altura).
+- Se ha ocultado el texto del botón de la paleta de colores para que muestre únicamente el icono 🎨.
