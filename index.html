@@ -8321,6 +8321,7 @@ window.rotateStoredPhoto = async function(kind, id, degrees) {
         src = await new Promise(resolve => {
           const reader = new FileReader();
           reader.onload = () => resolve(reader.result);
+          reader.onerror = () => { console.warn('Error leyendo foto:', reader.error); resolve(''); };
           reader.readAsDataURL(media);
         });
       } else {
@@ -15165,6 +15166,7 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
           coverSrc = await new Promise(resolve => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result);
+            reader.onerror = () => { console.warn('Error leyendo portada:', reader.error); resolve(''); };
             reader.readAsDataURL(media);
           });
         } else {
@@ -15188,6 +15190,7 @@ window.generateProjectFinancePDF = async function(isComplete = true) {
             src = await new Promise(resolve => {
               const reader = new FileReader();
               reader.onload = () => resolve(reader.result);
+              reader.onerror = () => { console.warn('Error reading media blob'); resolve(''); };
               reader.readAsDataURL(media);
             });
           } else {
