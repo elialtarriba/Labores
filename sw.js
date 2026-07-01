@@ -1,4 +1,4 @@
-const CACHE_NAME = 'laboresSinConex-v3-cache';
+const CACHE_NAME = 'laboresSinConex-v8-cache';
 const ASSETS = [
   './',
   './index.html',
