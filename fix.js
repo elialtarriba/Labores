@@ -47,9 +47,15 @@ ${pdfLibCode}
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then((reg) => {
-      console.log('SW registered!', reg.scope);
-    });
+    if (window.location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').then((reg) => {
+        console.log('SW registered!', reg.scope);
+      }).catch((err) => {
+        console.warn('SW registration failed:', err);
+      });
+    } else {
+      console.log('Service Worker omitido en protocolo file://');
+    }
   });
 }
 </script>

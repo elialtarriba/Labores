@@ -41,3 +41,18 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 - **Botones de herramientas:** Se ha corregido el color de los botones del menú de inicio (Buscar, Base de datos local, Sonido, Temas, Insertar Proyecto y el botón de Instrucciones), los botones del menú superior dentro de cada proyecto (Inicio, Compartir proyecto y Guardar), **y los botones de la pestaña general de los proyectos ('Buscar ficha', 'Foto' y '+ PDFs')**. Ahora todos se adaptan dinámicamente al tema elegido utilizando el color principal de la paleta actual (más suave y menos intenso que en pruebas anteriores), en lugar de quedarse marrones de forma estática. Esto mejora la legibilidad con texto en blanco y aplica sombras a juego.
 - **Botón de Instrucciones:** Se ha ocultado el texto "Instrucciones" de su interior para que quede exclusivamente el icono (📖) y se han forzado unas medidas fijas. Esto, sumado a que el título "Mis Proyectos" ahora puede encogerse en pantallas móviles, garantiza que el botón mantenga su forma de cuadrado perfecto en todo momento y no se deforme.
 - **Tipografía unificada:** Se ha estandarizado la fuente tipográfica a un mismo formato (Lato, tamaño 13px y letra extragruesa) en todo el grupo de botones principales (incluyendo la barra de búsqueda), logrando una simetría estética en todo el bloque de opciones.
+
+## [V99] - 2026-07-01
+
+### Arreglos
+- **Restauración del sistema**: Se ha regenerado `index.html` usando `fix.js` para recuperar los scripts finales (`pdf-lib.min.js`, Service Worker) que habían sido borrados accidentalmente por una modificación parcial.
+
+## [V99] - 2026-07-01 (Limpieza)
+
+### Arreglos
+- **Limpieza del Repositorio**: Se eliminaron scripts temporales y archivos de prueba (`fix_index.py`, `.txt` de 3MB, etc.) que no aportaban al funcionamiento y ocupaban espacio innecesario.
+
+## [V100] - 2026-07-01
+
+### Arreglos
+- **Arranque local**: Se ha corregido el molesto mensaje de error 'Promesa rechazada' que saltaba al abrir la aplicación localmente en el navegador, omitiendo y atrapando de forma silenciosa el registro del modo sin conexión (Service Worker) cuando se ejecuta directamente desde los archivos locales.

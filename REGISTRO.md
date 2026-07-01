@@ -978,3 +978,40 @@ La captura `IMG_6937.PNG` mostró que `Número / Talla` de Editar Aguja combinab
 
 ### Cambios realizados
 - **Sincronización exacta de alturas**: Se ha forzado a que el botón "Insertar Proyecto" y los botones de la misma fila ("Sonido", "Temas") tengan exactamente la misma altura (52px), el mismo modelo de caja (border-box) y los mismos márgenes. Ahora la fila es un bloque uniforme al milímetro.
+
+## Corrección del 1 de julio de 2026 - Restauración de index.html (Versión 99)
+
+### Archivos modificados
+- `index.html`
+- `CODEX.md`
+- `REGISTRO.md`
+
+### Cambios realizados
+- **Restauración de index.html**: Se detectó que la aplicación no funcionaba porque el archivo `index.html` estaba truncado, faltando los scripts esenciales al final del archivo (`pdf-lib.min.js` y `sw.js`). Esto fue provocado por una modificación parcial anterior (`fix_index.py`).
+- **Regeneración completa**: Se ejecutó el script `fix.js` para reconstruir `index.html` a partir de `LaboresV15.html` con todos sus recursos inyectados correctamente antes del cierre `</body>`.
+- Con esto, la aplicación vuelve a funcionar, el dictado, los informes, el visor de PDF y la aplicación en modo PWA están operativos de nuevo.
+
+## Ajuste del 1 de julio de 2026 - Limpieza de repositorio (Versión 99)
+
+### Archivos eliminados
+- `fix_index.py`
+- `append_css.py`
+- `append_logs.py`
+- `INSERTARproyecto-labores-Jersey-prueba.labores.txt`
+
+### Cambios realizados
+- **Limpieza de archivos innecesarios**: Se eliminaron scripts temporales y rotos (`fix_index.py`, `append_css.py`, `append_logs.py`) y un archivo de pruebas muy pesado (`INSERTARproyecto-labores-Jersey-prueba.labores.txt`) que no aportan nada al funcionamiento del programa y no debían subirse al repositorio.
+- **Mantenimiento**: Los archivos fuente necesarios para compilar la aplicación (`LaboresV15.html`, `fix.js`, `logo_corrected.jpg`, `pdf-lib.min.js`) se mantienen intactos, ya que son obligatorios para reconstruir el `index.html`.
+
+## Corrección del 1 de julio de 2026 - Promesa rechazada del Service Worker (Versión 100)
+
+### Archivos modificados
+- `fix.js`
+- `index.html`
+- `CODEX.md`
+- `REGISTRO.md`
+
+### Cambios realizados
+- **Manejo de Errores de Service Worker**: Al restaurar el `index.html` en el paso anterior, el registro del Service Worker (`sw.js`) generaba una ventana de error "Promesa rechazada" (Unhandled Promise Rejection) cuando la aplicación se abría en el navegador mediante el protocolo local `file://`.
+- **Solución implementada**: Se ha modificado el script de ensamblado `fix.js` para que la inyección del registro del Service Worker detecte primero si el protocolo es `file://` y en ese caso omita el registro. Además, se añadió un bloque `.catch()` para atrapar cualquier fallo futuro en el registro y evitar que interrumpa la interfaz del usuario. 
+- Con esto, al usar `node fix.js`, el `index.html` generado carga limpiamente desde disco local en cualquier navegador (Safari/Firefox) sin ventanas de error.
