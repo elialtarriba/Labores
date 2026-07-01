@@ -47,6 +47,13 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 ### Arreglos
 - **Restauración del sistema**: Se ha regenerado `index.html` usando `fix.js` para recuperar los scripts finales (`pdf-lib.min.js`, Service Worker) que habían sido borrados accidentalmente por una modificación parcial.
 
+## [V10] - 2026-07-01
+
+### Arreglos
+- **Calculadora:** Se ha verificado que la calculadora integrada previene el zoom automático al hacer doble toque (ya contaba con `touch-action: manipulation`).
+- **Limpieza de archivos:** Se han borrado los archivos temporales y scripts usados para la reparación y depuración de la aplicación para mantener el repositorio limpio de cara a la subida a GitHub.
+- Se ha actualizado la etiqueta de versión a V10.
+
 ## [V99] - 2026-07-01 (Limpieza)
 
 ### Arreglos
