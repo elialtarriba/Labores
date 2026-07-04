@@ -1,7 +1,8 @@
-const CACHE_NAME = 'labores-cache-v9';
+const CACHE_NAME = 'labores-cache-v10';
 const urlsToCache = [
   './',
   './index.html',
+  './LaboresV15.html',
   './pdf-lib.min.js',
   './manifest.json',
   './icon.png',
@@ -9,62 +10,63 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Forza al SW a activarse inmediatamente
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        return cache.addAll(urlsToCache).catch(err => {
+          console.warn('Algunos archivos no se pudieron pre-cachear:', err);
+        });
+      })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
+  self.clients.claim(); // Toma el control de las pestañas abiertas
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
+        cacheNames
+          .filter(name => name !== CACHE_NAME && name.startsWith('labores-cache-'))
+          .map(name => caches.delete(name))
       );
     })
   );
-  self.clients.claim();
 });
 
-// Network First strategy, falling back to cache
+// Estrategia combinada: Stale-While-Revalidate con Fallback a index.html
 self.addEventListener('fetch', event => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
+  
+  const url = new URL(event.request.url);
+  // Ignorar extensiones o esquemas raros
+  if (!url.protocol.startsWith('http')) return;
 
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
+    caches.match(event.request, { ignoreSearch: true }).then(cachedResponse => {
+      
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        // Guardamos en caché las respuestas válidas, incluyendo CORS (ej. Google Fonts)
+        if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
         }
+        return networkResponse;
+      }).catch(err => {
+        console.log('Fallo de red al intentar descargar:', event.request.url);
+        return null; // Resolvemos con null para manejar el fallo gracefully
+      });
 
-        // IMPORTANT: Clone the response. A response is a stream
-        // and because we want the browser to consume the response
-        // as well as the cache consuming the response, we need
-        // to clone it so we have two streams.
-        const responseToCache = response.clone();
-
-        caches.open(CACHE_NAME)
-          .then(cache => {
-            cache.put(event.request, responseToCache);
-          });
-
-        return response;
-      })
-      .catch(() => {
-        // If network fails (e.g., offline), fallback to cache
-        return caches.match(event.request).then(cachedResponse => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-            // If not in cache and offline, we can't do anything else
+      // Si es una petición de navegación (abrir la app) y no hay caché, intentamos red o fallback a index.html
+      if (event.request.mode === 'navigate') {
+        return fetchPromise.then(res => {
+          return res || cachedResponse || caches.match('./index.html', { ignoreSearch: true });
         });
-      })
+      }
+
+      // Para el resto (imágenes, fuentes, js): Devolvemos caché si hay, y de fondo actualizamos (Stale-While-Revalidate)
+      // Si no hay caché, esperamos a la red.
+      return cachedResponse || fetchPromise;
+    })
   );
 });
