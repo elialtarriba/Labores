@@ -75,3 +75,18 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 - **Generación de PDF**: Se ha optimizado la carga de imágenes en el informe para que se haga en paralelo, reduciendo drásticamente los tiempos de espera y evitando que la pantalla de "Generando informe..." se quede bloqueada.
 - **Sintaxis**: Se ha solucionado un error de etiquetas HTML en el código de impresión de notas que causaba que el navegador cortara la carga y mostrara el código en texto plano.
 - **Limpieza**: Se han eliminado los archivos temporales de diagnóstico y pruebas para limpiar el repositorio antes de subir a GitHub.
+
+## [V101] - 2026-07-10
+
+### Añadido
+- **Animaciones UI/UX:** Se ha implementado un sistema completo de animaciones suaves (estilo iOS) en toda la aplicación para mejorar la experiencia de usuario de manera sutil y sin afectar el rendimiento o el diseño existente.
+  - Transición tipo fade/scale al abrir proyectos y modales.
+  - Efecto tipo fade/slide en las pestañas inferiores de los detalles de proyectos.
+  - Rebote táctil en los contadores (`.anim-bounce`).
+  - Animación suave en barras de progreso (`progress`, `.progress-fill`).
+  - Animación de fade/scale para las nuevas tarjetas y filtrado en el buscador.
+  - Notificaciones de guardado rediseñadas tipo "píldora" superior (estilo "toast") con transiciones suaves de entrada y salida.
+  - Pulsación intermitente en las tarjetas de inventario cuando queda poco stock.
+  - Pulsación única en la barra de "Compartidos" al recibir un nuevo proyecto.
+  - Transición fluida al alternar entre modo Claro y Oscuro.
+  - Compatibilidad completa con la preferencia de accesibilidad de sistema (`prefers-reduced-motion`) desactivando las animaciones automáticamente.

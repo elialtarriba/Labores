@@ -8984,24 +8984,47 @@ window.handleBackBtn = function() {
   showView('proyectos');
 }
 
+let lastSharedCount = 0;
+function animateValue(el, newVal) {
+  if (!el) return;
+  const oldVal = parseInt(el.textContent) || 0;
+  if (oldVal === newVal) { el.textContent = newVal; return; }
+  const duration = 500;
+  const start = performance.now();
+  requestAnimationFrame(function step(time) {
+    const progress = Math.min((time - start) / duration, 1);
+    el.textContent = Math.floor(oldVal + (newVal - oldVal) * progress);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = newVal;
+  });
+}
+
 function updateBadges() {
   const ownProjects = db.proyectos.filter(p => !p.compartidoRecibido);
-  document.getElementById('badge-proyectos').textContent = ownProjects.length;
-  document.getElementById('badge-llanas').textContent    = db.llanas.length;
-  document.getElementById('badge-agujas').textContent    = db.agujas.length;
-  document.getElementById('badge-accesorios').textContent= db.accesorios.length;
+  animateValue(document.getElementById('badge-proyectos'), ownProjects.length);
+  animateValue(document.getElementById('badge-llanas'), db.llanas.length);
+  animateValue(document.getElementById('badge-agujas'), db.agujas.length);
+  animateValue(document.getElementById('badge-accesorios'), db.accesorios.length);
   const medidasBadge = document.getElementById('badge-medidas');
-  if (medidasBadge) medidasBadge.textContent = (db.medidasPersonas || []).length;
+  if (medidasBadge) animateValue(medidasBadge, (db.medidasPersonas || []).length);
 
   // stats
-  document.getElementById('stat-total').textContent     = ownProjects.length;
-  document.getElementById('stat-curso').textContent     = ownProjects.filter(p=>p.estado==='en-curso').length;
-  document.getElementById('stat-terminados').textContent= ownProjects.filter(p=>p.estado==='terminado').length;
+  animateValue(document.getElementById('stat-total'), ownProjects.length);
+  animateValue(document.getElementById('stat-curso'), ownProjects.filter(p=>p.estado==='en-curso').length);
+  animateValue(document.getElementById('stat-terminados'), ownProjects.filter(p=>p.estado==='terminado').length);
   const ideas = document.getElementById('stat-ideas');
-  if (ideas) ideas.textContent = ownProjects.filter(p=>p.estado==='pendiente').length;
-  document.getElementById('stat-pausa').textContent     = ownProjects.filter(p=>p.estado==='en-pausa').length;
+  if (ideas) animateValue(ideas, ownProjects.filter(p=>p.estado==='pendiente').length);
+  animateValue(document.getElementById('stat-pausa'), ownProjects.filter(p=>p.estado==='en-pausa').length);
   const shared = document.getElementById('stat-compartidos');
-  if (shared) shared.textContent = db.proyectos.filter(p=>p.compartidoRecibido).length;
+  if (shared) {
+    const newSharedCount = db.proyectos.filter(p=>p.compartidoRecibido).length;
+    animateValue(shared, newSharedCount);
+    if (newSharedCount > lastSharedCount) {
+       const bar = document.getElementById('shared-projects-bar');
+       if(bar) { bar.classList.remove('anim-pulse-once'); void bar.offsetWidth; bar.classList.add('anim-pulse-once'); }
+    }
+    lastSharedCount = newSharedCount;
+  }
 }
 
 /* ─── PROYECTOS ──────────────────────────────────────────── */
@@ -9101,7 +9124,7 @@ function projectCardHTML(p) {
   const yarnLabel = yarns.length ? yarns.join(', ') : manualYarns.join(', ');
 
   return `
-  <div class="project-card" onclick="openProject('${p.id}')">
+  <div class="project-card anim-card-appear" onclick="openProject('${p.id}')">
     <div class="project-card-image ${colorClass}">
       ${hasMedia(p,'foto') ? `<img data-media-key="${getMediaKey(p,'foto')}" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 1 1'%2F%3E" alt="${escapeAttr(p.nombre)}">` : `<span>${emoji}</span>`}
       <span class="type-badge">${escapeAttr(findProjectType(p.tipo)?.name || String(p.tipo || 'Otro').replace(/-/g, ' '))}</span>
@@ -9172,9 +9195,17 @@ function handleSearch() {
 
   if (currentView === 'proyectos') {
     if (q) {
-      renderProjects();
+      const cards = document.getElementById('projects-grid').querySelectorAll('.project-card');
+      if (cards.length === 0) renderProjects();
       document.getElementById('projects-grid').querySelectorAll('.project-card').forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(q) ? '' : 'none';
+        const match = card.innerText.toLowerCase().includes(q);
+        if (match) {
+          card.classList.remove('search-hidden');
+          setTimeout(() => card.style.display = '', 20);
+        } else {
+          card.classList.add('search-hidden');
+          setTimeout(() => card.style.display = 'none', 180);
+        }
       });
     } else {
       renderProjects();
@@ -9464,6 +9495,12 @@ window.openProject = function(id) {
   document.body.classList.toggle('shared-project-mode', !!currentProject.compartidoRecibido);
   renderDetail();
   showView('detalle');
+  const viewDetalle = document.getElementById('view-detalle');
+  if (viewDetalle) {
+    viewDetalle.classList.remove('anim-project-open');
+    void viewDetalle.offsetWidth;
+    viewDetalle.classList.add('anim-project-open');
+  }
   const title = document.getElementById('topbar-title');
   title.classList.remove('profile-mode');
   title.innerHTML = `<span>${currentProject.nombre}</span>`;
@@ -11025,7 +11062,16 @@ window.showTab = function(tab, el) {
   const detailTabs = ['general','tiempo','contadores','calculadora-puntos','finanzas'];
   detailTabs.forEach(t => {
     const pane = document.getElementById('tab-'+t);
-    if (pane) pane.style.display = t === tab ? '' : 'none';
+    if (pane) {
+      if (t === tab) {
+        pane.style.display = '';
+        pane.classList.remove('anim-tab-switch');
+        void pane.offsetWidth;
+        pane.classList.add('anim-tab-switch');
+      } else {
+        pane.style.display = 'none';
+      }
+    }
   });
   document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
   if (el) el.classList.add('active');
@@ -11555,7 +11601,12 @@ window.changeCounter = function(id, delta) {
   if (!c) return;
   c.valor = Math.max(0, (c.valor||0) + delta);
   const el = document.querySelector(`#counter-${id} .counter-display`);
-  if (el) el.innerHTML = `${c.valor}<span>/${c.objetivo||'∞'}</span>`;
+  if (el) {
+    el.innerHTML = `${c.valor}<span>/${c.objetivo||'∞'}</span>`;
+    el.classList.remove('anim-bounce');
+    void el.offsetWidth;
+    el.classList.add('anim-bounce');
+  }
   updateCounterZoom(id);
   saveProjectInDB();
 }
@@ -12645,7 +12696,7 @@ function renderLlanas() {
     return;
   }
   grid.innerHTML = items.map((l, i) => `
-    <div class="item-card" onclick="editLlana('${l.id}')">
+    <div class="item-card ${stockQuantity(l.cantidad, 0) <= 1 ? 'anim-pulse-low-stock' : ''}" onclick="editLlana('${l.id}')">
       <div class="item-stock-badge">STOCK <span>${stockQuantity(l.cantidad, 0)}</span></div>
       ${!q ? `
         <button class="item-order-btn item-order-up" title="Subir" ${i === 0 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('llanas','${l.id}',-1,event)">▲</button>
@@ -13262,7 +13313,7 @@ function renderAgujas() {
     return;
   }
   grid.innerHTML = items.map((a, i) => `
-    <div class="item-card" onclick="editAguja('${a.id}')">
+    <div class="item-card ${stockQuantity(a.cantidad, 0) <= 1 ? 'anim-pulse-low-stock' : ''}" onclick="editAguja('${a.id}')">
       <div class="item-stock-badge">STOCK <span>${stockQuantity(a.cantidad, 0)}</span></div>
       ${!q ? `
         <button class="item-order-btn item-order-up" title="Subir" ${i === 0 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('agujas','${a.id}',-1,event)">▲</button>
@@ -13508,7 +13559,7 @@ function renderAccesorios() {
     return;
   }
   grid.innerHTML = items.map((ac, i) => `
-    <div class="item-card" onclick="editAccesorio('${ac.id}')">
+    <div class="item-card ${stockQuantity(ac.cantidad, 0) <= 1 ? 'anim-pulse-low-stock' : ''}" onclick="editAccesorio('${ac.id}')">
       <div class="item-stock-badge">STOCK <span>${stockQuantity(ac.cantidad, 0)}</span></div>
       ${!q ? `
         <button class="item-order-btn item-order-up" title="Subir" ${i === 0 ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : ''} onclick="moveInventoryItem('accesorios','${ac.id}',-1,event)">▲</button>
@@ -14242,7 +14293,16 @@ window.closeModal = function(id) {
   if (id === 'modal-add-project-type') restorePendingProjectTypeSelection();
   if (id === 'modal-confirm-duplicate') pendingDuplicateAction = null;
   const overlay = document.getElementById(id);
-  if (overlay) overlay.classList.remove('open');
+  if (overlay) {
+    const content = overlay.querySelector('div');
+    if (content) { content.classList.remove('anim-modal-open'); content.classList.add('anim-modal-close'); }
+    overlay.style.animation = 'fadeOut 220ms ease forwards';
+    setTimeout(() => {
+      overlay.classList.remove('open');
+      overlay.style.animation = '';
+      if (content) content.classList.remove('anim-modal-close');
+    }, 200);
+  }
   if (id === 'modal-pdf-viewer') {
     pdfViewerRenderToken += 1;
     clearTimeout(pdfResizeTimer);
@@ -14281,11 +14341,16 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 function showNotification(msg) {
   const n = document.createElement('div');
   n.textContent = msg;
-  n.style.cssText = `position:fixed;bottom:24px;right:24px;background:var(--bark);color:#fff;
+  n.style.cssText = `position:fixed;top:env(safe-area-inset-top, 24px);left:50%;background:var(--bark);color:#fff;
     padding:12px 20px;border-radius:30px;font-size:14px;font-weight:700;
-    box-shadow:var(--shadow-md);z-index:999;animation:fadeIn .3s ease;`;
+    box-shadow:var(--shadow-md);z-index:999;`;
+  n.classList.add('anim-toast-enter');
   document.body.appendChild(n);
-  setTimeout(() => n.remove(), 2500);
+  setTimeout(() => {
+    n.classList.remove('anim-toast-enter');
+    n.classList.add('anim-toast-exit');
+    setTimeout(() => n.remove(), 250);
+  }, 2250);
 }
 
 /* ─── PESTAÑA DE FINANZAS / COSTES ───────────────────────── */
@@ -16086,6 +16151,80 @@ document.addEventListener('paste', function(e) {
   }
 });
 </script>
+<style id="animations-v101">
+/* 1. APERTURA PROYECTO */
+.anim-project-open { animation: projectEnter 250ms ease-out forwards; }
+@keyframes projectEnter { from { opacity: 0; transform: scale(0.97) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+/* 2. PESTAÑAS */
+.anim-tab-switch { animation: tabSwitch 220ms ease-out forwards; }
+@keyframes tabSwitch { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
+
+/* 3. CONTADOR */
+.anim-bounce { animation: counterBounce 180ms ease forwards; }
+@keyframes counterBounce { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+/* 4. PROGRESO */
+progress::-webkit-progress-value { transition: width 350ms ease !important; }
+progress::-moz-progress-bar { transition: width 350ms ease !important; }
+.progress-fill, .progress-bar { transition: width 350ms ease !important; }
+
+/* 5 & 17. TARJETAS */
+.anim-card-appear { animation: cardAppear 250ms ease forwards; }
+@keyframes cardAppear { from { opacity: 0; transform: scale(0.95) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+/* 6. NOTIFICACIÓN */
+.anim-toast-enter { animation: toastEnter 250ms ease forwards; }
+.anim-toast-exit { animation: toastExit 250ms ease forwards; }
+@keyframes toastEnter { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes toastExit { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -20px); } }
+
+/* 7. TEMAS */
+html:not(.no-animations) body, html:not(.no-animations) .card, html:not(.no-animations) .btn, html:not(.no-animations) .header, html:not(.no-animations) .modal-content, html:not(.no-animations) .project-item, html:not(.no-animations) input, html:not(.no-animations) textarea, html:not(.no-animations) select {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+}
+
+/* 8, 14, 15. MODALES Y FICHAS */
+.modal-overlay.open > div, .modal-overlay.open > .modal-content { animation: modalOpen 220ms ease forwards; }
+.anim-modal-close { animation: modalClose 220ms ease forwards !important; }
+@keyframes modalOpen { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes modalClose { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+
+/* 9. BOTONES */
+.btn:active, button:active, .tool-btn:active, .choice-card:active {
+  transform: translateY(4px) scale(0.98) !important;
+  transition: transform 90ms ease-out !important;
+}
+
+/* 10. BUSCADOR */
+.project-card, .item-card { transition: opacity 180ms ease, transform 180ms ease; }
+.search-hidden { opacity: 0 !important; transform: scale(0.95) !important; pointer-events: none; }
+
+/* 11. POCO STOCK */
+.anim-pulse-low-stock { animation: lowStockPulse 6s infinite ease; }
+@keyframes lowStockPulse { 0%, 10% { transform: scale(1); } 5% { transform: scale(1.02); } }
+
+/* 12. COMPARTIDOS */
+.anim-pulse-once { animation: singlePulse 300ms ease; }
+@keyframes singlePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* 16. SCROLL */
+html { scroll-behavior: smooth; }
+
+/* 18. HOVER */
+@media (hover: none) {
+  .project-card:active, .item-card:active, .stat-card:active {
+    filter: brightness(0.95);
+    transform: scale(0.98);
+    transition: all 100ms;
+  }
+}
+
+/* 20. REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+</style>
 </body>
 
 </html>
