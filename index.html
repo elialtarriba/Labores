@@ -9382,7 +9382,7 @@ window.saveProject = async function() {
   if (saveBtn) saveBtn.textContent = '✨ Crear proyecto';
   renderProjects();
   setTimeout(checkOverdueProjects, 0);
-  if (field === 'estado' && val === 'terminado' && !wasTerminado) {
+  if (document.getElementById('p-estado').value === 'terminado' && existing.estado !== 'terminado') {
     playFinishAnimation();
   }
 }
@@ -9638,9 +9638,6 @@ window.saveDetailChanges = function(silent) {
     showNotification('💾 Guardado');
   }
   setTimeout(checkOverdueProjects, 0);
-  if (field === 'estado' && val === 'terminado' && !wasTerminado) {
-    playFinishAnimation();
-  }
 }
 
 window.updateProjectProgress = function(value) {
@@ -15744,7 +15741,7 @@ ${reportToolbarHTML}
   </div>
 </div>
 
-<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V12</div>
+<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V13</div>
 
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-anim-content" style="position:relative; transform-origin:center;">
@@ -16173,7 +16170,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V12</div>
+<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V13</div>
 <!-- ═══════════════ MODAL: VISOR DE IMAGEN ═══════════════ -->
 <div class="modal-overlay" id="modal-image-viewer" onclick="if(event.target===this) closeModal('modal-image-viewer')">
   <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">

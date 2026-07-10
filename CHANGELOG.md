@@ -96,3 +96,9 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 ### Añadido
 - **Animación de Celebración:** Se ha creado una animación especial de un pequeño ovillo que dibuja un corazón cuando se marca un proyecto como "Terminado". Se ha diseñado para ser una seña de identidad cálida y artesanal que celebra el trabajo finalizado. Esta animación se muestra solo una vez por proyecto.
 - **Versión Actualizada:** Se ha actualizado el indicador visual de la versión a `V12` en la pantalla principal.
+
+## [V13] - 2026-07-10
+
+### Arreglos y Ajustes Visuales
+- **Corrección de guardado:** Se ha solucionado un error que aparecía al intentar guardar un nuevo proyecto.
+- **Versión Actualizada:** Se ha actualizado el indicador visual de la versión a `V13` en la pantalla principal.
