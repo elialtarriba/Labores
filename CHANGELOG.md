@@ -90,3 +90,9 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
   - Pulsación única en la barra de "Compartidos" al recibir un nuevo proyecto.
   - Transición fluida al alternar entre modo Claro y Oscuro.
   - Compatibilidad completa con la preferencia de accesibilidad de sistema (`prefers-reduced-motion`) desactivando las animaciones automáticamente.
+
+## [V12] - 2026-07-10
+
+### Añadido
+- **Animación de Celebración:** Se ha creado una animación especial de un pequeño ovillo que dibuja un corazón cuando se marca un proyecto como "Terminado". Se ha diseñado para ser una seña de identidad cálida y artesanal que celebra el trabajo finalizado. Esta animación se muestra solo una vez por proyecto.
+- **Versión Actualizada:** Se ha actualizado el indicador visual de la versión a `V12` en la pantalla principal.

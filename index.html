@@ -9382,6 +9382,9 @@ window.saveProject = async function() {
   if (saveBtn) saveBtn.textContent = '✨ Crear proyecto';
   renderProjects();
   setTimeout(checkOverdueProjects, 0);
+  if (field === 'estado' && val === 'terminado' && !wasTerminado) {
+    playFinishAnimation();
+  }
 }
 
 window.editProject = function() {
@@ -9602,6 +9605,7 @@ function renderProjectSharingPanel() {
 
 function updateField(field, val) {
   if (!currentProject) return;
+  const wasTerminado = currentProject.estado === 'terminado';
   currentProject[field] = field === 'tecnica' ? normalizeTechnique(val) : val;
   const idx = db.proyectos.findIndex(x => x.id === currentProject.id);
   if (idx >= 0) db.proyectos[idx][field] = currentProject[field];
@@ -9614,6 +9618,9 @@ function updateField(field, val) {
     renderProjects();
   }
   setTimeout(checkOverdueProjects, 0);
+  if (field === 'estado' && val === 'terminado' && !wasTerminado) {
+    playFinishAnimation();
+  }
 }
 
 window.saveDetailChanges = function(silent) {
@@ -9631,6 +9638,9 @@ window.saveDetailChanges = function(silent) {
     showNotification('💾 Guardado');
   }
   setTimeout(checkOverdueProjects, 0);
+  if (field === 'estado' && val === 'terminado' && !wasTerminado) {
+    playFinishAnimation();
+  }
 }
 
 window.updateProjectProgress = function(value) {
@@ -9705,6 +9715,7 @@ window.ackOverdueProject = function() {
 window.finishOverdueProject = function() {
   const project = db.proyectos.find(p => p.id === activeOverdueProjectId);
   if (project) {
+    const wasTerminado = project.estado === 'terminado';
     project.estado = 'terminado';
     project.progreso = 100;
     project.overdueNoticeAckDate = project.fechaFin || new Date().toISOString().slice(0, 10);
@@ -9716,6 +9727,7 @@ window.finishOverdueProject = function() {
     }
     save();
     renderProjects();
+    if (!wasTerminado) playFinishAnimation();
   }
   closeModal('modal-overdue-project');
   showNextOverdueProject();
@@ -11771,6 +11783,34 @@ window.printNoteZoom = function() {
           window.onload = function() { window.print(); window.close(); }
         <\/script>
       
+
+<div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
+  <div id="finish-anim-content" style="position:relative; transform-origin:center;">
+    <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div id="finish-yarn" style="position:absolute; font-size:3rem; top:0; left:0; transform:translate(-50%, -50%); opacity:0;">🧶</div>
+  </div>
+</div>
+<style id="celebration-anim">
+@keyframes drawHeart {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drawHeartYarn {
+  0% { top: 80%; left: 50%; opacity: 1; transform:translate(-50%, -50%) rotate(0deg); }
+  15% { top: 40%; left: 10%; opacity: 1; transform:translate(-50%, -50%) rotate(-45deg); }
+  30% { top: 15%; left: 25%; opacity: 1; transform:translate(-50%, -50%) rotate(-90deg); }
+  50% { top: 30%; left: 50%; opacity: 1; transform:translate(-50%, -50%) rotate(-135deg); }
+  70% { top: 15%; left: 75%; opacity: 1; transform:translate(-50%, -50%) rotate(-180deg); }
+  85% { top: 40%; left: 90%; opacity: 1; transform:translate(-50%, -50%) rotate(-225deg); }
+  100% { top: 80%; left: 50%; opacity: 0; transform:translate(-50%, -50%) rotate(-270deg); }
+}
+@keyframes fadeOutOverlay {
+  0% { opacity: 1; transform: scale(1); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95); }
+}
+</style>
 </body>
     </html>
   `;
@@ -14338,6 +14378,33 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 /* ─── NOTIFICATIONS ──────────────────────────────────────── */
+function playFinishAnimation() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const overlay = document.getElementById('finish-anim-overlay');
+  const path = document.getElementById('finish-heart-path');
+  const yarn = document.getElementById('finish-yarn');
+  const contentNode = document.getElementById('finish-anim-content');
+  if (!overlay || !path || !yarn || !contentNode) return;
+  
+  overlay.style.display = 'flex';
+  
+  path.style.animation = 'none';
+  yarn.style.animation = 'none';
+  contentNode.style.animation = 'none';
+  void overlay.offsetWidth;
+  
+  path.style.animation = 'drawHeart 1.2s ease-out forwards';
+  yarn.style.animation = 'drawHeartYarn 1.2s ease-out forwards';
+  contentNode.style.animation = 'fadeOutOverlay 1.8s ease forwards';
+  
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    path.style.animation = 'none';
+    yarn.style.animation = 'none';
+    contentNode.style.animation = 'none';
+  }, 2000);
+}
+
 function showNotification(msg) {
   const n = document.createElement('div');
   n.textContent = msg;
@@ -15677,7 +15744,35 @@ ${reportToolbarHTML}
   </div>
 </div>
 
-<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V11</div>
+<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V12</div>
+
+<div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
+  <div id="finish-anim-content" style="position:relative; transform-origin:center;">
+    <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div id="finish-yarn" style="position:absolute; font-size:3rem; top:0; left:0; transform:translate(-50%, -50%); opacity:0;">🧶</div>
+  </div>
+</div>
+<style id="celebration-anim">
+@keyframes drawHeart {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drawHeartYarn {
+  0% { top: 80%; left: 50%; opacity: 1; transform:translate(-50%, -50%) rotate(0deg); }
+  15% { top: 40%; left: 10%; opacity: 1; transform:translate(-50%, -50%) rotate(-45deg); }
+  30% { top: 15%; left: 25%; opacity: 1; transform:translate(-50%, -50%) rotate(-90deg); }
+  50% { top: 30%; left: 50%; opacity: 1; transform:translate(-50%, -50%) rotate(-135deg); }
+  70% { top: 15%; left: 75%; opacity: 1; transform:translate(-50%, -50%) rotate(-180deg); }
+  85% { top: 40%; left: 90%; opacity: 1; transform:translate(-50%, -50%) rotate(-225deg); }
+  100% { top: 80%; left: 50%; opacity: 0; transform:translate(-50%, -50%) rotate(-270deg); }
+}
+@keyframes fadeOutOverlay {
+  0% { opacity: 1; transform: scale(1); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95); }
+}
+</style>
 </body>
 
 </html>`;
@@ -16078,7 +16173,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V11</div>
+<div id="app-version-badge" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V12</div>
 <!-- ═══════════════ MODAL: VISOR DE IMAGEN ═══════════════ -->
 <div class="modal-overlay" id="modal-image-viewer" onclick="if(event.target===this) closeModal('modal-image-viewer')">
   <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
@@ -16223,6 +16318,34 @@ html { scroll-behavior: smooth; }
 /* 20. REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
+  <div id="finish-anim-content" style="position:relative; transform-origin:center;">
+    <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div id="finish-yarn" style="position:absolute; font-size:3rem; top:0; left:0; transform:translate(-50%, -50%); opacity:0;">🧶</div>
+  </div>
+</div>
+<style id="celebration-anim">
+@keyframes drawHeart {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drawHeartYarn {
+  0% { top: 80%; left: 50%; opacity: 1; transform:translate(-50%, -50%) rotate(0deg); }
+  15% { top: 40%; left: 10%; opacity: 1; transform:translate(-50%, -50%) rotate(-45deg); }
+  30% { top: 15%; left: 25%; opacity: 1; transform:translate(-50%, -50%) rotate(-90deg); }
+  50% { top: 30%; left: 50%; opacity: 1; transform:translate(-50%, -50%) rotate(-135deg); }
+  70% { top: 15%; left: 75%; opacity: 1; transform:translate(-50%, -50%) rotate(-180deg); }
+  85% { top: 40%; left: 90%; opacity: 1; transform:translate(-50%, -50%) rotate(-225deg); }
+  100% { top: 80%; left: 50%; opacity: 0; transform:translate(-50%, -50%) rotate(-270deg); }
+}
+@keyframes fadeOutOverlay {
+  0% { opacity: 1; transform: scale(1); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95); }
 }
 </style>
 </body>
