@@ -102,3 +102,15 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 ### Arreglos y Ajustes Visuales
 - **Corrección de guardado:** Se ha solucionado un error que aparecía al intentar guardar un nuevo proyecto.
 - **Versión Actualizada:** Se ha actualizado el indicador visual de la versión a `V13` en la pantalla principal.
+
+## [V14] - 2026-07-11
+
+### Añadido
+- **Animación "Terminados":** Se ha ampliado la duración de la animación a 5 segundos. Ahora incluye un efecto de caída de confeti y un mensaje de "¡Felicidades!" sobre el corazón y el ovillo.
+
+### Modificado
+- **Contadores (iPad):** Se ha corregido la disposición de los contadores en pantallas grandes (iPad). Los botones de atajo ahora se muestran horizontalmente encima de los contadores, de manera idéntica a como se ven en el iPhone.
+- **Calculadora:** Se ha actualizado la calculadora integrada reemplazándola por completo con el código de la aplicación independiente (Calculadora). Ahora cuenta con su diseño final y todas sus funcionalidades completas dentro de Labores.
+- **Botón Temas:** Se ha reactivado la visibilidad del texto "Temas" debajo del icono de la paleta de colores.
+- **Versión Actualizada:** Se ha actualizado el indicador visual de la versión a `V14` en la pantalla principal.
+- **Limpieza de código:** Se han eliminado bloques duplicados de código de animación que se habían acumulado en el archivo principal.
