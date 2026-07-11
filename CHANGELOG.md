@@ -2,6 +2,11 @@
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
+
+## [V15] - 2026-07-11
+
+### Añadido
+- **Copyright y Licencia:** Se ha integrado un footer dinámico y permanente de "Copyright © Elisabeth Altarriba 2026" con un enlace que abre un modal de "Licencia de Uso". Este modal explica las condiciones de uso de la aplicación, estableciendo que es para uso estrictamente personal y no comercial.
 ## [V1] - 2026-06-29
 
 ### Añadido

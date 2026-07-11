@@ -7,3 +7,4 @@ ehthumbs.db
 Thumbs.db
 .gemini/
 compartir/
+*.code-workspace
