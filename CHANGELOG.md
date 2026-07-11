@@ -3,10 +3,6 @@
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
 
-## [V15] - 2026-07-11
-
-### Añadido
-- **Copyright y Licencia:** Se ha integrado un footer dinámico y permanente de "Copyright © Elisabeth Altarriba 2026" con un enlace que abre un modal de "Licencia de Uso". Este modal explica las condiciones de uso de la aplicación, estableciendo que es para uso estrictamente personal y no comercial.
 ## [V1] - 2026-06-29
 
 ### Añadido
@@ -112,6 +108,7 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 
 ### Añadido
 - **Animación "Terminados":** Se ha ampliado la duración de la animación a 5 segundos. Ahora incluye un efecto de caída de confeti y un mensaje de "¡Felicidades!" sobre el corazón y el ovillo.
+- **Copyright y Licencia:** Se ha integrado un footer dinámico y permanente de "Copyright © Elisabeth Altarriba 2026" con un enlace que abre un modal de "Licencia de Uso". Este modal explica las condiciones de uso de la aplicación, estableciendo que es para uso estrictamente personal y no comercial.
 
 ### Modificado
 - **Contadores (iPad):** Se ha corregido la disposición de los contadores en pantallas grandes (iPad). Los botones de atajo ahora se muestran horizontalmente encima de los contadores, de manera idéntica a como se ven en el iPhone.
