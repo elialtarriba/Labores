@@ -2,6 +2,11 @@
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
+## [V20] - 2026-07-12
+
+### Nuevas Funcionalidades
+- **[En desarrollo]:** Inicio de ciclo de trabajo para la versión V20.
+
 ## [V19] - 2026-07-12
 
 ### Nuevas Funcionalidades
