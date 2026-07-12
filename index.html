@@ -8960,6 +8960,26 @@ function playCalcKeySound() {
   oscillator.stop(now + .055);
 }
 
+function playDingSound() {
+  if (!calcSoundEnabled) return;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+  calcAudioContext = calcAudioContext || new AudioCtx();
+  const oscillator = calcAudioContext.createOscillator();
+  const gain = calcAudioContext.createGain();
+  const now = calcAudioContext.currentTime;
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(880, now);
+  oscillator.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.08, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+  oscillator.connect(gain);
+  gain.connect(calcAudioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.45);
+}
+
 function updateCalculatorSoundButton() {
   const button = document.getElementById('calc-sound');
   if (button) {
@@ -8985,6 +9005,13 @@ window.toggleCalculatorSound = window.toggleAppSound;
 
 document.addEventListener('click', function(event) {
   if (!calcSoundEnabled) return;
+  
+  const projectCard = event.target.closest('.project-card');
+  if (projectCard) {
+    playDingSound();
+    return;
+  }
+  
   const control = event.target.closest('button, .nav-item, .detail-tab, .filter-chip, .stat-card, .shared-projects-bar');
   if (!control || control.closest('.calculator-shell') || control.id === 'home-sound-button') return;
   playCalcKeySound();
