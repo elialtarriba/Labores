@@ -4279,7 +4279,10 @@ if ('serviceWorker' in navigator) {
       font-size: 12px;
     }
     .shared-project-mode .detail-top-actions {
-      grid-template-columns: auto 1fr 1fr;
+      grid-template-columns: auto 1fr 1fr auto;
+    }
+    .shared-project-mode .detail-top-actions button[onclick="openShareProjectModal()"] {
+      display: none !important;
     }
     .detail-title-row {
       align-items: center;
@@ -7741,8 +7744,22 @@ async function duplicateSharedMediaForPersonalCopy(source, copy) {
 window.copySharedProjectToMine = async function(status) {
   if (!currentProject || !currentProject.compartidoRecibido) return;
   const source = currentProject;
+
+  const existingIdx = db.proyectos.findIndex(p => !p.compartidoRecibido && p.copiadoDeCompartidoId === source.id);
+  let oldId = null;
+  if (existingIdx >= 0) {
+    if (!confirm('Ya has importado este proyecto anteriormente. ¿Deseas sobreescribir completamente la copia que tienes en "Mis Proyectos" con estos datos originales? (Perderás los cambios que hayas hecho).')) {
+      closeModal('modal-copy-shared-project');
+      return;
+    }
+    oldId = db.proyectos[existingIdx].id;
+  }
+
   const copy = JSON.parse(JSON.stringify(source));
   regenerateSharedProjectIds(copy);
+  if (oldId) {
+    copy.id = oldId;
+  }
   copy.estado = status === 'pendiente' ? 'pendiente' : 'en-curso';
   copy.timerRunning = false;
   copy.timerStartedAt = '';
@@ -7759,7 +7776,11 @@ window.copySharedProjectToMine = async function(status) {
   delete copy.compartidoCon;
   try {
     await duplicateSharedMediaForPersonalCopy(source, copy);
-    db.proyectos.push(copy);
+    if (oldId) {
+      db.proyectos[existingIdx] = copy;
+    } else {
+      db.proyectos.push(copy);
+    }
     save();
     closeModal('modal-copy-shared-project');
     showNotification(copy.estado === 'pendiente' ? 'Idea creada en Mis Proyectos' : 'Proyecto creado en Mis Proyectos');
@@ -9376,7 +9397,7 @@ function projectCardHTML(p) {
     </div>
     <div class="project-card-body">
       <div class="project-card-title">${p.nombre}</div>
-      ${(p.compartidoRecibido || p.compartidoCopiaPor) ? `<div class="project-shared-badge">🤝 Compartido por ${escapeAttr(p.compartidoPor || p.compartidoCopiaPor || 'otra persona')}</div>` : ''}
+      ${p.compartidoRecibido ? `<div class="project-shared-badge">🤝 Compartido por ${escapeAttr(p.compartidoPor || 'otra persona')}</div>` : (p.compartidoCopiaPor ? `<div class="project-shared-badge" style="background:#eaf5e9;color:#2e7d32;border:1px solid #c8e6c9;">📥 Importado de: ${escapeAttr(p.compartidoCopiaPor)}</div>` : '')}
       <div class="project-card-meta">
         <span>${normalizeTechnique(p.tecnica)}</span>
         <span>${p.para ? '👤 ' + p.para : ''}</span>
@@ -11984,6 +12005,7 @@ window.confirmDeleteCounter = function() {
 }
 
 function saveProjectInDB() {
+  if (currentProject && currentProject.compartidoRecibido) return;
   const idx = db.proyectos.findIndex(x => x.id === currentProject.id);
   if (idx >= 0) db.proyectos[idx] = { ...currentProject };
   save();
