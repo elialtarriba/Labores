@@ -3987,6 +3987,11 @@ if ('serviceWorker' in navigator) {
   }
   
   /* ─── INSTRUCTIONS MODAL ─────────────────────────────────── */
+  
+  body:not(.view-proyectos):not(.view-detalle) #btn-instrucciones {
+    display: none !important;
+  }
+
   .btn-instrucciones {
     height: 42px;
     border-radius: 50%;
@@ -5705,14 +5710,15 @@ service cloud.firestore {<br>
       <nav class="manual-index" aria-label="Índice del manual" style="background:var(--cream);border:1.5px solid var(--cream-dark);border-radius:16px;padding:16px;margin-bottom:20px;">
         <h3 style="margin-top:0;margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:6px;">📑 Índice del Manual</h3>
         <div class="manual-index-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:8px;">
-          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">1. Empezar una labor</a>
-          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Dentro del proyecto</a>
-          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Inventario</a>
-          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Medidas / calculadora</a>
-          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Dictado por voz 🎙️</a>
-          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Compartir proyectos</a>
-          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Configuración / Copias</a>
-          <a href="#" onclick="document.getElementById('manual-instalar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Instalar la app</a>
+          <a href="#" onclick="document.getElementById('manual-instalar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">1. Instalar la app</a>
+          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Empezar una labor</a>
+          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Dentro del proyecto</a>
+          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Inventario</a>
+          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Medidas / calculadora</a>
+          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Dictado por voz 🎙️</a>
+          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Compartir proyectos</a>
+          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Configuración / Copias</a>
+          <a href="#" onclick="document.getElementById('manual-copyright').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">9. Copyright</a>
         </div>
       </nav>
       <div class="manual-hero">
@@ -5723,6 +5729,14 @@ service cloud.firestore {<br>
           <div class="manual-quick-card"><span>1️⃣</span>Crea o abre un proyecto</div>
           <div class="manual-quick-card"><span>2️⃣</span>Añade patrón y materiales</div>
           <div class="manual-quick-card"><span>3️⃣</span>Guarda mientras trabajas</div>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-instalar">
+        <h3 class="inst-title">📱 Instalar como una app</h3>
+        <div class="inst-content">
+          <p><strong>iPhone/iPad:</strong> abre el enlace con Safari, pulsa Compartir ⬆️ y <strong>Añadir a pantalla de inicio</strong>.</p>
+          <p><strong>Android:</strong> abre el enlace con Chrome, pulsa ⋮ y elige <strong>Instalar aplicación</strong> o <strong>Añadir a pantalla de inicio</strong>.</p>
         </div>
       </div>
 
@@ -5744,7 +5758,7 @@ service cloud.firestore {<br>
         <div class="inst-content">
           <ul>
             <li><strong>📋 General:</strong> información, diario de notas, lanas, agujas, accesorios, medidas, portada, galería y varios PDF.</li>
-            <li><strong>⏱ Tiempo:</strong> pulsa <strong>Empezar</strong> al tejer y <strong>Parar</strong> al terminar; también controla fechas y progreso.</li>
+            <li><strong>⏱ Tiempo y Píldora 3D:</strong> pulsa <strong>Empezar</strong> al tejer y <strong>Parar</strong> al terminar. Aparecerá una <strong>píldora flotante</strong> 3D. Puedes arrastrarla a donde quieras, pulsarla rápido para ir directo a la pestaña de Tiempo de su proyecto, o mantenerla pulsada (se hunde) para moverla. Además, si intentas iniciar el tiempo de un proyecto distinto teniendo una píldora en marcha, la app te avisará para cerrar el anterior primero, evitando duplicidades.</li>
             <li><strong>🔢 Contadores:</strong> crea uno por vueltas, mangas o dibujos. Usa ＋/−, escribe notas y toca el número para verlo grande.</li>
             <li><strong>🧶 Calculadora:</strong> indica medida, muestra de 10 cm y holgura; calcula puntos o vueltas y guarda el resultado.</li>
             <li><strong>💶 Finanzas:</strong> reúne materiales, tiempo y mano de obra. <strong>Informe</strong> crea el resumen; <strong>Informe Completo</strong> añade evolución, notas y diario. Puedes imprimirlo o enviarlo por WhatsApp/email.</li>
@@ -5777,7 +5791,7 @@ service cloud.firestore {<br>
       </div>
 
       <div class="inst-section" id="manual-dictado">
-        <h3 class="inst-title" style="color:var(--terracota-d);">🎙️ Dictado por voz (¡NUEVO!)</h3>
+        <h3 class="inst-title" style="color:var(--terracota-d);">🎙️ Dictado por voz</h3>
         <div class="inst-content">
           <p>Apunta tu progreso o ideas sin soltar las agujas, simplemente usando tu voz.</p>
           <div class="manual-steps">
@@ -5817,15 +5831,7 @@ service cloud.firestore {<br>
         </div>
       </div>
 
-      <div class="inst-section" id="manual-instalar">
-        <h3 class="inst-title">📱 Instalar como una app</h3>
-        <div class="inst-content">
-          <p><strong>iPhone/iPad:</strong> abre el enlace con Safari, pulsa Compartir ⬆️ y <strong>Añadir a pantalla de inicio</strong>.</p>
-          <p><strong>Android:</strong> abre el enlace con Chrome, pulsa ⋮ y elige <strong>Instalar aplicación</strong> o <strong>Añadir a pantalla de inicio</strong>.</p>
-        </div>
-      </div>
-
-      <div class="manual-contact">
+      <div class="manual-contact" id="manual-copyright">
         <strong>¿Tienes una sugerencia o una mejora?</strong><br>
         Puedes escribir a <a href="mailto:lisaltarriba@gmail.com">lisaltarriba@gmail.com</a>.
       </div>
@@ -6497,10 +6503,6 @@ service cloud.firestore {<br>
           <input type="number" id="a-cantidad" min="0" value="1">
         </div>
         <div class="form-group">
-          <label>Longitud cable (cm)</label>
-          <input type="number" id="a-longitud" placeholder="80">
-        </div>
-        <div class="form-group">
           <label>Material</label>
           <input type="text" id="a-material" placeholder="Bambú, acero, plástico…">
         </div>
@@ -6509,27 +6511,23 @@ service cloud.firestore {<br>
           <select id="a-marca"></select>
         </div>
         <div class="form-group">
-          <label id="label-a-precio">Precio</label>
-          <div style="display:flex;gap:8px;">
-            <input type="text" id="a-precio" placeholder="0,00" inputmode="decimal" style="flex:1;">
-            <select id="a-divisa" style="width:110px;padding:9px 12px;font-size:14px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--warm-white);color:var(--text-main);outline:none;cursor:pointer;"></select>
-          </div>
+          <label>Color</label>
+          <input type="text" id="a-color" placeholder="Ej: azul, madera clara…">
         </div>
         <div class="form-group">
           <label>Comprado en</label>
           <select id="a-tienda"></select>
         </div>
         <div class="form-group">
-          <label>Ubicación</label>
-          <select id="a-ubicacion"></select>
+          <label id="label-a-precio">Precio</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="a-precio" placeholder="0,00" inputmode="decimal" style="flex:1;">
+            <select id="a-divisa" style="width:110px;padding:9px 12px;font-size:14px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--warm-white);color:var(--text-main);outline:none;cursor:pointer;"></select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Color</label>
-          <input type="text" id="a-color" placeholder="Ej: azul, madera clara…">
-        </div>
-        <div class="form-group">
-          <label>Color (hex)</label>
-          <input type="color" id="a-color-hex" value="#AA93E8" style="height:40px;padding:4px;">
+        <div class="form-group full">
+          <label>Notas</label>
+          <textarea id="a-notas" rows="2" placeholder="Notas sobre la aguja..."></textarea>
         </div>
         <div class="form-group full">
           <label>Fotos</label>
@@ -6539,6 +6537,10 @@ service cloud.firestore {<br>
           </label>
           <div class="file-note">Puedes añadir tantas fotos como quieras y elegir cuál sale en la lista.</div>
           <div id="a-fotos-preview"></div>
+        </div>
+        <div class="form-group full">
+          <label>Ubicación</label>
+          <select id="a-ubicacion"></select>
         </div>
       </div>
     </div>
@@ -6573,20 +6575,20 @@ service cloud.firestore {<br>
           <label>Cantidad / stock</label>
           <input type="number" id="ac-cantidad" min="0" value="1">
         </div>
-        <div class="form-group">
-          <label id="label-ac-precio">Precio</label>
-          <div style="display:flex;gap:8px;">
-            <input type="text" id="ac-precio" placeholder="0,00" inputmode="decimal" style="flex:1;">
-            <select id="ac-divisa" style="width:110px;padding:9px 12px;font-size:14px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--warm-white);color:var(--text-main);outline:none;cursor:pointer;"></select>
-          </div>
+        <div class="form-group full">
+          <label>Notas</label>
+          <textarea id="ac-notas" rows="2" placeholder="Descripción, cantidad…"></textarea>
         </div>
         <div class="form-group">
           <label>Comprado en</label>
           <select id="ac-tienda"></select>
         </div>
         <div class="form-group">
-          <label>Ubicación</label>
-          <select id="ac-ubicacion"></select>
+          <label id="label-ac-precio">Precio</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="ac-precio" placeholder="0,00" inputmode="decimal" style="flex:1;">
+            <select id="ac-divisa" style="width:110px;padding:9px 12px;font-size:14px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--warm-white);color:var(--text-main);outline:none;cursor:pointer;"></select>
+          </div>
         </div>
         <div class="form-group">
           <label>Foto para la lista</label>
@@ -6607,8 +6609,8 @@ service cloud.firestore {<br>
           <div id="ac-gallery-preview" class="accessory-gallery-preview-container" style="margin-top:12px;"></div>
         </div>
         <div class="form-group full">
-          <label>Notas</label>
-          <textarea id="ac-notas" rows="2" placeholder="Descripción, cantidad…"></textarea>
+          <label>Ubicación</label>
+          <select id="ac-ubicacion"></select>
         </div>
       </div>
     </div>
@@ -13217,9 +13219,9 @@ const inventoryHistoryFields = {
     ['jerseyOvillos','Ovillos jersey'], ['notas','Notas']
   ],
   agujas: [
-    ['tipo','Tipo'], ['nombre','Nombre'], ['numero','Número / talla'], ['longitud','Longitud'],
+    ['tipo','Tipo'], ['nombre','Nombre'], ['numero','Número / talla'],
     ['material','Material'], ['marca','Marca'], ['precio','Precio'], ['divisa','Divisa'],
-    ['tienda','Tienda'], ['ubicacion','Ubicación'], ['color','Color'], ['colorHex','Color visual']
+    ['tienda','Tienda'], ['color','Color'], ['notas','Notas'], ['ubicacion','Ubicación']
   ],
   accesorios: [
     ['tipo','Tipo'], ['nombre','Nombre'], ['precio','Precio'], ['divisa','Divisa'],
@@ -13649,7 +13651,7 @@ function renderAgujas() {
   tipoEmoji['aguja-circular'] = tipoEmoji['aguja-circular'] || '⭕';
   tipoEmoji['aguja-recta'] = tipoEmoji['aguja-recta'] || '📍';
   const q = inventoryQuery('agujas-search');
-  const items = q ? db.agujas.filter(a => inventorySearchText(a, ['nombre','numero','tipo','longitud','material','marca','tienda','ubicacion','color','precio']).includes(q)) : db.agujas;
+  const items = q ? db.agujas.filter(a => inventorySearchText(a, ['nombre','numero','tipo','material','marca','tienda','ubicacion','color','precio','notas']).includes(q)) : db.agujas;
   if (!items.length) {
     grid.innerHTML = '<p class="empty-inline">No encuentro ninguna aguja con esa búsqueda.</p>';
     updateBadges();
@@ -13672,7 +13674,6 @@ function renderAgujas() {
       <div class="item-tags">
         ${a.material ? `<span class="tag">${escapeAttr(a.material)}</span>` : ''}
         ${a.marca ? `<span class="tag terracota">${escapeAttr(a.marca)}</span>` : ''}
-        ${a.longitud ? `<span class="tag">${a.longitud}cm</span>` : ''}
         ${a.ubicacion ? `<span class="tag">Ubicación: ${escapeAttr(a.ubicacion)}</span>` : ''}
       </div>
       <div class="inventory-card-footer">
@@ -13699,14 +13700,13 @@ function resetAgujaForm() {
   const saveBtn = document.getElementById('modal-aguja-save');
   if (title) title.textContent = '🔧 Nueva aguja / ganchillo';
   if (saveBtn) saveBtn.textContent = '💾 Guardar aguja';
-  ['a-tipo','a-nombre','a-numero','a-longitud','a-material','a-marca','a-precio','a-tienda','a-color','a-ubicacion'].forEach(id => {
+  ['a-tipo','a-nombre','a-numero','a-material','a-marca','a-precio','a-tienda','a-color','a-notas','a-ubicacion'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
   if (document.getElementById('a-divisa')) document.getElementById('a-divisa').value = getDefaultCurrency();
   document.getElementById('a-tipo').value = needleTypes.length ? needleTypes[0].name.toLowerCase().replace(/\s+/g,'-').replace(/[()]/g,'') : 'ganchillo';
   renderNeedleSizeOptions('');
-  document.getElementById('a-color-hex').value = '#AA93E8';
   document.getElementById('a-cantidad').value = '1';
   resetFileInput('a-fotos');
   renderAgujaFotosPreview('');
@@ -13780,7 +13780,7 @@ window.editAguja = function(id) {
   document.getElementById('a-tipo').value = a.tipo || 'ganchillo';
   renderNeedleSizeOptions(a.numero || '');
   document.getElementById('a-nombre').value = a.nombre || '';
-  document.getElementById('a-longitud').value = a.longitud || '';
+  if(document.getElementById('a-notas')) document.getElementById('a-notas').value = a.notas || '';
   document.getElementById('a-material').value = a.material || '';
   document.getElementById('a-marca').value = a.marca || '';
   document.getElementById('a-precio').value = a.precio ? String(a.precio).replace('.', ',') : '';
@@ -13788,7 +13788,6 @@ window.editAguja = function(id) {
   document.getElementById('a-tienda').value = a.tienda || '';
   document.getElementById('a-ubicacion').value = a.ubicacion || '';
   document.getElementById('a-color').value = a.color || '';
-  document.getElementById('a-color-hex').value = a.colorHex || '#AA93E8';
   document.getElementById('a-cantidad').value = stockQuantity(a.cantidad, 0);
   resetFileInput('a-fotos');
   if (!a.fotosUrls && !a.fotosKeys && (a.fotoKey || a.fotoUrl)) {
@@ -13853,7 +13852,7 @@ window.saveAguja = async function() {
     tipo:     document.getElementById('a-tipo').value,
     nombre:   document.getElementById('a-nombre').value.trim(),
     numero:   document.getElementById('a-numero').value.trim(),
-    longitud: document.getElementById('a-longitud').value,
+    notas: document.getElementById('a-notas')?.value || '',
     material: document.getElementById('a-material').value.trim(),
     marca:    document.getElementById('a-marca').value.trim(),
     precio:   parseFloat(String(document.getElementById('a-precio').value).replace(',', '.'))||0,
@@ -13861,7 +13860,6 @@ window.saveAguja = async function() {
     tienda:   document.getElementById('a-tienda').value.trim(),
     ubicacion: document.getElementById('a-ubicacion').value,
     color:    document.getElementById('a-color').value.trim(),
-    colorHex: document.getElementById('a-color-hex').value,
     cantidad: newQty,
     fotosUrls,
     movimientos,
