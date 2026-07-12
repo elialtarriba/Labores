@@ -2,6 +2,19 @@
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
+## [V20] - 2026-07-12
+
+### Nuevas Funcionalidades
+- **Temporizador Flotante (Píldora):** Se ha implementado un temporizador en forma de píldora flotante de color verde pastel. Esta píldora se muestra de forma constante en la parte superior central de la pantalla mientras haya un temporizador activo (botón "Empezar" en la pestaña Tiempo de un proyecto).
+- **Control Arrastrable:** La píldora se puede arrastrar por toda la pantalla para que no moleste. Si se recarga la app, la píldora vuelve a su posición central original.
+- **Acceso Directo:** Haciendo doble clic (o doble toque rápido) en la píldora flotante, la aplicación navega instantáneamente al proyecto en cuestión y abre directamente su pestaña "Tiempo" para poder detenerlo o editarlo.
+- **Aguja Utilizada Dinámica:** En la pestaña General de los proyectos, debajo de "Técnica", se ha añadido el campo "Aguja utilizada en el proyecto". Este campo es inteligente: si eliges la técnica "Punto", muestra tu lista de agujas de punto; si eliges "Ganchillo", muestra tu lista de ganchillos; y si eliges otra técnica, te permite escribir libremente. Al cambiar de técnica, el campo se vacía automáticamente para evitar errores.
+- **Limpieza de repositorio:** Se han eliminado los scripts temporales de Python (`.py`) utilizados para la automatización e inserción de código durante el desarrollo de las últimas versiones, dejando el entorno limpio para subir a GitHub.
+
+### Arreglos y Ajustes Visuales
+- **Pestañas de Detalle (Efecto 3D):** Se ha ajustado el espaciado (padding) inferior de las pestañas de proyecto (General, Tiempo, etc.) y se ha duplicado el tamaño de su sombra para que no se corten y muestren un aspecto 3D más profundo y realista.
+- **Botón de Instrucciones (Oculto):** El botón de instrucciones con icono de libro de la barra superior ahora se oculta de forma automática al entrar al detalle de cualquier proyecto para liberar espacio.
+
 ## [V17] - 2026-07-12
 
 ### Nuevas Funcionalidades

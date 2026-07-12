@@ -140,8 +140,8 @@ if ('serviceWorker' in navigator) {
     box-shadow:0 5px 0 #bdbdbd, 0 10px 22px rgba(0,0,0,.10);
   }
   body.theme-blanco .detail-tabs {
-    background: #eeeeee;
-    box-shadow: inset 0 1.5px 3px rgba(0,0,0,0.1);
+    background: transparent;
+    box-shadow: none;
   }
   body.theme-blanco .detail-tab.active {
     background: #ffffff;
@@ -200,8 +200,8 @@ if ('serviceWorker' in navigator) {
     box-shadow:0 5px 0 #050505, 0 12px 26px rgba(0,0,0,.5);
   }
   body.theme-negro .detail-tabs {
-    background: #1e1e1e;
-    box-shadow: inset 0 1.5px 3px rgba(0,0,0,0.3);
+    background: transparent;
+    box-shadow: none;
   }
   body.theme-negro .detail-tab.active {
     background: #2d2d2d;
@@ -900,16 +900,16 @@ if ('serviceWorker' in navigator) {
   .detail-tabs {
     display: flex;
     gap: 4px;
-    margin-bottom: 20px;
-    background: var(--cream-dark);
-    padding: 4px;
-    border-radius: 12px;
+    margin-bottom: 0px;
+    background: transparent;
+    padding: 0 4px 20px 4px;
+    border-radius: 0;
     width: fit-content;
     max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    box-shadow: inset 0 1.5px 3px rgba(110,74,58,0.15);
+    box-shadow: none;
   }
   .detail-tabs::-webkit-scrollbar { display: none; }
   
@@ -922,7 +922,7 @@ if ('serviceWorker' in navigator) {
     color: var(--bark);
     background: color-mix(in srgb, var(--terracota-l) 40%, var(--warm-white) 60%);
     border: none;
-    box-shadow: 0 3px 0 color-mix(in srgb, var(--terracota-d) 30%, var(--cream-dark) 70%);
+    box-shadow: 0 8px 0 color-mix(in srgb, var(--terracota-d) 30%, var(--cream-dark) 70%);
     white-space: nowrap;
     flex: 0 0 auto;
     display: inline-flex;
@@ -3382,7 +3382,7 @@ if ('serviceWorker' in navigator) {
       display: flex;
       flex-wrap: nowrap;
       gap: 8px;
-      padding: 6px 4px 10px;
+      padding: 6px 4px 20px;
       margin-bottom: 16px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -3416,8 +3416,8 @@ if ('serviceWorker' in navigator) {
       -webkit-tap-highlight-color: transparent;
       transform: translateY(0);
       box-shadow: 
-        0 4px 0 var(--cream-dark), 
-        0 4px 6px rgba(110, 74, 58, 0.08);
+        0 8px 0 var(--cream-dark), 
+        0 10px 14px rgba(110, 74, 58, 0.15);
       transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.08s ease, color 0.08s ease;
     }
     body.theme-blanco .detail-tab {
@@ -3425,23 +3425,23 @@ if ('serviceWorker' in navigator) {
       border-color: #d8d8d8;
       color: #555555;
       box-shadow: 
-        0 4px 0 #d8d8d8, 
-        0 4px 6px rgba(0, 0, 0, 0.05);
+        0 8px 0 #d8d8d8, 
+        0 10px 14px rgba(0, 0, 0, 0.1);
     }
     body.theme-negro .detail-tab {
       background: #111111;
       border-color: #444444;
       color: #999999;
       box-shadow: 
-        0 4px 0 #333333, 
-        0 4px 6px rgba(0, 0, 0, 0.2);
+        0 8px 0 #333333, 
+        0 10px 14px rgba(0, 0, 0, 0.3);
     }
     body .detail-tab:active,
     body .detail-tab.active {
       background: var(--cream);
       color: var(--bark);
       border-color: var(--cream-dark);
-      transform: translateY(3px);
+      transform: translateY(7px);
       box-shadow: 
         0 1px 0 var(--cream-dark),
         0 1px 2px rgba(110, 74, 58, 0.05);
@@ -3451,7 +3451,7 @@ if ('serviceWorker' in navigator) {
       background: #eeeeee;
       color: #111111;
       border-color: #d8d8d8;
-      transform: translateY(3px);
+      transform: translateY(7px);
       box-shadow: 
         0 1px 0 #d8d8d8,
         0 1px 2px rgba(0, 0, 0, 0.03);
@@ -3461,7 +3461,7 @@ if ('serviceWorker' in navigator) {
       background: #1e1e1e;
       color: #ffffff;
       border-color: #444444;
-      transform: translateY(3px);
+      transform: translateY(7px);
       box-shadow: 
         0 1px 0 #333333,
         0 1px 2px rgba(0, 0, 0, 0.1);
@@ -4203,6 +4203,9 @@ if ('serviceWorker' in navigator) {
   body.view-detalle .topbar .home-actions-grid {
     display: none !important;
   }
+  body.view-detalle #btn-instrucciones {
+    display: none !important;
+  }
   
   /* Ajustes de altura para los botones de herramientas (buscar, sonido, etc) */
   .home-tool {
@@ -4731,7 +4734,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
 
 
 <body>
-<div id="global-active-timer-bar" onclick="goToActiveTimer()" style="display:none; position:fixed; top:12px; left:50%; transform:translateX(-50%); background:#a8e6cf; color:#1b4332; padding:8px 16px; border-radius:20px; font-weight:800; font-size:13px; z-index:999999; cursor:pointer; box-shadow:0 4px 15px rgba(168,230,207,0.4); border:2px solid white; align-items:center; gap:8px;">
+<div id="global-active-timer-bar" ondblclick="goToActiveTimer()" style="display:none; position:fixed; top:12px; left:50%; transform:translateX(-50%); background:#d4f0d0; color:#1e3a1b; padding:8px 16px; border-radius:30px; font-weight:800; font-size:13px; z-index:999999; cursor:move; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1.5px solid #a3d49c; align-items:center; gap:8px; user-select:none;">
   <span class="blinking-dot" style="width:8px; height:8px; background:#1b4332; border-radius:50%; display:inline-block; animation:blink-timer 1s infinite;"></span>
   <span id="global-active-timer-text">Tiempo en curso</span>
 </div>
@@ -4896,20 +4899,20 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
       <div class="detail-header">
         <div class="detail-top-actions">
           <button class="back-btn" onclick="handleBackBtn()"><span>←</span><span>Inicio</span></button>
-          <button class="btn btn-secondary share-guardar-btn" onclick="openShareProjectModal()">🤝 Compartir proyecto</button>
+          <button class="btn btn-secondary share-guardar-btn" onclick="openShareProjectModal()">🤝 Compartir</button>
           <button class="btn btn-secondary shared-convert-btn share-guardar-btn" type="button" onclick="openSharedProjectCopyModal()">📥 Pasar a mis proyectos</button>
           <button class="btn btn-secondary share-guardar-btn" onclick="saveDetailChanges()">💾 Guardar</button>
+          <button class="btn btn-danger btn-delete-quiet detail-trash-btn" onclick="deleteCurrentProject()" title="Borrar proyecto" style="margin-left:auto; padding:0 12px; height: 38px;">🗑️</button>
         </div>
         <div class="shared-project-notice" id="shared-project-notice">
           <span>Este proyecto compartido es independiente: sus materiales no usan ni modifican tu inventario.</span>
           <button class="btn btn-secondary" type="button" onclick="openSharedProjectCopyModal()">Crear una copia en Mis Proyectos</button>
         </div>
-        <div class="detail-heading-row">
+        <div class="detail-heading-row" style="display:none;">
           <div class="detail-title-block">
             <div style="font-size:12px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;" id="detail-tipo"></div>
             <div class="detail-title-row">
               <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--bark);margin:0;flex:1;" id="detail-nombre">—</h2>
-              <button class="btn btn-danger btn-delete-quiet detail-trash-btn" onclick="deleteCurrentProject()" title="Borrar proyecto">🗑</button>
             </div>
             <span id="detail-status-badge" class="project-card-status"></span>
             <span id="detail-origin-badge" class="detail-origin-badge"></span>
@@ -9701,9 +9704,28 @@ function renderDetail() {
           `<option value="${t.value}" ${normalizeTechnique(p.tecnica)===t.value?'selected':''}>${t.label}</option>`).join('')}
       </select>
     </div>
+    <div class="form-group"><label>Aguja utilizada en el proyecto</label>
+      ${(() => {
+        const t = normalizeTechnique(p.tecnica);
+        const dis = shared ? 'disabled' : '';
+        const ro = shared ? 'readonly' : '';
+        if (t === 'Punto') {
+          return `<select onchange="updateField('agujaUtilizada', this.value)" ${dis}>
+            <option value="">-- Selecciona --</option>
+            ${knittingSizes.map(s => `<option value="${escapeAttr(s.name)}" ${p.agujaUtilizada===s.name?'selected':''}>${escapeAttr((s.emoji||'🟠') + ' ' + s.name)}</option>`).join('')}
+          </select>`;
+        } else if (t === 'Ganchillo') {
+          return `<select onchange="updateField('agujaUtilizada', this.value)" ${dis}>
+            <option value="">-- Selecciona --</option>
+            ${crochetSizes.map(s => `<option value="${escapeAttr(s.name)}" ${p.agujaUtilizada===s.name?'selected':''}>${escapeAttr((s.emoji||'🟡') + ' ' + s.name)}</option>`).join('')}
+          </select>`;
+        } else {
+          return `<input type="text" value="${escapeAttr(p.agujaUtilizada || '')}" onchange="updateField('agujaUtilizada', this.value)" placeholder="Escribe la aguja..." ${ro}>`;
+        }
+      })()}
+    </div>
     <div class="form-group"><label>Medidas</label><button type="button" class="btn btn-secondary measure-button" onclick="${shared ? 'openMeasurementsModalForProjectLegacy()' : 'openProjectMeasuresModal()'}">${shared ? '📏 Ver ficha' : '📏 Buscar ficha'}</button>${projectPersonSummaryHTML(p)}</div>
-    <div class="form-group"><label>Para quién</label><input type="text" value="${escapeAttr(p.para||'')}" onchange="updateField('para',this.value)" ${shared ? 'readonly' : ''}></div>
-    <div class="form-group"><label>Patrón</label><input type="text" value="${escapeAttr(p.patron||'')}" onchange="updateField('patron',this.value)" ${shared ? 'readonly' : ''}></div>
+
     <div class="form-group"><label>Estado</label>
       <select onchange="updateField('estado',this.value)" ${shared ? 'disabled' : ''}>
         ${projectStatusOptions.map(s =>
@@ -9761,11 +9783,25 @@ function renderProjectSharingPanel() {
 function updateField(field, val) {
   if (!currentProject) return;
   const wasTerminado = currentProject.estado === 'terminado';
-  currentProject[field] = field === 'tecnica' ? normalizeTechnique(val) : val;
+  
+  if (field === 'tecnica') {
+    const newVal = normalizeTechnique(val);
+    if (currentProject.tecnica !== newVal) {
+      currentProject.agujaUtilizada = "";
+      const idx = db.proyectos.findIndex(x => x.id === currentProject.id);
+      if (idx >= 0) db.proyectos[idx].agujaUtilizada = "";
+    }
+    currentProject.tecnica = newVal;
+  } else {
+    currentProject[field] = val;
+  }
+  
   const idx = db.proyectos.findIndex(x => x.id === currentProject.id);
   if (idx >= 0) db.proyectos[idx][field] = currentProject[field];
   save();
+  
   if (field === 'nombre' || field === 'tipo' || field === 'tecnica') {
+    if (field === 'tecnica') renderDetail();
     document.getElementById('detail-nombre').textContent = currentProject.nombre || '—';
     document.getElementById('detail-tipo').textContent = projectTypeLabel(currentProject.tipo) + ' · ' + normalizeTechnique(currentProject.tecnica);
     const topbarTitle = document.getElementById('topbar-title');
@@ -15155,7 +15191,9 @@ async function buildCurrentReportPdfBlob(includeImages = true) {
   drawInfo('Patrón', p.patron, true, 30);
   drawInfo('Fecha inicio', fmtDate(p.fechaInicio), false, 45);
   drawInfo('Fecha fin', fmtDate(p.fechaFin), true, 45);
-  if (p.progreso != null) drawInfo('Progreso', p.progreso+'%', false, 60);
+  let pdfY = 60;
+  if (p.agujaUtilizada) { drawInfo('Aguja', p.agujaUtilizada, false, pdfY); pdfY += 15; }
+  if (p.progreso != null) drawInfo('Progreso', p.progreso+'%', false, pdfY);
 
   y -= 80;
   
@@ -15853,6 +15891,7 @@ ${reportToolbarHTML}
           ${infoRow('Nombre', p.nombre)}
           ${infoRow('Tipo', p.tipo ? projectTypeLabel(p.tipo) : '')}
           ${infoRow('Técnica', p.tecnica)}
+          ${p.agujaUtilizada ? infoRow('Aguja', p.agujaUtilizada) : ''}
           ${infoRow('Estado', statusLabel)}
           ${infoRow('Para quién', p.para)}
           ${infoRow('Patrón', p.patron)}
@@ -17289,15 +17328,8 @@ function makeTimerDraggable() {
   const bar = document.getElementById('global-active-timer-bar');
   if (!bar) return;
 
-  const savedPos = localStorage.getItem('timer_pill_pos');
-  if (savedPos) {
-    try {
-      const pos = JSON.parse(savedPos);
-      bar.style.left = pos.left + 'px';
-      bar.style.top = pos.top + 'px';
-      bar.style.transform = 'none';
-    } catch(e){}
-  }
+  // Usuario pidió que la posición vuelva a la inicial (centrada) al recargar
+  localStorage.removeItem('timer_pill_pos');
 
   const startDrag = (e) => {
     isDraggingTimer = true;
@@ -17352,9 +17384,20 @@ function makeTimerDraggable() {
   document.addEventListener('mousemove', onDrag, {passive: false});
   document.addEventListener('mouseup', endDrag);
 
+  let lastTap = 0;
   bar.addEventListener('touchstart', startDrag, {passive: false});
   document.addEventListener('touchmove', onDrag, {passive: false});
-  document.addEventListener('touchend', endDrag);
+  document.addEventListener('touchend', (e) => {
+    endDrag(e);
+    if (bar.getAttribute('data-dragged') !== 'true') {
+      const now = new Date().getTime();
+      const timesince = now - lastTap;
+      if (timesince < 300 && timesince > 0) {
+        goToActiveTimer(e);
+      }
+      lastTap = new Date().getTime();
+    }
+  });
 }
 
 function startGlobalTimerTracker() {
@@ -17377,7 +17420,7 @@ function startGlobalTimerTracker() {
       bar.style.display = 'flex';
       const worked = typeof getWorkedSeconds === 'function' ? getWorkedSeconds(activeProject) : 0;
       const dur = typeof formatDuration === 'function' ? formatDuration(worked) : '';
-      document.getElementById('global-active-timer-text').textContent = `⏱ ${activeProject.nombre || 'Proyecto'} (${dur}) - Toca para parar`;
+      document.getElementById('global-active-timer-text').textContent = `⏱ ${activeProject.nombre || 'Proyecto'} (${dur})`;
     } else {
       bar.style.display = 'none';
     }
