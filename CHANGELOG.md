@@ -1,5 +1,11 @@
 # Changelog - LaboresSinConex
 
+## [V22] - 2026-07-12
+
+### Añadido
+- **Fotos en Ejemplos de Fábrica:** Se han incrustado (mediante codificación Base64) las fotos reales para el proyecto de ejemplo "Margarita en Maceta" (foto principal y galería), su lana (Katia Capri) y su aguja directamente en el archivo `index.html`. Ahora, al abrir la app de cero o borrar los datos, las fotos del ejemplo cargan sin necesidad de internet y sin romperse.
+
+
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
 ## [V21] - 2026-07-12
