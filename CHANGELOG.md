@@ -1,6 +1,6 @@
 # Changelog - LaboresSinConex
 
-## [V22] - 2026-07-12
+## [V23] - 2026-07-12
 
 ### Añadido
 - **Fotos en Ejemplos de Fábrica:** Se han incrustado (mediante codificación Base64) las fotos reales para el proyecto de ejemplo "Margarita en Maceta" (foto principal y galería) y el PDF `EJEMPLO.pdf` directamente en el código JavaScript `FACTORY_MEDIA`.
