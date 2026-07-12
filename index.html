@@ -4983,33 +4983,40 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
           <h3>📝 Notas del proyecto</h3>
           <div class="timeline" id="notas-timeline"></div>
           <style>
-            .nota-btn-dark {
-              background: linear-gradient(180deg, var(--terracota-l) 0%, var(--terracota) 50%, var(--terracota-d) 100%) !important;
-              color: #fff !important;
-              border: none !important;
-              box-shadow: 0 4px 0 var(--bark), 0 6px 12px rgba(0,0,0,.2) !important;
-              text-shadow: 0 1px 2px rgba(0,0,0,.3) !important;
+            .btn-faded-theme {
+              background: color-mix(in srgb, var(--terracota-l) 35%, var(--warm-white) 65%) !important;
+              color: var(--terracota-d) !important;
+              border: 1px solid color-mix(in srgb, var(--terracota-l) 40%, transparent) !important;
+              box-shadow: 0 3px 0 rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.05) !important;
+              text-shadow: none !important;
               border-radius: 30px !important;
               font-family: 'Lato', sans-serif !important;
               font-weight: 700 !important;
               height: 38px !important;
+              padding: 0 20px;
               display: inline-flex !important;
               align-items: center !important;
               justify-content: center !important;
               transition: transform 0.1s, box-shadow 0.1s !important;
               cursor: pointer;
             }
-            .nota-btn-dark:active {
-              transform: translateY(4px) !important;
-              box-shadow: 0 0px 0 var(--bark), 0 2px 4px rgba(0,0,0,.35) !important;
+            .btn-faded-theme:active {
+              transform: translateY(3px) !important;
+              box-shadow: 0 0px 0 transparent, 0 1px 2px rgba(0,0,0,0.1) !important;
+            }
+            .btn-faded-theme.measure-button,
+            .btn-faded-theme.media-btn {
+              height: 42px !important;
+              border-radius: 12px !important;
+              padding: 8px 16px;
             }
           </style>
           <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
             <textarea id="new-nota-input" placeholder="Escribe una nota…" rows="1"
               style="flex:1;height:38px;box-sizing:border-box;border:1.5px solid var(--cream-dark);border-radius:12px;padding:8px 14px;font-family:'Lato',sans-serif;font-size:14px;outline:none;resize:none;background:var(--warm-white);color:var(--text-main);line-height:1.4;transition:border-color var(--transition),box-shadow var(--transition);"></textarea>
             <div style="display:flex;gap:8px;flex-shrink:0;">
-              <button class="nota-btn-dark" onclick="openDictationModal()" title="Dictar por voz" style="width:46px;font-size:18px;">🎙️</button>
-              <button class="nota-btn-dark" onclick="addNota()" style="padding:0 20px;font-size:14px;">Añadir</button>
+              <button class="btn-faded-theme" onclick="openDictationModal()" title="Dictar por voz" style="width:46px;font-size:18px;">🎙️</button>
+              <button class="btn-faded-theme" onclick="addNota()" style="padding:0 20px;font-size:14px;">Añadir</button>
             </div>
           </div>
         </div>
@@ -9907,7 +9914,7 @@ function renderDetail() {
         }
       })()}
     </div>
-    <div class="form-group"><label>Medidas</label><button type="button" class="btn btn-secondary measure-button" onclick="${shared ? 'openMeasurementsModalForProjectLegacy()' : 'openProjectMeasuresModal()'}">${shared ? '📏 Ver ficha' : '📏 Buscar ficha'}</button>${projectPersonSummaryHTML(p)}</div>
+    <div class="form-group"><label>Medidas</label><button type="button" class="btn btn-faded-theme measure-button" onclick="${shared ? 'openMeasurementsModalForProjectLegacy()' : 'openProjectMeasuresModal()'}">${shared ? '📏 Ver ficha' : '📏 Buscar ficha'}</button>${projectPersonSummaryHTML(p)}</div>
 
     <div class="form-group"><label>Estado</label>
       <select onchange="updateField('estado',this.value)" ${shared ? 'disabled' : ''}>
@@ -10891,7 +10898,7 @@ function renderProjectMediaPanel() {
           <label>Foto de portada</label>
           <div class="file-picker-row">
             <input class="file-picker-hidden" type="file" id="detail-project-foto" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.gif,.heic,.heif" onchange="saveProjectMedia()">
-            <label class="btn btn-secondary" for="detail-project-foto">Foto</label>
+            <label class="btn btn-faded-theme media-btn" for="detail-project-foto">Foto</label>
             <span class="file-name" id="detail-project-foto-name"></span>
           </div>
           <div class="file-note">${currentProject.fotoKey ? 'Actual: Foto guardada localmente' : 'JPG, PNG, WebP o HEIC. Se guardará automáticamente.'}</div>
@@ -10900,7 +10907,7 @@ function renderProjectMediaPanel() {
           <label>PDF / patrón</label>
           <div class="file-picker-row">
             <input class="file-picker-hidden" type="file" id="detail-project-pdf" accept="application/pdf,.pdf" multiple onchange="saveProjectMedia()">
-            <label class="btn btn-secondary" for="detail-project-pdf">＋ PDFs</label>
+            <label class="btn btn-faded-theme media-btn" for="detail-project-pdf">＋ PDFs</label>
             <span class="file-name" id="detail-project-pdf-name"></span>
           </div>
           <div class="file-note project-current-file">
@@ -16565,10 +16572,7 @@ function saveDictation() {
   body .home-tools-grid .fb-pill,
   body .topbar .btn-instrucciones,
   body .detail-top-actions .back-btn,
-  body .detail-top-actions .share-guardar-btn,
-  body .measure-button,
-  body label.btn-secondary[for="detail-project-foto"],
-  body label.btn-secondary[for="detail-project-pdf"] {
+  body .detail-top-actions .share-guardar-btn {
     background: var(--terracota) !important; /* Menos intenso */
     color: #fff !important;
     border: 1.5px solid var(--terracota-d) !important;
@@ -16583,10 +16587,7 @@ function saveDictation() {
   body .home-tools-grid .fb-pill:active,
   body .topbar .btn-instrucciones:active,
   body .detail-top-actions .back-btn:active,
-  body .detail-top-actions .share-guardar-btn:active,
-  body .measure-button:active,
-  body label.btn-secondary[for="detail-project-foto"]:active,
-  body label.btn-secondary[for="detail-project-pdf"]:active {
+  body .detail-top-actions .share-guardar-btn:active {
     transform: translateY(4px) !important;
     box-shadow: 0 0px 0 var(--terracota-d), 0 2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(0,0,0,0.2) !important;
   }
