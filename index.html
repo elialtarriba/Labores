@@ -3441,76 +3441,6 @@ if ('serviceWorker' in navigator) {
     body.theme-negro .detail-tabs::-webkit-scrollbar {
       display: none;
     }
-    body .detail-tab {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 6px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-soft);
-      background: var(--warm-white);
-      border: 1.5px solid var(--cream-dark);
-      border-radius: 10px;
-      white-space: nowrap;
-      flex: 0 0 auto;
-      cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      transform: translateY(0);
-      box-shadow: 
-        0 8px 0 var(--cream-dark), 
-        0 10px 14px rgba(110, 74, 58, 0.15);
-      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.08s ease, color 0.08s ease;
-    }
-    body.theme-blanco .detail-tab {
-      background: #ffffff;
-      border-color: #d8d8d8;
-      color: #555555;
-      box-shadow: 
-        0 8px 0 #d8d8d8, 
-        0 10px 14px rgba(0, 0, 0, 0.1);
-    }
-    body.theme-negro .detail-tab {
-      background: #111111;
-      border-color: #444444;
-      color: #999999;
-      box-shadow: 
-        0 8px 0 #333333, 
-        0 10px 14px rgba(0, 0, 0, 0.3);
-    }
-    body .detail-tab:active,
-    body .detail-tab.active {
-      background: var(--cream);
-      color: var(--bark);
-      border-color: var(--cream-dark);
-      transform: translateY(7px);
-      box-shadow: 
-        0 1px 0 var(--cream-dark),
-        0 1px 2px rgba(110, 74, 58, 0.05);
-    }
-    body.theme-blanco .detail-tab:active,
-    body.theme-blanco .detail-tab.active {
-      background: #eeeeee;
-      color: #111111;
-      border-color: #d8d8d8;
-      transform: translateY(7px);
-      box-shadow: 
-        0 1px 0 #d8d8d8,
-        0 1px 2px rgba(0, 0, 0, 0.03);
-    }
-    body.theme-negro .detail-tab:active,
-    body.theme-negro .detail-tab.active {
-      background: #1e1e1e;
-      color: #ffffff;
-      border-color: #444444;
-      transform: translateY(7px);
-      box-shadow: 
-        0 1px 0 #333333,
-        0 1px 2px rgba(0, 0, 0, 0.1);
-    }
     .tab-text-desktop { display: none; }
     .tab-text-mobile { display: inline; }
     .form-section {
@@ -5731,14 +5661,15 @@ service cloud.firestore {<br>
         <h3 style="margin-top:0;margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:6px;">📑 Índice del Manual</h3>
         <div class="manual-index-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:8px;">
           <a href="#" onclick="document.getElementById('manual-instalar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">1. Instalar la app</a>
-          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Empezar una labor</a>
-          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Dentro del proyecto</a>
-          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Inventario</a>
-          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Medidas / calculadora</a>
-          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Dictado por voz 🎙️</a>
-          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Compartir proyectos</a>
-          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Configuración / Copias</a>
-          <a href="#" onclick="document.getElementById('manual-copyright').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">9. Copyright</a>
+          <a href="#" onclick="document.getElementById('manual-inicio').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Pantalla de Inicio</a>
+          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Empezar una labor</a>
+          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Dentro del proyecto</a>
+          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Inventario</a>
+          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Medidas / calculadora</a>
+          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Dictado por voz 🎙️</a>
+          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Compartir proyectos</a>
+          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">9. Configuración / Copias</a>
+          <a href="#" onclick="document.getElementById('manual-copyright').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">10. Copyright</a>
         </div>
       </nav>
       <div class="manual-hero">
@@ -5760,6 +5691,24 @@ service cloud.firestore {<br>
         </div>
       </div>
 
+      <div class="inst-section" id="manual-inicio">
+        <h3 class="inst-title">🏠 Pantalla de Inicio</h3>
+        <div class="inst-content">
+          <p>Esta es la pantalla principal desde donde controlas toda la app. Aquí tienes explicados todos sus botones y funciones:</p>
+          <ul>
+            <li><strong>🔍 Buscar:</strong> Barra superior para localizar rápidamente cualquier proyecto escribiendo su nombre.</li>
+            <li><strong>💾 Base de datos local:</strong> Sirve para guardar una copia de seguridad de toda la app (proyectos, inventario, etc.) en tu dispositivo, o para restaurar una copia guardada previamente.</li>
+            <li><strong>🔔 Sonido (sí/no):</strong> Activa o desactiva todos los sonidos y efectos musicales de la aplicación.</li>
+            <li><strong>➕ Nuevo Proyecto:</strong> Inicia la creación de una labor nueva pidiendo los datos mínimos indispensables.</li>
+            <li><strong>📂 Mis Proyectos (Todos):</strong> Te muestra la lista completa de todos los proyectos que has creado o importado.</li>
+            <li><strong>Filtros (En Curso, Terminados, Ideas, Pausa):</strong> Botones rápidos para filtrar la lista y mostrar solo los proyectos que se encuentran en ese estado.</li>
+            <li><strong>📊 Estadísticas:</strong> Pequeñas tarjetas que cuentan cuántos proyectos tienes en cada estado para que veas tu progreso de un vistazo.</li>
+            <li><strong>🎨 Temas:</strong> Permite cambiar toda la gama de colores de la aplicación.</li>
+            <li><strong>Configuración (Lanas, Agujas, Accesorios):</strong> Accesos directos a tu inventario de materiales para gestionarlos sin estar dentro de un proyecto.</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="inst-section" id="manual-empezar">
         <h3 class="inst-title">🧵 Empezar una labor</h3>
         <div class="inst-content">
@@ -5768,7 +5717,7 @@ service cloud.firestore {<br>
             <div class="manual-step"><span class="manual-step-number">2</span><p>Abre su tarjeta. En <strong>General</strong> puedes cambiar datos, añadir notas, fotos de evolución, patrón PDF, materiales y una ficha de medidas.</p></div>
             <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Guardar</strong> después de modificar la ficha. El botón grande <strong>← Inicio</strong> vuelve a la página principal.</p></div>
           </div>
-          <p><strong>En Inicio:</strong> Buscar localiza proyectos, Base de datos indica si el guardado local está disponible, Sonido activa o desactiva los sonidos de botones y Temas cambia los colores de toda la app.</p>
+          
           <div class="manual-chip-row"><span class="manual-chip">🔍 Lupa: ampliar</span><span class="manual-chip">🗑 Papelera: borrar</span><span class="manual-chip">⧉ Duplicar ficha</span></div>
         </div>
       </div>
@@ -9965,6 +9914,11 @@ function renderDetail() {
         ${projectStatusOptions.map(s =>
           `<option value="${s.value}" ${p.estado===s.value?'selected':''}>${s.label}</option>`).join('')}
       </select>
+    </div>
+    <div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; gap: 16px; font-size: 13px; color: var(--text-soft); padding-top: 12px; margin-top: 8px; border-top: 1px solid var(--cream-dark); user-select:none;">
+      <span><strong style="color:var(--text-main); font-weight:600;">Inicio:</strong> ${p.fechaInicio ? p.fechaInicio.split('-').reverse().join('/') : '-'}</span>
+      <span style="opacity: 0.4;">|</span>
+      <span><strong style="color:var(--text-main); font-weight:600;">Fin:</strong> ${p.fechaFin ? p.fechaFin.split('-').reverse().join('/') : '-'}</span>
     </div>
   `;
 
