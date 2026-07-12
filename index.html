@@ -9508,11 +9508,58 @@ function refreshProjectCardTimes() {
   });
 }
 
+window.playTerminadosConfetti = function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (calcSoundEnabled) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      calcAudioContext = calcAudioContext || new AudioCtx();
+      const now = calcAudioContext.currentTime;
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+        const osc = calcAudioContext.createOscillator();
+        const g = calcAudioContext.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i*0.1);
+        g.gain.setValueAtTime(0, now + i*0.1);
+        g.gain.linearRampToValueAtTime(0.05, now + i*0.1 + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, now + i*0.1 + 0.6);
+        osc.connect(g);
+        g.connect(calcAudioContext.destination);
+        osc.start(now + i*0.1);
+        osc.stop(now + i*0.1 + 0.7);
+      });
+    }
+  }
+
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed; inset:0; z-index:9999; pointer-events:none; overflow:hidden;';
+  document.body.appendChild(container);
+
+  const colors = ['#E8A8B4', '#A8E8B4', '#B4A8E8', '#E8D0A8', '#A8D0E8', '#F3B562', '#F2607D'];
+  for(let i=0; i<150; i++) {
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = (Math.random() * 100) + '%';
+    conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.animationDelay = (Math.random() * 1.5) + 's';
+    conf.style.animationDuration = '2.5s';
+    conf.style.borderRadius = '50%';
+    conf.style.width = '6px';
+    conf.style.height = '6px';
+    container.appendChild(conf);
+  }
+
+  setTimeout(() => container.remove(), 4000);
+}
+
 window.setFilter = function(f, el) {
   document.querySelectorAll('.filter-chip, .stat-card, .shared-projects-bar').forEach(c => c.classList.remove('active'));
   if (el) el.classList.add('active');
   activeFilter = f;
   document.getElementById('shared-import-panel')?.classList.toggle('visible', f === 'compartidos');
+  if (f === 'terminado') {
+    playTerminadosConfetti();
+  }
   renderProjects();
 }
 
@@ -12211,7 +12258,7 @@ window.printNoteZoom = function() {
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-confetti-container" style="position:absolute; inset:0; overflow:hidden;"></div>
   <div id="finish-anim-content" style="position:relative; transform-origin:center; z-index: 2;">
-    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: 2px 2px 0px #fff, -1px -1px 0px #fff, 0px 4px 10px rgba(0,0,0,0.2); opacity:0; white-space:nowrap;">¡Felicidades!</div>
+    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid #E8A8B4; opacity:0; white-space:nowrap;">¡Felicidades!</div>
     <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
       <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -14815,13 +14862,16 @@ function playFinishAnimation() {
   if (confettiContainer) {
     confettiContainer.innerHTML = '';
     const colors = ['#E8A8B4', '#A8E8B4', '#B4A8E8', '#E8D0A8', '#A8D0E8', '#F3B562', '#F2607D'];
-    for(let i=0; i<80; i++) {
+    for(let i=0; i<250; i++) {
       const conf = document.createElement('div');
       conf.className = 'confetti';
       conf.style.left = (Math.random() * 100) + '%';
       conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      conf.style.animationDelay = (Math.random() * 2) + 's';
-      conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      conf.style.animationDelay = (Math.random() * 4) + 's';
+      conf.style.animationDuration = '6s';
+      conf.style.borderRadius = '50%';
+      conf.style.width = '10px';
+      conf.style.height = '10px';
       confettiContainer.appendChild(conf);
     }
   }
@@ -14834,8 +14884,8 @@ function playFinishAnimation() {
   
   path.style.animation = 'drawHeart 1.5s ease-out forwards';
   yarn.style.animation = 'drawHeartYarn 4.5s ease-out forwards';
-  contentNode.style.animation = 'fadeOutOverlay 5s ease forwards';
-  if(textNode) textNode.style.animation = 'popFelicidades 4.8s ease forwards 0.2s';
+  contentNode.style.animation = 'fadeOutOverlay 6.5s ease forwards';
+  if(textNode) textNode.style.animation = 'popFelicidades 6s ease forwards 0.2s';
   
   setTimeout(() => {
     overlay.style.display = 'none';
@@ -14844,7 +14894,7 @@ function playFinishAnimation() {
     contentNode.style.animation = 'none';
     if(textNode) textNode.style.animation = 'none';
     if(confettiContainer) confettiContainer.innerHTML = '';
-  }, 5000);
+  }, 6500);
 }
 
 function showNotification(msg) {
@@ -16212,7 +16262,7 @@ ${reportToolbarHTML}
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-confetti-container" style="position:absolute; inset:0; overflow:hidden;"></div>
   <div id="finish-anim-content" style="position:relative; transform-origin:center; z-index: 2;">
-    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: 2px 2px 0px #fff, -1px -1px 0px #fff, 0px 4px 10px rgba(0,0,0,0.2); opacity:0; white-space:nowrap;">¡Felicidades!</div>
+    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid #E8A8B4; opacity:0; white-space:nowrap;">¡Felicidades!</div>
     <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
       <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -16788,7 +16838,7 @@ html { scroll-behavior: smooth; }
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-confetti-container" style="position:absolute; inset:0; overflow:hidden;"></div>
   <div id="finish-anim-content" style="position:relative; transform-origin:center; z-index: 2;">
-    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: 2px 2px 0px #fff, -1px -1px 0px #fff, 0px 4px 10px rgba(0,0,0,0.2); opacity:0; white-space:nowrap;">¡Felicidades!</div>
+    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid #E8A8B4; opacity:0; white-space:nowrap;">¡Felicidades!</div>
     <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
       <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
