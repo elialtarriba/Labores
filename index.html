@@ -12258,9 +12258,9 @@ window.printNoteZoom = function() {
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-confetti-container" style="position:absolute; inset:0; overflow:hidden;"></div>
   <div id="finish-anim-content" style="position:relative; transform-origin:center; z-index: 2;">
-    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid #E8A8B4; opacity:0; white-space:nowrap;">¡Felicidades!</div>
+    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:var(--terracota-d); text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid var(--terracota-d); opacity:0; white-space:nowrap;">¡Felicidades!</div>
     <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
-      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="var(--terracota-d)" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <div id="finish-yarn" style="position:absolute; font-size:3rem; top:0; left:0; transform:translate(-50%, -50%); opacity:0;">🧶</div>
   </div>
@@ -14847,8 +14847,51 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 /* ─── NOTIFICATIONS ──────────────────────────────────────── */
+window.playVictoryMelody = function() {
+  if (!calcSoundEnabled) return;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+  calcAudioContext = calcAudioContext || new AudioCtx();
+  const ctx = calcAudioContext;
+  const now = ctx.currentTime;
+  
+  const notes = [
+    { freq: 523.25, time: 0.0, dur: 0.4 }, 
+    { freq: 659.25, time: 0.4, dur: 0.4 }, 
+    { freq: 783.99, time: 0.8, dur: 0.4 }, 
+    { freq: 1046.50, time: 1.2, dur: 0.8 }, 
+    { freq: 1318.51, time: 2.2, dur: 0.2 }, 
+    { freq: 1046.50, time: 2.4, dur: 0.2 }, 
+    { freq: 783.99, time: 2.6, dur: 0.2 }, 
+    { freq: 1046.50, time: 2.8, dur: 0.2 }, 
+    { freq: 523.25, time: 3.2, dur: 2.8 },
+    { freq: 659.25, time: 3.2, dur: 2.8 },
+    { freq: 783.99, time: 3.2, dur: 2.8 },
+    { freq: 1046.50, time: 3.2, dur: 2.8 }
+  ];
+  
+  notes.forEach(n => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = n.time >= 3.2 ? 'sine' : 'triangle';
+    osc.frequency.setValueAtTime(n.freq, now + n.time);
+    
+    gain.gain.setValueAtTime(0, now + n.time);
+    gain.gain.linearRampToValueAtTime(0.06, now + n.time + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + n.time + n.dur);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(now + n.time);
+    osc.stop(now + n.time + n.dur + 0.1);
+  });
+}
+
 function playFinishAnimation() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  playVictoryMelody();
   const overlay = document.getElementById('finish-anim-overlay');
   const path = document.getElementById('finish-heart-path');
   const yarn = document.getElementById('finish-yarn');
@@ -16262,9 +16305,9 @@ ${reportToolbarHTML}
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-confetti-container" style="position:absolute; inset:0; overflow:hidden;"></div>
   <div id="finish-anim-content" style="position:relative; transform-origin:center; z-index: 2;">
-    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid #E8A8B4; opacity:0; white-space:nowrap;">¡Felicidades!</div>
+    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:var(--terracota-d); text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid var(--terracota-d); opacity:0; white-space:nowrap;">¡Felicidades!</div>
     <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
-      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="var(--terracota-d)" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <div id="finish-yarn" style="position:absolute; font-size:3rem; top:0; left:0; transform:translate(-50%, -50%); opacity:0;">🧶</div>
   </div>
@@ -16838,9 +16881,9 @@ html { scroll-behavior: smooth; }
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
   <div id="finish-confetti-container" style="position:absolute; inset:0; overflow:hidden;"></div>
   <div id="finish-anim-content" style="position:relative; transform-origin:center; z-index: 2;">
-    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:#E8A8B4; text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid #E8A8B4; opacity:0; white-space:nowrap;">¡Felicidades!</div>
+    <div id="finish-text" style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Playfair Display', serif; font-size:42px; font-weight:900; color:var(--terracota-d); text-shadow: none; background: rgba(255,255,255,0.95); padding: 5px 25px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: 2px solid var(--terracota-d); opacity:0; white-space:nowrap;">¡Felicidades!</div>
     <svg width="150" height="150" viewBox="0 0 100 100" style="overflow:visible; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
-      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="#E8A8B4" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="finish-heart-path" d="M 50 80 C 50 80 10 50 10 30 C 10 15 25 10 35 15 C 45 20 50 30 50 30 C 50 30 55 20 65 15 C 75 10 90 15 90 30 C 90 50 50 80 50 80 Z" fill="none" stroke="var(--terracota-d)" stroke-width="4" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <div id="finish-yarn" style="position:absolute; font-size:3rem; top:0; left:0; transform:translate(-50%, -50%); opacity:0;">🧶</div>
   </div>
