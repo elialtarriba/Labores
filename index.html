@@ -4823,7 +4823,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
 
 
 <body>
-<div id="global-active-timer-bar" ondblclick="goToActiveTimer()" style="display:none; position:fixed; top:12px; left:50%; transform:translateX(-50%); background:linear-gradient(180deg, #d4f0d0, #b9deb4); color:#1e3a1b; padding:8px 18px; border-radius:30px; font-weight:800; font-size:13px; z-index:999999; cursor:move; box-shadow:0 5px 0 #97be90, 0 8px 15px rgba(0,0,0,0.25), inset 0 2px 2px rgba(255,255,255,0.8); border:1px solid #97be90; align-items:center; gap:8px; user-select:none; transition: transform 0.1s, box-shadow 0.1s;">
+<div id="global-active-timer-bar" style="display:none; position:fixed; top:12px; left:50%; transform:translateX(-50%); background:linear-gradient(180deg, #d4f0d0, #b9deb4); color:#1e3a1b; padding:8px 18px; border-radius:30px; font-weight:800; font-size:13px; z-index:999999; cursor:move; box-shadow:0 5px 0 #97be90, 0 8px 15px rgba(0,0,0,0.25), inset 0 2px 2px rgba(255,255,255,0.8); border:1px solid #97be90; align-items:center; gap:8px; user-select:none; transition: transform 0.1s, box-shadow 0.1s;">
   <span class="blinking-dot" style="width:8px; height:8px; background:#1b4332; border-radius:50%; display:inline-block; animation:blink-timer 1s infinite;"></span>
   <span id="global-active-timer-text">Tiempo en curso</span>
 </div>
@@ -6696,7 +6696,7 @@ service cloud.firestore {<br>
 <div class="modal-overlay" id="modal-historial" style="z-index: 150;">
   <div class="modal" style="max-width: 500px;">
     <div class="modal-header">
-      <h2 id="modal-historial-titulo">📊 Historial de Movimientos</h2>
+      <h2 id="modal-historial-titulo" style="font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; padding-right: 10px; flex: 1; min-width: 0;">📊 Historial de Movimientos</h2>
       <button class="modal-close" onclick="closeModal('modal-historial')">✕</button>
     </div>
     <div class="modal-body" style="max-height: 60vh; overflow-y: auto; padding: 20px;">
@@ -10712,14 +10712,44 @@ function renderWorkTimer() {
 
 window.toggleWorkTimer = function() {
   if (!currentProject) return;
-  if (currentProject.timerRunning) {
+  
+  if (!currentProject.timerRunning) {
+    let otherRunningProject = null;
+    const projArray = (typeof db !== 'undefined' && db.proyectos) ? db.proyectos : (typeof proyectos !== 'undefined' ? proyectos : []);
+    for(let p of projArray) {
+      if(p.id !== currentProject.id && p.timerRunning) {
+        otherRunningProject = p; break;
+      }
+    }
+    
+    if (otherRunningProject) {
+      if (confirm(`¿Quieres cerrar el otro temporizador del proyecto "${otherRunningProject.nombre}"?`)) {
+        otherRunningProject.tiempoTotalSegundos = getWorkedSeconds(otherRunningProject);
+        otherRunningProject.timerRunning = false;
+        otherRunningProject.timerStartedAt = '';
+        otherRunningProject.horas = Math.round(getWorkedSeconds(otherRunningProject) / 36) / 100;
+        
+        if (confirm(`¿Empezamos a contabilizar tiempo del proyecto "${currentProject.nombre}"?`)) {
+          // Continuar
+        } else {
+          saveProjectInDB();
+          renderWorkTimer();
+          renderProjects();
+          return;
+        }
+      } else {
+        return;
+      }
+    }
+    
+    currentProject.timerRunning = true;
+    currentProject.timerStartedAt = new Date().toISOString();
+  } else {
     currentProject.tiempoTotalSegundos = getWorkedSeconds(currentProject);
     currentProject.timerRunning = false;
     currentProject.timerStartedAt = '';
-  } else {
-    currentProject.timerRunning = true;
-    currentProject.timerStartedAt = new Date().toISOString();
   }
+  
   currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
   saveProjectInDB();
   renderWorkTimer();
@@ -17425,7 +17455,10 @@ function makeTimerDraggable() {
     const rect = bar.getBoundingClientRect();
     bar.style.left = rect.left + 'px';
     bar.style.top = rect.top + 'px';
-    bar.style.transform = 'none';
+    
+    // Hundimiento 3D
+    bar.style.transform = 'translateY(4px)';
+    bar.style.boxShadow = '0 0 0 #97be90, 0 3px 5px rgba(0,0,0,0.2)';
     
     timerInitialLeft = rect.left;
     timerInitialTop = rect.top;
@@ -17456,48 +17489,31 @@ function makeTimerDraggable() {
     bar.style.top = newTop + 'px';
   };
 
-  const endDrag = () => {
+  const endDrag = (e) => {
     if (isDraggingTimer) {
       isDraggingTimer = false;
+      
+      // Restaurar visual 3D
+      bar.style.transform = 'none';
+      bar.style.boxShadow = '0 5px 0 #97be90, 0 8px 15px rgba(0,0,0,0.25), inset 0 2px 2px rgba(255,255,255,0.8)';
+      
       const rect = bar.getBoundingClientRect();
       localStorage.setItem('timer_pill_pos', JSON.stringify({left: rect.left, top: rect.top}));
+      
+      if (bar.getAttribute('data-dragged') !== 'true') {
+        goToActiveTimer(e);
+      }
+      setTimeout(() => { bar.setAttribute('data-dragged', 'false'); }, 100);
     }
   };
 
   bar.addEventListener('mousedown', startDrag);
   document.addEventListener('mousemove', onDrag, {passive: false});
-  document.addEventListener('mouseup', (e) => {
-    endDrag();
-    // Desktop double click is handled by ondblclick attribute, so just reset drag state
-    setTimeout(() => { bar.setAttribute('data-dragged', 'false'); }, 100);
-  });
+  document.addEventListener('mouseup', endDrag);
 
-  let lastTap = 0;
   bar.addEventListener('touchstart', startDrag, {passive: false});
   document.addEventListener('touchmove', onDrag, {passive: false});
-  document.addEventListener('touchend', (e) => {
-    endDrag();
-    
-    // Only process tap if the touchend was originally on the bar (startDrag was called)
-    // and we didn't drag it significantly
-    if (bar.getAttribute('data-dragged') !== 'true') {
-      const now = new Date().getTime();
-      const timesince = now - lastTap;
-      if (timesince < 350 && timesince > 0) {
-        // Double tap! Trigger animation and action
-        bar.style.transform = 'translateX(-50%) translateY(5px)';
-        bar.style.boxShadow = '0 0 0 #97be90, 0 3px 5px rgba(0,0,0,0.2)';
-        setTimeout(() => {
-          bar.style.transform = 'translateX(-50%) translateY(0)';
-          bar.style.boxShadow = '0 5px 0 #97be90, 0 8px 15px rgba(0,0,0,0.25), inset 0 2px 2px rgba(255,255,255,0.8)';
-          goToActiveTimer(e);
-        }, 150);
-      }
-      lastTap = new Date().getTime();
-    }
-    
-    setTimeout(() => { bar.setAttribute('data-dragged', 'false'); }, 100);
-  });
+  document.addEventListener('touchend', endDrag);
 }
 
 function startGlobalTimerTracker() {
