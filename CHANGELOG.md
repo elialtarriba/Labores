@@ -3,8 +3,8 @@
 ## [V22] - 2026-07-12
 
 ### Añadido
-- **Fotos en Ejemplos de Fábrica:** Se han incrustado (mediante codificación Base64) las fotos reales para el proyecto de ejemplo "Margarita en Maceta" (foto principal y galería), su lana (Katia Capri) y su aguja directamente en el archivo `index.html`. Ahora, al abrir la app de cero o borrar los datos, las fotos del ejemplo cargan sin necesidad de internet y sin romperse.
-
+- **Fotos en Ejemplos de Fábrica:** Se han incrustado (mediante codificación Base64) las fotos reales para el proyecto de ejemplo "Margarita en Maceta" (foto principal y galería) y el PDF `EJEMPLO.pdf` directamente en el código JavaScript `FACTORY_MEDIA`.
+- **Corrección de Cuota de Memoria en Safari:** Se ha reestructurado la carga inicial de los ejemplos de fábrica para evitar que la memoria `localStorage` exceda el límite de 5 MB de Safari al guardar las imágenes y el PDF. Ahora se leen dinámicamente desde memoria pura, evitando que la app falle al crear el proyecto de ejemplo en iOS.
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
