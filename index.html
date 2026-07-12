@@ -7128,10 +7128,35 @@ let workTimerInterval = null;
 let overdueProjectQueue = [];
 let activeOverdueProjectId = '';
 
+const factoryExamples = {
+  'labores_tipos_agujas': "[{\"emoji\":\"\ud83d\udfe1\",\"name\":\"Ganchillo\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"Aguja circular\"},{\"emoji\":\"\ud83e\udd62\",\"name\":\"Aguja recta\"}]",
+  'labores_tiendas': "[{\"emoji\":\"\ud83d\udecd\ufe0f\",\"name\":\"Jana\"},{\"emoji\":\"\ud83d\udecd\ufe0f\",\"name\":\"Katia\"},{\"emoji\":\"\ud83d\udecd\ufe0f\",\"name\":\"Las Tijeras M\u00e1gicas\"},{\"emoji\":\"\ud83d\udecd\ufe0f\",\"name\":\"Mercer\u00eda\"},{\"emoji\":\"\ud83d\udecd\ufe0f\",\"name\":\"Amazon\"},{\"emoji\":\"\u274c\",\"name\":\"Sin tienda\"},{\"emoji\":\"\ud83d\udecd\ufe0f\",\"name\":\"El Corte Ingl\u00e9s\"}]",
+  'labores_calc_prendas': "[{\"emoji\":\"\ud83d\udc55\",\"name\":\"Top\"},{\"emoji\":\"\ud83e\udde5\",\"name\":\"Jersey\"},{\"emoji\":\"\ud83e\udde5\",\"name\":\"Chaqueta\"},{\"emoji\":\"\ud83e\uddba\",\"name\":\"Chaleco\"},{\"emoji\":\"\ud83c\udfa9\",\"name\":\"Gorro\"},{\"emoji\":\"\ud83e\udde3\",\"name\":\"Bufanda\"},{\"emoji\":\"\ud83d\udc57\",\"name\":\"Falda\"},{\"emoji\":\"\u2728\",\"name\":\"Otro\"}]",
+  'labores_tipos_proyecto': "[{\"emoji\":\"\ud83e\udde5\",\"name\":\"Jersey / Su\u00e9ter\"},{\"emoji\":\"\ud83e\udde5\",\"name\":\"C\u00e1rdigan\"},{\"emoji\":\"\ud83e\uddf8\",\"name\":\"Amigurumi\"},{\"emoji\":\"\ud83e\udde6\",\"name\":\"Calcetines\"},{\"emoji\":\"\ud83e\udde3\",\"name\":\"Mant\u00f3n / Chal\"},{\"emoji\":\"\ud83c\udfa9\",\"name\":\"Gorro\"},{\"emoji\":\"\ud83d\udc5c\",\"name\":\"Bolso / Cesta\"},{\"emoji\":\"\ud83d\udecf\",\"name\":\"Manta\"},{\"emoji\":\"\u2728\",\"name\":\"Otro\"},{\"emoji\":\"\ud83e\udde5\",\"name\":\"Flores\"}]",
+  'labores_tipos_accesorios': "[{\"emoji\":\"\ud83d\udd35\",\"name\":\"Marcador de puntos\"},{\"emoji\":\"\u2702\ufe0f\",\"name\":\"Tijeras\"},{\"emoji\":\"\ud83d\udccf\",\"name\":\"Mide puntos\"},{\"emoji\":\"\ud83e\udea1\",\"name\":\"Aguja lanera\"},{\"emoji\":\"\ud83d\udccc\",\"name\":\"Bloqueador / alfileres\"},{\"emoji\":\"\ud83d\udd22\",\"name\":\"Cuentavueltas\"},{\"emoji\":\"\u2728\",\"name\":\"Otro\"}]",
+  'labores_ubicaciones': "[{\"emoji\":\"\ud83d\udeaa\",\"name\":\"Armario\"},{\"emoji\":\"\ud83d\udce6\",\"name\":\"Caja 1\"},{\"emoji\":\"\ud83d\udce6\",\"name\":\"Caja 2\"},{\"emoji\":\"\ud83d\udc5c\",\"name\":\"Bolsa de proyectos\"},{\"emoji\":\"\ud83d\uddc4\ufe0f\",\"name\":\"Estanter\u00eda\"},{\"emoji\":\"\u2753\",\"name\":\"Sin ubicaci\u00f3n\"}]",
+  'labores_agujas': "[{\"ubicacion\":\"Armario\",\"id\":\"mpnzz6dv9ag9a6e8jlj\",\"cantidad\":1,\"colorHex\":\"#aa93e8\",\"marca\":\"KnitPro\",\"tienda\":\"Jana\",\"longitud\":\"\",\"tipo\":\"aguja-circular\",\"precio\":10,\"creadoEn\":\"2026-05-27T11:45:18.355Z\",\"numero\":\"3mm\",\"actualizadoEn\":\"2026-07-12T20:12:03.232Z\",\"nombre\":\"Aguja Knitpro smart\",\"color\":\"azul intermitente\",\"material\":\"acero\",\"divisa\":\"EUR\",\"movimientos\":[{\"id\":\"mri84ejd961frrigl4h\",\"tipo\":\"salida\",\"cantidad\":7,\"saldo\":0,\"fecha\":\"12/07/2026, 22:06\",\"motivo\":\"Ajuste manual\"},{\"id\":\"mri8c1lsjvuoqlvsepf\",\"tipo\":\"entrada\",\"cantidad\":2,\"saldo\":2,\"fecha\":\"12/07/2026, 22:12\",\"motivo\":\"Ajuste manual\"},{\"id\":\"mri8cep1pysa2me7ds9\",\"tipo\":\"salida\",\"cantidad\":1,\"saldo\":1,\"fecha\":\"12/07/2026, 22:12\",\"motivo\":\"Proyecto: Margarita en Maceta (ejemplo)\"}],\"fotosUrls\":[{\"key\":\"agujas_mpnzz6dv9ag9a6e8jlj_mq69rhe72rjt0x7de7\",\"url\":\"\",\"local\":true,\"portada\":true}],\"notas\":\"\"}]",
+  'labores_proyectos': "[{\"id\":\"mri5rwe0xln4p12i7p\",\"nombre\":\"Margarita en Maceta (ejemplo)\",\"tipo\":\"flores\",\"tecnica\":\"Punto\",\"estado\":\"pendiente\",\"talla\":\"\",\"para\":\"\",\"precio\":0,\"divisa\":\"EUR\",\"fechaInicio\":\"2026-07-12\",\"patron\":\"\",\"fotoUrl\":\"\",\"fotoKey\":\"proyectos_mri5rwe0xln4p12i7p_mri6z9aubj6tcplkvst\",\"pdfs\":[{\"id\":\"mri6eb8vqhftt3upz7j\",\"key\":\"proyectos_mri5rwe0xln4p12i7p_pdf_mri6eb8ndviigsms18\",\"nombre\":\"ejemplo_documento_pdf_profesional.pdf\",\"tamanoOriginal\":4608805,\"tamanoGuardado\":4606121,\"creadoEn\":\"2026-07-12T19:17:49.807Z\"}],\"notas\":\"\",\"progreso\":0,\"horas\":0,\"tiempoTotalSegundos\":0,\"timerRunning\":false,\"timerStartedAt\":\"\",\"contadores\":[],\"materiales\":[{\"id\":\"mri8cnd6gpsl0hg7m5v\",\"llanaId\":\"mri7i64ubq25m0a7jr\",\"nombre\":\"Capri (Best Basics)\",\"cantidad\":2,\"color\":\"#D98463\",\"notas\":\"Azul Oscuro elegante\"}],\"agujasUsadas\":[{\"id\":\"mri8cep1a9k1vbcs85\",\"agujaId\":\"mpnzz6dv9ag9a6e8jlj\",\"nombre\":\"Aguja Knitpro smart \u00b7 N\u00ba 3mm \u00b7 aguja-circular\",\"cantidad\":1}],\"accesoriosUsados\":[],\"accesoriosSlots\":[{\"id\":\"mri8cubianibckkkb0k\",\"accesorioId\":\"mppk9ep65lfc3hrlwrd\",\"nombre\":\"Cable Agujas\",\"tipo\":\"Cable Agujas\",\"cantidad\":1,\"tienda\":\"Las tijeras Magicas\",\"precio\":\"\",\"divisa\":\"\",\"notas\":\"40cm\"},{\"id\":\"mri8cy28vkc8dm0ic5l\",\"accesorioId\":\"mpob60d5t078nwc1bz8\",\"nombre\":\"Tijeras peque\u00f1as\",\"tipo\":\"\",\"cantidad\":1,\"tienda\":\"Amazon\",\"precio\":8,\"divisa\":\"EUR\",\"notas\":\"\"}],\"galeria\":[{\"id\":\"mri8e5j9xcx7y33025\",\"url\":\"\",\"local\":true,\"key\":\"proyectos_mri5rwe0xln4p12i7p_galeria_mri8e5j9s938kb2jk7m\",\"nombre\":\"resolution.webp\",\"creadoEn\":\"2026-07-12T20:13:41.641Z\"}],\"medidas\":null,\"medidasPersonaId\":\"\",\"apuntes\":[{\"id\":\"mri5yuf6nb4muetxu3p\",\"texto\":\"Este ejemplo est\u00e1 en el estado de ideas. \\nSi se desea realizarlo, se puede poner en estado 'En curso'. \\nPulsando encima de ideas y saldr\u00e1 una lista de las opciones, entre ellas 'En Curso'.\",\"fecha\":\"12/7/2026\"},{\"id\":\"mri5w3pi7bg5wjzbdxb\",\"texto\":\"Margarita en Maceta, es un ejemplo. Se puede borrar si se desea, pulsando el bot\u00f3n borrar en la parte superior-derecha del proyecto (al lado del bot\u00f3n guardar).\",\"fecha\":\"12/7/2026\"}],\"creadoEn\":\"2026-07-12T19:00:24.120Z\",\"terminadoEn\":null,\"actualizadoEn\":\"2026-07-12T19:00:24.120Z\",\"enlacesWeb\":\"https://www.instagram.com/reel/DAXODP4xvAU/?igsh=MTdpeTI1ajltbWg2\",\"fechaFin\":\"\"}]",
+  'labores_divisas': "[{\"emoji\":\"\ud83c\uddea\ud83c\uddfa\",\"name\":\"EUR\",\"symbol\":\"\u20ac\"},{\"emoji\":\"\ud83c\uddfa\ud83c\uddf8\",\"name\":\"USD\",\"symbol\":\"$\"},{\"emoji\":\"\ud83c\uddec\ud83c\udde7\",\"name\":\"GBP\",\"symbol\":\"\u00a3\"},{\"emoji\":\"\ud83c\uddf2\ud83c\uddfd\",\"name\":\"MXN\",\"symbol\":\"$\"}]",
+  'labores_accesorios': "[{\"id\":\"mpob60d5t078nwc1bz8\",\"notas\":\"\",\"cantidad\":5,\"ubicacion\":\"Bolsa de proyectos\",\"tienda\":\"Amazon\",\"tipo\":\"\",\"precio\":8,\"creadoEn\":\"2026-05-27T16:58:32.921Z\",\"divisa\":\"EUR\",\"actualizadoEn\":\"2026-06-08T19:05:59.732Z\",\"nombre\":\"Tijeras peque\u00f1as\",\"fotoUrl\":\"https://res.cloudinary.com/druf9xhnk/image/upload/v1780578728/labores/zjjsz5gejqasmsptt19p.jpg\",\"fotoKey\":\"\",\"movimientos\":[{\"id\":\"mri8cy28ftg4hc3cngc\",\"tipo\":\"salida\",\"cantidad\":1,\"saldo\":5,\"fecha\":\"12/07/2026, 22:12\",\"motivo\":\"Proyecto: Margarita en Maceta (ejemplo)\"}]},{\"tienda\":\"\",\"tipo\":\"\",\"id\":\"mppk2mlutmwsgw0otu\",\"pdfNombre\":\"\",\"notas\":\"\",\"cantidad\":25,\"ubicacion\":\"\",\"pdfKey\":\"accesorios_mppk2mlutmwsgw0otu_pdf\",\"actualizadoEn\":\"2026-06-05T21:25:15.748Z\",\"nombre\":\"Marcadores Redondos\",\"fotoUrl\":\"https://res.cloudinary.com/druf9xhnk/image/upload/v1780578759/labores/gtggavhpgps6jpqrn6wk.jpg\",\"precio\":1,\"creadoEn\":\"2026-05-28T13:55:37.842Z\",\"notes\":\"\",\"movimientos\":[],\"divisa\":\"EUR\"},{\"precio\":0,\"creadoEn\":\"2026-05-28T14:00:54.186Z\",\"fotoUrl\":\"https://res.cloudinary.com/druf9xhnk/image/upload/v1780578781/labores/dadkmhzxrmqtvp8ysqae.jpg\",\"nombre\":\"Cable Agujas\",\"actualizadoEn\":\"2026-06-04T19:22:09.856Z\",\"ubicacion\":\"Bolsa de proyectos\",\"pdfKey\":\"accesorios_mppk9ep65lfc3hrlwrd_pdf\",\"id\":\"mppk9ep65lfc3hrlwrd\",\"cantidad\":4,\"pdfNombre\":\"\",\"notas\":\"40cm\",\"tienda\":\"Las tijeras Magicas\",\"tipo\":\"Cable Agujas\",\"movimientos\":[{\"id\":\"mri8cubiedgojrtg7ss\",\"tipo\":\"salida\",\"cantidad\":1,\"saldo\":4,\"fecha\":\"12/07/2026, 22:12\",\"motivo\":\"Proyecto: Margarita en Maceta (ejemplo)\"}]}]",
+  'labores_llanas': "[{\"id\":\"mri7i64ubq25m0a7jr\",\"marca\":\"Katia\",\"nombre\":\"Capri (Best Basics)\",\"color\":\"Azul Oscuro elegante\",\"numColor\":\"82178\",\"peso\":\"50\",\"longitud\":\"125\",\"composicion\":\"100% Algod\u00f3n\",\"cantidad\":6,\"tienda\":\"Jana\",\"precio\":3.5,\"divisa\":\"EUR\",\"ubicacion\":\"Armario\",\"colorHex\":\"#D98463\",\"jerseyTalla\":\"42\",\"jerseyOvillos\":\"8\",\"agujaPunto\":\"2.5mm-3.0mm\",\"agujaGanchillo\":\"2mm\",\"agujaUtilizada\":\"\",\"fotosUrls\":[{\"url\":\"\",\"portada\":true,\"local\":true,\"key\":\"llanas_mri7i64ubq25m0a7jr_foto_mri7i64u9im4c11900e\"}],\"notas\":\"Tinte num. 76064\",\"movimientos\":[{\"id\":\"mri7i64ybglmir90z6j\",\"tipo\":\"entrada\",\"cantidad\":8,\"saldo\":8,\"fecha\":\"12/07/2026, 21:48\",\"motivo\":\"Stock inicial\"},{\"id\":\"mri8attjyiwawlabb1\",\"tipo\":\"edicion\",\"cantidad\":0,\"saldo\":8,\"fecha\":\"12/07/2026, 22:11\",\"motivo\":\"Ficha editada\",\"detalle\":\"Tienda: vac\u00edo \u2192 Jana \u00b7 Precio: 0 \u2192 3.5\"},{\"id\":\"mri8b53j40lc9hk8bo\",\"tipo\":\"edicion\",\"cantidad\":0,\"saldo\":8,\"fecha\":\"12/07/2026, 22:11\",\"motivo\":\"Ficha editada\",\"detalle\":\"Aguja de punto: vac\u00edo \u2192 2.5mm-3.0mm \u00b7 Aguja de ganchillo: vac\u00edo \u2192 2mm\"},{\"id\":\"mri8cnd6nrsdsm2ua6\",\"tipo\":\"salida\",\"cantidad\":2,\"saldo\":6,\"fecha\":\"12/07/2026, 22:12\",\"motivo\":\"Proyecto: Margarita en Maceta (ejemplo)\"}],\"creadoEn\":\"2026-07-12T19:48:49.427Z\",\"actualizadoEn\":\"2026-07-12T20:11:21.103Z\"}]",
+  'labores_medidas_personas': "[{\"id\":\"mri8653q5xiwvlyzlmr\",\"nombre\":\"Elisabeth\",\"tipo\":\"mujer\",\"valores\":{},\"notas\":\"\",\"creadoEn\":\"2026-07-12T20:07:27.830Z\",\"actualizadoEn\":\"2026-07-12T20:07:27.830Z\"}]",
+  'labores_tallas_punto': "[{\"emoji\":\"\ud83d\udfe0\",\"name\":\"2mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"2.5mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"3mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"3.5mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"4mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"4.5mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"5mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"5.5mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"6mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"7mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"8mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"9mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"10mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"12mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"15mm\"},{\"emoji\":\"\ud83d\udfe0\",\"name\":\"2.5mm-3.0mm\"}]",
+  'labores_composiciones_lana': "[{\"emoji\":\"\ud83e\uddf6\",\"name\":\"100% Lana\"},{\"emoji\":\"\ud83e\uddf6\",\"name\":\"100% Algod\u00f3n\"},{\"emoji\":\"\ud83e\uddf6\",\"name\":\"100% Acr\u00edlico\"},{\"emoji\":\"\ud83e\uddf6\",\"name\":\"50% Lana / 50% Acr\u00edlico\"},{\"emoji\":\"\ud83e\uddf6\",\"name\":\"75% Lana / 25% Poliamida\"}]",
+  'labores_tallas_ganchillo': "[{\"emoji\":\"\ud83d\udfe1\",\"name\":\"2mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"2.5mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"3mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"3.5mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"4mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"4.5mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"5mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"5.5mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"6mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"7mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"8mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"9mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"10mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"12mm\"},{\"emoji\":\"\ud83d\udfe1\",\"name\":\"15mm\"}]",
+  'labores_calc_partes': "[{\"emoji\":\"\ud83d\udc58\",\"name\":\"Delantero\"},{\"emoji\":\"\ud83d\udc58\",\"name\":\"Espalda\"},{\"emoji\":\"\ud83d\udcaa\",\"name\":\"Manga derecha\"},{\"emoji\":\"\ud83d\udcaa\",\"name\":\"Manga izquierda\"},{\"emoji\":\"\ud83c\udf80\",\"name\":\"Tirante derecho\"},{\"emoji\":\"\ud83c\udf80\",\"name\":\"Tirante izquierdo\"},{\"emoji\":\"\ud83d\udc55\",\"name\":\"Cuello\"},{\"emoji\":\"\ud83d\udc47\",\"name\":\"Bajo\"},{\"emoji\":\"\ud83d\udc97\",\"name\":\"Pecho / busto\"},{\"emoji\":\"\ud83d\udccf\",\"name\":\"Bajo pecho\"},{\"emoji\":\"\ud83d\udd04\",\"name\":\"Cintura\"},{\"emoji\":\"\ud83d\udd01\",\"name\":\"Cadera\"},{\"emoji\":\"\ud83d\udcd0\",\"name\":\"Alto total\"},{\"emoji\":\"\u2728\",\"name\":\"Otro\"}]",
+  'labores_marcas_lana': "[{\"emoji\":\"\ud83e\uddf6\",\"name\":\"Katia\"},{\"emoji\":\"\ud83e\uddf6\",\"name\":\"Drops\"},{\"emoji\":\"\ud83e\uddf6\",\"name\":\"DMC\"}]",
+};
+
 // Try to load from localStorage without breaking the app if old data is malformed.
 function loadStoredList(key) {
   try {
-    const value = localStorage.getItem(key);
+    let value = localStorage.getItem(key);
+    // If it's a completely new user, inject factory examples
+    if (!value && factoryExamples[key]) {
+      value = factoryExamples[key];
+      localStorage.setItem(key, value); // Save it immediately so they own it
+    }
     if (!value) return [];
     const parsed = JSON.parse(value);
     return Array.isArray(parsed) ? parsed : [];
@@ -7324,8 +7349,12 @@ function completeListEmojis(items, fallbackEmoji) {
 
 function loadList(key, defaults) {
   try {
-    const raw = localStorage.getItem(key);
+    let raw = localStorage.getItem(key);
     const fallbackEmoji = listDefaultEmojis[key] || '✨';
+    if (!raw && factoryExamples[key]) {
+      raw = factoryExamples[key];
+      localStorage.setItem(key, raw);
+    }
     if (!raw) return completeListEmojis(defaults, fallbackEmoji);
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed) || !parsed.length) return completeListEmojis(defaults, fallbackEmoji);
@@ -8253,7 +8282,7 @@ function pdfPreviewHTML(item, kind, title, variant, pdfId) {
     </div>
     <div class="pdf-preview-info">
       <div class="pdf-preview-title">${safeName}</div>
-      <div class="pdf-preview-sub">${sizeLabel ? escapeAttr(sizeLabel) + ' · ' : ''}Toca para abrir el PDF</div>
+      <div class="pdf-preview-sub">${sizeLabel ? escapeAttr(sizeLabel) : ''}</div>
     </div>
     <div class="pdf-preview-actions">
       <button type="button" class="pdf-view-lens" title="Ver PDF" onclick="event.stopPropagation(); openPdfPreview('${safeKind}','${safeId}','${safePdfId}')">🔍</button>
@@ -9701,7 +9730,6 @@ window.saveProject = async function() {
       ? [{ id: uid(), texto: document.getElementById('p-notas').value, fecha: new Date().toLocaleDateString('es') }]
       : []),
     creadoEn: existing.creadoEn || new Date().toISOString(),
-    terminadoEn,
     actualizadoEn: new Date().toISOString(),
   };
   delete p.foto; delete p.fotoNombre; delete p.pdf; delete p.pdfKey; delete p.pdfNombre;
@@ -9930,6 +9958,7 @@ function renderDetail() {
         <button type="button" class="btn btn-secondary" onclick="openWebModal()" title="Ver todo en grande" style="padding: 0; width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
         </button>
+        <button type="button" class="btn btn-secondary" onclick="openWebLink()" title="Abrir enlace en el navegador" style="padding: 0; width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size:16px;">🌍</button>
         <button type="button" class="btn btn-secondary" onclick="copyWebLink()" title="Copiar al portapapeles" style="padding: 0; width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         </button>
@@ -12571,11 +12600,39 @@ function renderNotas() {
       <div class="timeline-entry">
         <div class="timeline-dot"></div>
         <div class="timeline-text">${n.texto}<div class="timeline-date">${n.fecha}</div></div>
-        <button onclick="removeNota('${n.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">🗑</button>
+        <div style="display:flex; gap:8px;">
+          <button onclick="moveNotaUp('${n.id}')" title="Subir (ver antes)" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">⬆️</button>
+          <button onclick="moveNotaDown('${n.id}')" title="Bajar (ver después)" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">⬇️</button>
+          <button onclick="removeNota('${n.id}')" title="Borrar" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">🗑</button>
+        </div>
       </div>`).join('');
   }
 }
 
+window.moveNotaUp = function(id) {
+  const p = currentProject;
+  if (!p || !p.apuntes) return;
+  const idx = p.apuntes.findIndex(n => n.id === id);
+  if (idx < p.apuntes.length - 1) {
+    const temp = p.apuntes[idx];
+    p.apuntes[idx] = p.apuntes[idx + 1];
+    p.apuntes[idx + 1] = temp;
+    saveDetailChanges(true);
+    renderNotas();
+  }
+}
+window.moveNotaDown = function(id) {
+  const p = currentProject;
+  if (!p || !p.apuntes) return;
+  const idx = p.apuntes.findIndex(n => n.id === id);
+  if (idx > 0) {
+    const temp = p.apuntes[idx];
+    p.apuntes[idx] = p.apuntes[idx - 1];
+    p.apuntes[idx - 1] = temp;
+    saveDetailChanges(true);
+    renderNotas();
+  }
+}
 window.addNota = function() {
   const input = document.getElementById('new-nota-input');
   const texto = input.value.trim();
@@ -12621,6 +12678,23 @@ function renderConfigList(listEl, arr, updateFn, deleteFn) {
 }
 
 window.saveConfigListExplicit = function(listId) {
+  const addFnMap = {
+    'currencies-list': window.addCurrency,
+    'locations-list': window.addStorageLocation,
+    'brands-list': window.addBrand,
+    'compositions-list': window.addComposition,
+    'shops-list': window.addShop,
+    'project-types-list': window.addProjectType,
+    'calc-garments-list': window.addCalcGarment,
+    'calc-parts-list': window.addCalcPart,
+    'accessory-types-list': window.addAccessoryType,
+    'needle-types-list': window.addNeedleType,
+    'needle-brands-list': window.addNeedleBrand,
+    'knitting-sizes-list': window.addKnittingSize,
+    'crochet-sizes-list': window.addCrochetSize
+  };
+  if (addFnMap[listId]) addFnMap[listId]();
+
   const active = document.activeElement;
   if (active && active.dataset && active.dataset.listUpdate === listId) {
     const i = parseInt(active.dataset.listIdx);
@@ -12630,12 +12704,46 @@ window.saveConfigListExplicit = function(listId) {
     if (field === 'emoji') active.value = value;
     if (fn) fn(i, field, value);
   }
+  
+  const renderMap = {
+    'currencies-list': () => renderConfigList(document.getElementById('currencies-list'), currencies, 'update_currencies-list', 'delete_currencies-list'),
+    'locations-list': () => renderConfigList(document.getElementById('locations-list'), storageLocations, 'update_locations-list', 'delete_locations-list'),
+    'brands-list': () => renderConfigList(document.getElementById('brands-list'), brands, 'update_brands-list', 'delete_brands-list'),
+    'compositions-list': () => renderConfigList(document.getElementById('compositions-list'), compositions, 'update_compositions-list', 'delete_compositions-list'),
+    'shops-list': () => renderConfigList(document.getElementById('shops-list'), shops, 'update_shops-list', 'delete_shops-list'),
+    'project-types-list': () => renderConfigList(document.getElementById('project-types-list'), projectTypes, 'update_project-types-list', 'delete_project-types-list'),
+    'calc-garments-list': () => renderConfigList(document.getElementById('calc-garments-list'), calcGarments, 'update_calc-garments-list', 'delete_calc-garments-list'),
+    'calc-parts-list': () => renderConfigList(document.getElementById('calc-parts-list'), calcParts, 'update_calc-parts-list', 'delete_calc-parts-list'),
+    'accessory-types-list': () => renderConfigList(document.getElementById('accessory-types-list'), accessoryTypes, 'update_accessory-types-list', 'delete_accessory-types-list'),
+    'needle-types-list': () => renderConfigList(document.getElementById('needle-types-list'), needleTypes, 'update_needle-types-list', 'delete_needle-types-list'),
+    'needle-brands-list': () => renderConfigList(document.getElementById('needle-brands-list'), needleBrands, 'update_needle-brands-list', 'delete_needle-brands-list'),
+    'knitting-sizes-list': () => renderConfigList(document.getElementById('knitting-sizes-list'), knittingSizes, 'update_knitting-sizes-list', 'delete_knitting-sizes-list'),
+    'crochet-sizes-list': () => renderConfigList(document.getElementById('crochet-sizes-list'), crochetSizes, 'update_crochet-sizes-list', 'delete_crochet-sizes-list')
+  };
+  if (renderMap[listId]) renderMap[listId]();
+
   showNotification('💾 Cambios guardados con éxito');
 }
 
 
 // Global delegated handler for config lists
-document.addEventListener('change', function(e) {
+document.addEventListener('change', async function(e) {
+  if (['l-fotos', 'a-fotos', 'ac-foto', 'ac-gallery', 'detail-project-foto', 'detail-project-gallery'].includes(e.target.id)) {
+    let previewId = e.target.id + '-preview';
+    if (e.target.id === 'detail-project-foto') previewId = 'detail-project-media-preview';
+    if (e.target.id === 'detail-project-gallery') previewId = 'project-gallery-grid';
+    const box = document.getElementById(previewId);
+    if (box) {
+      const files = Array.from(e.target.files);
+      if (files.length) {
+        box.innerHTML = '<div class="multi-fotos-grid">' + files.map((f, i) => {
+          const url = URL.createObjectURL(f);
+          return '<div class="multi-foto-item' + (i===0?' portada':'') + '"><img src="'+url+'" alt="Preview"><div class="portada-badge">Sin guardar</div></div>';
+        }).join('') + '</div>';
+      }
+    }
+  }
+
   const el = e.target;
   if (!el || !el.dataset) return;
   const listId = el.dataset.listUpdate;
@@ -14007,7 +14115,6 @@ window.saveAguja = async function() {
     fotosUrls,
     movimientos,
     creadoEn: existing.creadoEn || new Date().toISOString(),
-    terminadoEn,
     actualizadoEn: new Date().toISOString(),
   };
   appendInventoryEditMovement(movimientos, 'agujas', existing, a);
@@ -14410,7 +14517,6 @@ window.saveAccesorio = async function() {
     galeria: tempAccessoryGallery,
     movimientos,
     creadoEn: existing.creadoEn || new Date().toISOString(),
-    terminadoEn,
     actualizadoEn: new Date().toISOString(),
   };
   appendInventoryEditMovement(movimientos, 'accesorios', existing, ac);
@@ -17770,6 +17876,15 @@ window.goToActiveTimer = function(e) {
 }
 startGlobalTimerTracker();
 
+window.openWebLink = function() {
+  const text = currentProject ? (currentProject.enlacesWeb || '').trim() : '';
+  if (!text) return;
+  const match = text.match(/(https?:\/\/[^\s]+|www\.[^\s]+)/i);
+  let url = match ? match[0] : (!text.includes(' ') ? text : '');
+  if (!url) { showNotification('❌ No se ha detectado ningún enlace'); return; }
+  if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+  window.open(url, '_blank');
+}
 window.openWebModal = function() {
   document.getElementById('web-zoom-textarea').value = currentProject ? (currentProject.enlacesWeb || '') : '';
   const shared = currentProject && currentProject.compartidoRecibido;
@@ -17807,6 +17922,7 @@ window.copyWebLink = function() {
       style="width:100%;box-sizing:border-box;border:1.5px solid var(--cream-dark);border-radius:12px;padding:12px;font-family:'Lato',sans-serif;font-size:14px;outline:none;background:var(--warm-white);color:var(--text-main);line-height:1.4;resize:vertical;"></textarea>
     <div style="display: flex; gap: 10px; justify-content: flex-end;">
       <button class="btn btn-ghost" onclick="closeWebModal()">Cancelar</button>
+      <button class="btn btn-secondary" onclick="openWebLink()" title="Visitar enlace">🌍 Visitar</button>
       <button class="btn btn-primary" onclick="saveWebModal()">💾 Guardar</button>
     </div>
   </div>

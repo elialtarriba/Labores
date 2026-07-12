@@ -5,7 +5,12 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 ## [V20] - 2026-07-12
 
 ### Nuevas Funcionalidades
-- **[En desarrollo]:** Inicio de ciclo de trabajo para la versión V20.
+- **Enlaces Web clicables:** Se ha añadido un botón "Visitar" (🌍) junto al botón de copiar en el apartado web (y dentro del visor grande). Al pulsarlo, si hay un enlace guardado, te abrirá el navegador directamente.
+- **Reordenar Notas:** Ahora todas las notas de los proyectos (diario de evolución) incluyen botones de flechas (⬆️ y ⬇️) que te permiten reordenarlas libremente en cualquier momento.
+- **Previsualización de Fotos en tiempo real:** Ahora, al seleccionar fotos nuevas (para lanas, agujas, proyectos o accesorios), la miniatura de previsualización aparecerá instantáneamente en pantalla sin tener que esperar a guardar.
+- **Autoguardado en Configuración:** Se ha mejorado el comportamiento de todas las listas de configuración (como tallas de agujas, marcas, tipos, etc.). Ahora, si escribes un nuevo elemento y pulsas directamente "Guardar cambios", el elemento se añade y se guarda de forma automática sin tener que pulsar antes el botón `+`.
+- **Ejemplo por defecto (Fábrica):** Ahora, cuando alguien abra la aplicación por primera vez o tú entres desde un dispositivo nuevo, aparecerá el proyecto de ejemplo "Margarita en Maceta", con sus lanas, accesorios y agujas vinculados.
+- **Correcciones y limpieza:** Se ha eliminado el texto sobrante ("Toca para abrir el PDF") que manchaba las miniaturas de los PDFs. Además, se ha arreglado un error crítico (`terminadoEn`) que impedía editar y guardar las agujas y accesorios existentes.
 
 ## [V19] - 2026-07-12
 
