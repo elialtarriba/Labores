@@ -2,6 +2,17 @@
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
+## [V17] - 2026-07-12
+
+### Nuevas Funcionalidades
+- **Barra Global de Temporizador Activo:** Se ha añadido un indicador flotante en la parte superior de la aplicación que detecta y se muestra globalmente si hay algún proyecto con el temporizador corriendo. 
+- **Píldora de Tiempo Móvil:** El indicador ahora es arrastrable (draggable) por la pantalla. Puedes moverlo con el dedo o el ratón a cualquier rincón, y la aplicación recordará exactamente dónde lo dejaste aunque cambies de proyecto o recargues la página. Al pulsar sobre ella, la aplicación navega directamente al proyecto activo y abre su pestaña "Tiempo" para controlarlo.
+
+### Arreglos y Ajustes Visuales
+- **Pestañas de Proyecto (`.detail-tab`):** Ahora las pestañas dentro de un proyecto (General, Tiempo, Contadores, etc.) adquieren un tono claro del color principal del tema escogido. Cuando se seleccionan, el fondo se vuelve blanco completamente (`#fff`) para destacar en qué pestaña te encuentras en todo momento.
+- **Botones de Notas del Proyecto:** Los botones de "Añadir" y el icono de micrófono 🎙️ en la sección de "Notas del proyecto" ahora utilizan exactamente la misma estética y el color del tema actual (`.btn-primary`) que el resto de botones principales. Además, tanto botones como caja de texto son más reducidos en altura y alinean perfectamente.
+- **Botón Copyright:** Se ha eliminado el texto/botón de Copyright de la pantalla de inicio principal para dejarla más limpia. Ahora se ubica como un pequeño y discreto botón circular con el símbolo "©" al final del manual de instrucciones.
+- Se ha actualizado la etiqueta de versión de la aplicación a **V17**.
 
 ## [V1] - 2026-06-29
 

@@ -38,6 +38,30 @@ Este archivo protege el comportamiento existente de la app. Antes de hacer cambi
 - `capturas/IMG_6913.jpg`: formulario de lana y lista de marcas; todas las opciones deben mostrar icono. El título de edición debe ser `Editar Lana`.
 - `capturas/IMG_6914.PNG`: formulario de aguja; `Número / Talla` y `Marca` deben ser listas configurables. El título debe ser `Editar Aguja`.
 
+## [2026-07-12] - Ajustes Visuales V17
+
+### Encargo
+Refinar la interfaz (pestañas y notas de proyecto) para que adquieran colores dinámicos según el tema actual, limpiar la pantalla de inicio moviendo el copyright al manual e implementar un monitor flotante global para los tiempos.
+
+### Archivos tocados
+- `index.html`
+- `CHANGELOG.md`
+- `REGISTRO.md`
+
+### Cambios exactos
+- **Barra de Timer Global**: Añadido `<div id="global-active-timer-bar">` en el body con estilo `fixed` (fondo rojo) y animación intermitente. Se corrigió la lógica apuntando a `db.proyectos` en lugar de `proyectos` en el rastreador.
+- **Lógica de Arrastre**: Implementada la función `makeTimerDraggable()` que captura eventos `touchstart/mousedown` y permite mover la píldora libremente por la pantalla, guardando constantemente sus coordenadas en `localStorage.setItem('timer_pill_pos')` para que recuerde su ubicación exacta entre cargas. Se añadió una protección de click para que soltarla tras arrastrar no ejecute el enlace.
+- **Pestañas `.detail-tab`**: Modificadas para usar `color-mix` con `var(--terracota-l)` y fondo blanco `#fff` cuando están activas (`.active`).
+- **Notas de proyecto (`.nota-btn-dark` y `textarea`)**: Los botones "Añadir" y el icono del micrófono se han reestilizado para usar los estilos del botón principal (`linear-gradient(180deg, var(--terracota-l) 0%, var(--terracota) 50%, var(--terracota-d) 100%)`). Botones y textarea han sido reducidos en altura a 38px para ser más compactos y mantener alineación.
+- **Copyright**: Se ha retirado el elemento del final de la página principal. Se ha añadido un botón de `©` poco visible (opacity: 0.5) al final del `modal-instrucciones`, justo debajo del botón "¡Entendido!".
+- Versión actualizada a **V17**.
+
+### Comportamiento protegido
+- Se mantienen todas las funcionalidades intactas de guardado, gestión de proyectos y cálculos de tiempo. El tracker visual es una capa encima de los estados ya guardados en `proyectos`, sin alterarlos.
+
+### Pruebas ejecutadas
+- Se ha aplicado parche Python al archivo `index.html` dado su volumen, verificando que los cambios de CSS en las clases específicas fueron efectivos.
+
 ## Encargo actual
 
 - [x] Botón de duplicar en lanas, agujas y accesorios. El nombre duplicado termina en ` (copia)`.

@@ -919,10 +919,10 @@ if ('serviceWorker' in navigator) {
     font-size: 13.5px;
     cursor: pointer;
     font-weight: 700;
-    color: var(--text-soft);
-    background: transparent;
+    color: var(--bark);
+    background: color-mix(in srgb, var(--terracota-l) 40%, var(--warm-white) 60%);
     border: none;
-    box-shadow: none;
+    box-shadow: 0 3px 0 color-mix(in srgb, var(--terracota-d) 30%, var(--cream-dark) 70%);
     white-space: nowrap;
     flex: 0 0 auto;
     display: inline-flex;
@@ -939,10 +939,10 @@ if ('serviceWorker' in navigator) {
   }
   .detail-tab.active {
     background: #fff;
-    color: var(--text-main);
+    color: var(--terracota-d);
     box-shadow:
-      0 2px 5px rgba(110,74,58,0.12),
-      0 1px 1.5px rgba(110,74,58,0.08);
+      0 1px 0 color-mix(in srgb, var(--terracota-d) 30%, var(--cream-dark) 70%),
+      0 2px 5px rgba(110,74,58,0.12);
   }
   .detail-tab:hover:not(.active) { color: var(--bark); background: rgba(255,255,255,0.25); }
 
@@ -4606,7 +4606,7 @@ if ('serviceWorker' in navigator) {
   
   /* El de la paleta de colores que no ponga nada */
   .home-theme-label {
-    /* display: none !important; Removed for V14 */
+    /* display: none !important; Removed for V17 */
   }
 </style>
 
@@ -4718,6 +4718,12 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
 }
 
 </style>
+<style>
+@keyframes blink-timer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+</style>
 </head>
 
 
@@ -4725,6 +4731,10 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
 
 
 <body>
+<div id="global-active-timer-bar" onclick="goToActiveTimer()" style="display:none; position:fixed; top:12px; left:50%; transform:translateX(-50%); background:#a8e6cf; color:#1b4332; padding:8px 16px; border-radius:20px; font-weight:800; font-size:13px; z-index:999999; cursor:pointer; box-shadow:0 4px 15px rgba(168,230,207,0.4); border:2px solid white; align-items:center; gap:8px;">
+  <span class="blinking-dot" style="width:8px; height:8px; background:#1b4332; border-radius:50%; display:inline-block; animation:blink-timer 1s infinite;"></span>
+  <span id="global-active-timer-text">Tiempo en curso</span>
+</div>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <aside class="sidebar">
@@ -4871,9 +4881,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
       </div>
 
       
-<div style="text-align:center; padding: 20px 10px; font-size:12px; opacity:0.6; cursor:pointer; color:inherit; font-family:inherit; clear:both; margin-top:auto;" onclick="openCopyright(event)">
-  © 2025–Present Elisabeth Altarriba
-</div>
+<!-- Copyright moved to instructions modal in V17 -->
 
       <div class="empty-state" id="empty-projects" style="display:none;">
         <div class="empty-icon">🧶</div>
@@ -4930,14 +4938,15 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
           <div class="timeline" id="notas-timeline"></div>
           <style>
             .nota-btn-dark {
-              background: var(--bark) !important;
+              background: linear-gradient(180deg, var(--terracota-l) 0%, var(--terracota) 50%, var(--terracota-d) 100%) !important;
               color: #fff !important;
-              border: 1.5px solid var(--bark-l) !important;
-              box-shadow: 0 4px 0 #4a3026, 0 6px 12px rgba(110,74,58,.2) !important;
-              border-radius: 12px !important;
+              border: none !important;
+              box-shadow: 0 4px 0 var(--bark), 0 6px 12px rgba(0,0,0,.2) !important;
+              text-shadow: 0 1px 2px rgba(0,0,0,.3) !important;
+              border-radius: 30px !important;
               font-family: 'Lato', sans-serif !important;
               font-weight: 700 !important;
-              height: 46px !important;
+              height: 38px !important;
               display: inline-flex !important;
               align-items: center !important;
               justify-content: center !important;
@@ -4946,12 +4955,12 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
             }
             .nota-btn-dark:active {
               transform: translateY(4px) !important;
-              box-shadow: 0 0px 0 #4a3026, 0 2px 4px rgba(110,74,58,.2) !important;
+              box-shadow: 0 0px 0 var(--bark), 0 2px 4px rgba(0,0,0,.35) !important;
             }
           </style>
           <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
             <textarea id="new-nota-input" placeholder="Escribe una nota…" rows="1"
-              style="flex:1;height:46px;border:1.5px solid var(--cream-dark);border-radius:12px;padding:12px 14px;font-family:'Lato',sans-serif;font-size:14px;outline:none;resize:none;background:var(--warm-white);color:var(--text-main);line-height:1.4;transition:border-color var(--transition),box-shadow var(--transition);"></textarea>
+              style="flex:1;height:38px;box-sizing:border-box;border:1.5px solid var(--cream-dark);border-radius:12px;padding:8px 14px;font-family:'Lato',sans-serif;font-size:14px;outline:none;resize:none;background:var(--warm-white);color:var(--text-main);line-height:1.4;transition:border-color var(--transition),box-shadow var(--transition);"></textarea>
             <div style="display:flex;gap:8px;flex-shrink:0;">
               <button class="nota-btn-dark" onclick="openDictationModal()" title="Dictar por voz" style="width:46px;font-size:18px;">🎙️</button>
               <button class="nota-btn-dark" onclick="addNota()" style="padding:0 20px;font-size:14px;">Añadir</button>
@@ -5737,8 +5746,9 @@ service cloud.firestore {<br>
       </div>
 
     </div>
-    <div class="modal-footer" style="display:flex; justify-content:center; padding-top:10px; border-top:1px solid var(--cream-dark);">
+    <div class="modal-footer" style="display:flex; flex-direction:column; align-items:center; gap:10px; padding-top:10px; border-top:1px solid var(--cream-dark);">
       <button class="btn btn-primary" onclick="closeModal('modal-instrucciones')" style="width: 100%;">¡Entendido!</button>
+      <button onclick="openCopyright(event)" style="background:transparent; border:none; color:var(--text-muted); opacity:0.5; cursor:pointer; font-size:14px; padding:5px;">©</button>
     </div>
   </div>
 </div>
@@ -15907,7 +15917,7 @@ ${reportToolbarHTML}
   </div>
 </div>
 
-<div id=\"app-version-badge\" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V14</div>
+<div id=\"app-version-badge\" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V17</div>
 
 
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
@@ -16337,7 +16347,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<div id=\"app-version-badge\" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V14</div>
+<div id=\"app-version-badge\" style="position:fixed; bottom:75px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V17</div>
 <!-- ═══════════════ MODAL: VISOR DE IMAGEN ═══════════════ -->
 <div class="modal-overlay" id="modal-image-viewer" onclick="if(event.target===this) closeModal('modal-image-viewer')">
   <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
@@ -17269,6 +17279,137 @@ function openCopyright(e) {
   m.style.opacity = '1';
   m.firstElementChild.style.transform = 'translateY(0)';
 }
+
+let globalTimerInterval;
+let isDraggingTimer = false;
+let timerDragStartX, timerDragStartY;
+let timerInitialLeft, timerInitialTop;
+
+function makeTimerDraggable() {
+  const bar = document.getElementById('global-active-timer-bar');
+  if (!bar) return;
+
+  const savedPos = localStorage.getItem('timer_pill_pos');
+  if (savedPos) {
+    try {
+      const pos = JSON.parse(savedPos);
+      bar.style.left = pos.left + 'px';
+      bar.style.top = pos.top + 'px';
+      bar.style.transform = 'none';
+    } catch(e){}
+  }
+
+  const startDrag = (e) => {
+    isDraggingTimer = true;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    timerDragStartX = clientX;
+    timerDragStartY = clientY;
+    
+    const rect = bar.getBoundingClientRect();
+    bar.style.left = rect.left + 'px';
+    bar.style.top = rect.top + 'px';
+    bar.style.transform = 'none';
+    
+    timerInitialLeft = rect.left;
+    timerInitialTop = rect.top;
+    
+    bar.setAttribute('data-dragged', 'false');
+  };
+
+  const onDrag = (e) => {
+    if (!isDraggingTimer) return;
+    e.preventDefault();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    const dx = clientX - timerDragStartX;
+    const dy = clientY - timerDragStartY;
+    
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      bar.setAttribute('data-dragged', 'true');
+    }
+    
+    let newLeft = timerInitialLeft + dx;
+    let newTop = timerInitialTop + dy;
+    
+    newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - bar.offsetWidth));
+    newTop = Math.max(0, Math.min(newTop, window.innerHeight - bar.offsetHeight));
+    
+    bar.style.left = newLeft + 'px';
+    bar.style.top = newTop + 'px';
+  };
+
+  const endDrag = () => {
+    if (isDraggingTimer) {
+      isDraggingTimer = false;
+      const rect = bar.getBoundingClientRect();
+      localStorage.setItem('timer_pill_pos', JSON.stringify({left: rect.left, top: rect.top}));
+    }
+  };
+
+  bar.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', onDrag, {passive: false});
+  document.addEventListener('mouseup', endDrag);
+
+  bar.addEventListener('touchstart', startDrag, {passive: false});
+  document.addEventListener('touchmove', onDrag, {passive: false});
+  document.addEventListener('touchend', endDrag);
+}
+
+function startGlobalTimerTracker() {
+  if (globalTimerInterval) clearInterval(globalTimerInterval);
+  makeTimerDraggable();
+  
+  globalTimerInterval = setInterval(() => {
+    let activeProject = null;
+    const projArray = (typeof db !== 'undefined' && db.proyectos) ? db.proyectos : (typeof proyectos !== 'undefined' ? proyectos : []);
+    
+    for(let p of projArray) {
+      if(p.timerRunning) {
+        activeProject = p;
+        break;
+      }
+    }
+    
+    const bar = document.getElementById('global-active-timer-bar');
+    if(activeProject) {
+      bar.style.display = 'flex';
+      const worked = typeof getWorkedSeconds === 'function' ? getWorkedSeconds(activeProject) : 0;
+      const dur = typeof formatDuration === 'function' ? formatDuration(worked) : '';
+      document.getElementById('global-active-timer-text').textContent = `⏱ ${activeProject.nombre || 'Proyecto'} (${dur}) - Toca para parar`;
+    } else {
+      bar.style.display = 'none';
+    }
+  }, 1000);
+}
+
+window.goToActiveTimer = function(e) {
+  const bar = document.getElementById('global-active-timer-bar');
+  if (bar && bar.getAttribute('data-dragged') === 'true') {
+    bar.setAttribute('data-dragged', 'false');
+    return;
+  }
+  
+  let activeProject = null;
+  const projArray = (typeof db !== 'undefined' && db.proyectos) ? db.proyectos : (typeof proyectos !== 'undefined' ? proyectos : []);
+  for(let p of projArray) {
+    if(p.timerRunning) {
+      activeProject = p;
+      break;
+    }
+  }
+  
+  if(activeProject && typeof openProject === 'function' && typeof showTab === 'function') {
+    openProject(activeProject.id);
+    // Add a slight delay to ensure the DOM is ready after opening the project
+    setTimeout(() => {
+      const tabs = document.querySelectorAll('.detail-tab');
+      showTab('tiempo', tabs.length > 1 ? tabs[1] : null);
+    }, 50);
+  }
+}
+startGlobalTimerTracker();
 </script>
 </body>
 
