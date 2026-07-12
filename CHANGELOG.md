@@ -12,6 +12,10 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 - **Limpieza de repositorio:** Se han eliminado los scripts temporales de Python (`.py`) utilizados para la automatización e inserción de código durante el desarrollo de las últimas versiones, dejando el entorno limpio para subir a GitHub.
 
 ### Arreglos y Ajustes Visuales
+- **Barra de Navegación Inferior (Móvil):** Se ha subido la barra inferior de botones en las pantallas móviles para evitar que queden escondidos por la curvatura del cristal, añadiendo un margen inferior generoso (espacio vacío extra) que los desplaza hacia arriba.
+- **Botones de Navegación 3D:** La barra inferior de secciones se ha rediseñado para que los botones tengan un aspecto 3D "físico" y grueso, con una sombra dura debajo. Ahora, los botones adoptan el color oscuro de tu tema principal para hacer contraste, y al pulsar uno (activarlo), este se "hunde" mecánicamente y pasa a ser de un color muy claro y luminoso del tema para que quede totalmente claro en qué pantalla te encuentras.
+- **Detalle de Proyecto (Móvil):** Dentro de la ficha de un proyecto, se ha ajustado la distribución superior de los botones (Inicio, Compartir, Guardar y Borrar) para que quepan todos alineados en una sola fila en las pantallas de los teléfonos.
+- **Detalle de Proyecto (Limpieza Visual):** Se ha eliminado el encabezado "Información del proyecto" que aparecía encima de los campos principales, ya que resultaba redundante y ocupaba espacio innecesario.
 - **Pestañas de Detalle (Efecto 3D):** Se ha ajustado el espaciado (padding) inferior de las pestañas de proyecto (General, Tiempo, etc.) y se ha duplicado el tamaño de su sombra para que no se corten y muestren un aspecto 3D más profundo y realista.
 - **Botón de Instrucciones (Oculto):** El botón de instrucciones con icono de libro de la barra superior ahora se oculta de forma automática al entrar al detalle de cualquier proyecto para liberar espacio.
 
