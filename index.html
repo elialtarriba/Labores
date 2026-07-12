@@ -4979,6 +4979,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
             <!-- populated by JS -->
           </div>
         </div>
+
         <div class="form-section">
           <h3>📝 Notas del proyecto</h3>
           <div class="timeline" id="notas-timeline"></div>
@@ -9922,6 +9923,18 @@ function renderDetail() {
           `<option value="${s.value}" ${p.estado===s.value?'selected':''}>${s.label}</option>`).join('')}
       </select>
     </div>
+    <div class="form-group" style="grid-column: 1 / -1; margin-top: 5px;">
+      <label>Web</label>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="text" id="d-enlaces-web-line" placeholder="Pega aquí tus enlaces web o recortes..." value="${escapeAttr(p.enlacesWeb||'')}" onchange="if(currentProject){ currentProject.enlacesWeb = this.value; saveDetailChanges(true); }" ${shared ? 'readonly style="opacity:0.6; flex:1;"' : 'style="flex:1;"'}>
+        <button type="button" class="btn btn-secondary" onclick="openWebModal()" title="Ver todo en grande" style="padding: 0; width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="copyWebLink()" title="Copiar al portapapeles" style="padding: 0; width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+      </div>
+    </div>
     <div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; gap: 16px; font-size: 13px; color: var(--text-soft); padding-top: 12px; margin-top: 8px; border-top: 1px solid var(--cream-dark); user-select:none;">
       <span><strong style="color:var(--text-main); font-weight:600;">Inicio:</strong> ${p.fechaInicio ? p.fechaInicio.split('-').reverse().join('/') : '-'}</span>
       <span style="opacity: 0.4;">|</span>
@@ -9931,6 +9944,9 @@ function renderDetail() {
 
   document.getElementById('d-fecha-inicio').value = p.fechaInicio || '';
   document.getElementById('d-fecha-fin').value    = p.fechaFin    || '';
+
+
+
   syncScheduleProgress(false);
 
   renderProjectMediaPanel();
@@ -17753,7 +17769,48 @@ window.goToActiveTimer = function(e) {
   }
 }
 startGlobalTimerTracker();
+
+window.openWebModal = function() {
+  document.getElementById('web-zoom-textarea').value = currentProject ? (currentProject.enlacesWeb || '') : '';
+  const shared = currentProject && currentProject.compartidoRecibido;
+  document.getElementById('web-zoom-textarea').readOnly = shared;
+  document.getElementById('modal-web-zoom').classList.add('active');
+}
+window.closeWebModal = function() {
+  document.getElementById('modal-web-zoom').classList.remove('active');
+}
+window.saveWebModal = function() {
+  if (currentProject) {
+    currentProject.enlacesWeb = document.getElementById('web-zoom-textarea').value;
+    const inputLine = document.getElementById('d-enlaces-web-line');
+    if (inputLine) inputLine.value = currentProject.enlacesWeb;
+    saveDetailChanges(true);
+  }
+  closeWebModal();
+}
+window.copyWebLink = function() {
+  const text = currentProject ? (currentProject.enlacesWeb || '') : '';
+  if (text) {
+    navigator.clipboard.writeText(text).then(() => {
+      showNotification('📋 Copiado');
+    });
+  }
+}
 </script>
+<div class="modal-overlay" id="modal-web-zoom">
+  <div class="modal-content" style="max-width: 500px; display: flex; flex-direction: column; gap: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2 style="margin: 0; font-size: 20px;">🌐 Enlaces Web</h2>
+      <button class="modal-close" onclick="closeWebModal()">✕</button>
+    </div>
+    <textarea id="web-zoom-textarea" rows="10" placeholder="Pega aquí tus enlaces web o recortes de texto..." 
+      style="width:100%;box-sizing:border-box;border:1.5px solid var(--cream-dark);border-radius:12px;padding:12px;font-family:'Lato',sans-serif;font-size:14px;outline:none;background:var(--warm-white);color:var(--text-main);line-height:1.4;resize:vertical;"></textarea>
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <button class="btn btn-ghost" onclick="closeWebModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveWebModal()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
 </body>
 
 </html>
