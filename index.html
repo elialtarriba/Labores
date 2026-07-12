@@ -5782,6 +5782,7 @@ service cloud.firestore {<br>
             <li><strong>🔢 Contadores:</strong> crea uno por vueltas, mangas o dibujos. Usa ＋/−, escribe notas y toca el número para verlo grande.</li>
             <li><strong>🧶 Calculadora:</strong> indica medida, muestra de 10 cm y holgura; calcula puntos o vueltas y guarda el resultado.</li>
             <li><strong>💶 Finanzas:</strong> reúne materiales, tiempo y mano de obra. <strong>Informe</strong> crea el resumen; <strong>Informe Completo</strong> añade evolución, notas y diario. Puedes imprimirlo o enviarlo por WhatsApp/email.</li>
+            <li><strong>📅 Fechas inalterables:</strong> Al editar un proyecto, debajo de las notas verás una línea con la <strong>fecha de inicio</strong> y la <strong>fecha fin</strong>. Estas fechas son automáticas e independientes del calendario normal, no se pueden modificar a mano y sirven como un registro fiable de cuándo creaste el proyecto por primera vez y cuándo lo marcaste como "Terminado".</li>
           </ul>
           <div class="manual-tip">💡 Los materiales reservados para una labor descuentan existencias. Al devolverlos o borrar el proyecto, vuelven al inventario y queda anotado en su historial.</div>
         </div>
@@ -5824,17 +5825,22 @@ service cloud.firestore {<br>
       </div>
 
       <div class="inst-section" id="manual-compartir">
-        <h3 class="inst-title">🤝 Enviar o recibir un proyecto</h3>
+        <h3 class="inst-title">🤝 Compartir y recibir proyectos</h3>
         <div class="inst-content">
+          <p>La app te permite enviarle tus proyectos completos a otras personas y recibir los suyos. Al hacerlo, viaja absolutamente todo: fotos, patrones en PDF, tiempo, contadores, cálculos, notas y materiales.</p>
+          
+          <h4 style="margin: 16px 0 8px; font-size: 15px; color: var(--bark);">📤 Cómo enviar un proyecto</h4>
+          <p style="margin-top:0;">Abre tu proyecto, pulsa el botón superior <strong>🤝 Compartir</strong>, escribe a quién se lo envías y elige por dónde mandarlo (WhatsApp, Mail, AirDrop...).</p>
+          
+          <h4 style="margin: 20px 0 8px; font-size: 15px; color: var(--bark);">📥 Cómo recibir e importar</h4>
           <div class="manual-steps">
-            <div class="manual-step"><span class="manual-step-number">1</span><p>Para enviar: abre la labor, pulsa <strong>Compartir proyecto</strong>, indica a quién y elige WhatsApp, Mail o AirDrop.</p></div>
-            <div class="manual-step"><span class="manual-step-number">2</span><p>Para recibir: en Inicio pulsa la barra alargada <strong>Compartidos</strong> y después <strong>Importar proyecto</strong>.</p></div>
-            <div class="manual-step"><span class="manual-step-number">3</span><p>Se añade como otra labor, sin borrar nada. Viajan fotos, PDF, tiempo, contadores, cálculos, finanzas, notas, medidas y materiales.</p></div>
+            <div class="manual-step"><span class="manual-step-number">1</span><p>En la pantalla de Inicio, pulsa la barra alargada de <strong>Compartidos</strong> y luego <strong>Importar proyecto</strong>. Selecciona el archivo que te han enviado. Cuando termine, la barra parpadeará confirmando el éxito.</p></div>
+            <div class="manual-step"><span class="manual-step-number">2</span><p><strong>Modo Solo Lectura:</strong> Los proyectos de la carpeta "Compartidos" se pueden visualizar al completo y puedes descargar sus PDFs, pero <strong>no se pueden modificar</strong> (botones apagados, no suma tiempo ni notas). Así evitas alterar o borrar sin querer el archivo original.</p></div>
+            <div class="manual-step"><span class="manual-step-number">3</span><p><strong>Pasar a Mis Proyectos:</strong> Si quieres empezar a tejerlo y modificarlo, entra en él y pulsa <strong>📥 Pasar a mis proyectos</strong>. (El sistema te avisará si ya lo habías copiado antes para evitar duplicados infinitos). Al pasarlo, el botón "Todos" parpadeará y se creará tu propia copia oficial editable, que lucirá una bonita etiqueta verde indicando quién te lo regaló.</p></div>
           </div>
-          <p>Los proyectos recibidos muestran <strong>Compartido por…</strong>. Si los pasas a Mis Proyectos, esa etiqueta se conserva para recordar quién te los envió.</p>
-          <div class="manual-tip">👥 Al final del proyecto verás de forma compacta quién lo envió o a quién se lo has enviado.</div>
+
           <div class="manual-tip" style="margin-top: 10px; background: #fff5eb; border-left: 3px solid var(--terracota);">
-            <strong>⚠️ Nota sobre el archivo "texto.txt":</strong> Al compartir desde un iPhone/iPad (Safari) usando WhatsApp o correo, a veces se envían <strong>dos archivos</strong>: el proyecto real (terminado en <code>.labores.txt</code>) y otro archivo llamado <code>texto.txt</code>. Ese archivo de texto solo contiene un saludo automático y <strong>puedes ignorarlo o borrarlo</strong>; el que importa y debes importar en la app es el archivo principal del proyecto.
+            <strong>⚠️ Nota sobre el archivo "texto.txt":</strong> Al compartir desde un iPhone/iPad usando WhatsApp o correo, a veces se envían <strong>dos archivos</strong>: el proyecto (terminado en <code>.labores</code>) y un <code>texto.txt</code>. Este último solo contiene un saludo automático y <strong>puedes ignorarlo</strong>; debes importar el archivo principal.
           </div>
         </div>
       </div>
@@ -6353,6 +6359,9 @@ service cloud.firestore {<br>
         <div class="form-group full advanced-field">
           <label>Notas iniciales</label>
           <textarea id="p-notas" rows="3" placeholder="Cualquier detalle importante…"></textarea>
+        </div>
+        <div id="project-readonly-dates" style="display:none; font-size: 13px; color: var(--text-soft); padding: 8px 12px; background: var(--cream); border-radius: 6px; margin-top: 10px; text-align:center; width: 100%;">
+          <strong>Fecha inicio:</strong> <span id="ro-fecha-inicio">-</span> &nbsp;|&nbsp; <strong>Fecha fin:</strong> <span id="ro-fecha-fin">-</span>
         </div>
       </div>
 
@@ -9579,6 +9588,7 @@ window.openNewModal = function() {
   document.getElementById('p-estado').value = 'pendiente';
   document.getElementById('p-fecha-inicio').value = new Date().toISOString().slice(0,10);
   document.getElementById('counter-presets').innerHTML = '';
+  const roDates = document.getElementById('project-readonly-dates'); if(roDates) roDates.style.display = 'none';
 
   if (currentView === 'llanas') { resetLlanaForm(); openModal('modal-llana'); return; }
   if (currentView === 'agujas') { resetAgujaForm(); openModal('modal-aguja'); return; }
@@ -9601,6 +9611,13 @@ window.saveProject = async function() {
   const existing = db.proyectos.find(x => x.id === id) || {};
   const newPdfs = await storeProjectPdfFiles('p-pdf', id);
   const pdfs = existingProjectPdfs(existing).concat(newPdfs);
+  let terminadoEn = existing.terminadoEn || null;
+  const nuevoEstado = document.getElementById('p-estado').value;
+  if (nuevoEstado === 'terminado' && existing.estado !== 'terminado') {
+    terminadoEn = new Date().toISOString();
+  } else if (nuevoEstado !== 'terminado') {
+    terminadoEn = null;
+  }
 
   let fotoUrl = existing.fotoUrl || '';
   let fotoKey = existing.fotoKey || '';
@@ -9653,6 +9670,7 @@ window.saveProject = async function() {
       ? [{ id: uid(), texto: document.getElementById('p-notas').value, fecha: new Date().toLocaleDateString('es') }]
       : []),
     creadoEn: existing.creadoEn || new Date().toISOString(),
+    terminadoEn,
     actualizadoEn: new Date().toISOString(),
   };
   delete p.foto; delete p.fotoNombre; delete p.pdf; delete p.pdfKey; delete p.pdfNombre;
@@ -9702,6 +9720,12 @@ window.editProject = function() {
   document.getElementById('p-notas').value = currentProject.notas || '';
   ['p-foto','p-pdf'].forEach(resetFileInput);
   document.getElementById('counter-presets').innerHTML = '<p style="font-size:12px;color:var(--text-muted);">Los contadores actuales se conservan al editar.</p>';
+  const roDates = document.getElementById('project-readonly-dates');
+  if (roDates) {
+    roDates.style.display = 'block';
+    document.getElementById('ro-fecha-inicio').textContent = currentProject.creadoEn ? new Date(currentProject.creadoEn).toLocaleDateString() : '-';
+    document.getElementById('ro-fecha-fin').textContent = currentProject.terminadoEn ? new Date(currentProject.terminadoEn).toLocaleDateString() : '-';
+  }
   openModal('modal-proyecto');
 }
 
@@ -13932,6 +13956,7 @@ window.saveAguja = async function() {
     fotosUrls,
     movimientos,
     creadoEn: existing.creadoEn || new Date().toISOString(),
+    terminadoEn,
     actualizadoEn: new Date().toISOString(),
   };
   appendInventoryEditMovement(movimientos, 'agujas', existing, a);
@@ -14334,6 +14359,7 @@ window.saveAccesorio = async function() {
     galeria: tempAccessoryGallery,
     movimientos,
     creadoEn: existing.creadoEn || new Date().toISOString(),
+    terminadoEn,
     actualizadoEn: new Date().toISOString(),
   };
   appendInventoryEditMovement(movimientos, 'accesorios', existing, ac);
