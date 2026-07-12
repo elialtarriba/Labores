@@ -2708,7 +2708,7 @@ if ('serviceWorker' in navigator) {
   .shared-import-panel.visible { display:flex; }
   .shared-import-panel p { margin:0; color:var(--text-soft); font-size:13px; line-height:1.45; }
   .project-shared-badge {
-    display:inline-flex; align-items:center; gap:5px; margin-top:8px; padding:5px 9px;
+    display:inline-flex; align-items:center; gap:5px; margin-top:8px; margin-bottom:8px; padding:5px 9px;
     border-radius:999px; background:var(--sage-l); color:#46604d; font-size:11px; font-weight:800;
   }
   .project-sharing-panel { margin:22px 0 4px; }
@@ -4824,6 +4824,23 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
   50% { opacity: 0.3; }
 }
 </style>
+
+<style>
+@keyframes intenseBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.02); background-color: var(--terracota); color: #fff; box-shadow: 0 0 12px var(--terracota); border-color: var(--terracota); }
+}
+.blink-animation {
+  animation: intenseBlink 0.35s infinite !important;
+}
+</style>
+
+<style>
+  #modal-proyecto.is-new-project .advanced-field,
+  #modal-proyecto.is-new-project .counters-section {
+    display: none !important;
+  }
+</style>
 </head>
 
 
@@ -6295,19 +6312,19 @@ service cloud.firestore {<br>
             <option value="en-pausa">⏸ En pausa</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Talla / Medidas</label>
           <input type="text" id="p-talla" placeholder="XS/S/M/L o cm">
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Destinatario</label>
           <input type="text" id="p-para" placeholder="Para quién es">
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Precio / Presupuesto</label>
           <input type="text" inputmode="decimal" id="p-precio" placeholder="0,00">
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Divisa preferida</label>
           <select id="p-divisa">
             <option value="EUR">€ EUR</option>
@@ -6319,28 +6336,28 @@ service cloud.firestore {<br>
           <label>Fecha inicio</label>
           <input type="date" id="p-fecha-inicio">
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Patrón (nombre)</label>
           <input type="text" id="p-patron" placeholder="Nombre del patrón">
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Foto para la lista</label>
           <input class="file-input" type="file" id="p-foto" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.gif,.heic,.heif">
           <div class="file-note">JPG, PNG, WebP o HEIC. Será la imagen de portada.</div>
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>PDF / patrón (solo PDF)</label>
           <input class="file-input" type="file" id="p-pdf" accept="application/pdf,.pdf" multiple>
           <div class="file-note">Puedes seleccionar varios PDFs. Se optimizarán y guardarán por separado.</div>
         </div>
-        <div class="form-group full">
+        <div class="form-group full advanced-field">
           <label>Notas iniciales</label>
           <textarea id="p-notas" rows="3" placeholder="Cualquier detalle importante…"></textarea>
         </div>
       </div>
 
       <!-- Contadores a crear -->
-        <div style="margin-top:16px;">
+        <div class="counters-section" style="margin-top:16px;">
         <label style="font-size:12px;font-weight:700;color:var(--text-soft);letter-spacing:.06em;">
           CONTADORES PREDEFINIDOS
         </label>
@@ -6593,7 +6610,7 @@ service cloud.firestore {<br>
             <select id="ac-divisa" style="width:110px;padding:9px 12px;font-size:14px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--warm-white);color:var(--text-main);outline:none;cursor:pointer;"></select>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group advanced-field">
           <label>Foto para la lista</label>
           <div class="file-picker-row">
             <input class="file-picker-hidden" type="file" id="ac-foto" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.gif,.heic,.heif" onchange="updateFileName('ac-foto','ac-foto-name')">
@@ -7785,6 +7802,11 @@ window.copySharedProjectToMine = async function(status) {
     closeModal('modal-copy-shared-project');
     showNotification(copy.estado === 'pendiente' ? 'Idea creada en Mis Proyectos' : 'Proyecto creado en Mis Proyectos');
     openProject(copy.id);
+    const todosBtn = document.querySelector('.stat-card[data-filter="todos"]') || document.querySelector('.filter-chip[onclick*="todos"]');
+    if (todosBtn) {
+      todosBtn.classList.add('blink-animation');
+      setTimeout(() => todosBtn.classList.remove('blink-animation'), 4000);
+    }
   } catch (error) {
     console.error(error);
     alert('No se pudo crear la copia completa. Comprueba que las fotos y los PDF sigan disponibles.');
@@ -7805,6 +7827,11 @@ window.importSharedProject = function(input) {
       if (!ok) return;
       const project = await importSharedProjectPayload(payload);
       showNotification(`Proyecto de ${project.compartidoPor} añadido`);
+      const sharedBtn = document.getElementById('shared-projects-bar');
+      if (sharedBtn) {
+        sharedBtn.classList.add('blink-animation');
+        setTimeout(() => sharedBtn.classList.remove('blink-animation'), 4000);
+      }
     } catch (error) {
       console.error(error);
       alert('No he podido importar este archivo. Comprueba que sea un proyecto compartido desde Labores.');
@@ -9541,6 +9568,7 @@ window.openNewModal = function() {
   renderProjectTypeOptions('');
   renderCurrencyOptions({'p-divisa': getDefaultCurrency()});
   document.getElementById('modal-proyecto-titulo').textContent = '✨ Nuevo proyecto';
+  document.getElementById('modal-proyecto').classList.add('is-new-project');
   const saveBtn = document.getElementById('modal-proyecto-save');
   if (saveBtn) saveBtn.textContent = '✨ Crear proyecto';
   ['p-nombre','p-talla','p-para','p-patron','p-notas','p-precio'].forEach(id => document.getElementById(id).value='');
@@ -9656,6 +9684,7 @@ window.editProject = function() {
   if (!currentProject) return;
   editingId = currentProject.id;
   document.getElementById('modal-proyecto-titulo').textContent = '✏️ Editar proyecto';
+  document.getElementById('modal-proyecto').classList.remove('is-new-project');
   const saveBtn = document.getElementById('modal-proyecto-save');
   if (saveBtn) saveBtn.textContent = '💾 Guardar cambios';
   renderProjectTypeOptions(currentProject.tipo || '');
@@ -12101,7 +12130,24 @@ window.printNoteZoom = function() {
           h1 { border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; }
           .content { white-space: pre-wrap; font-size: 14px; }
         </style>
-      </head>
+      
+<style>
+@keyframes intenseBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.02); background-color: var(--terracota); color: #fff; box-shadow: 0 0 12px var(--terracota); border-color: var(--terracota); }
+}
+.blink-animation {
+  animation: intenseBlink 0.35s infinite !important;
+}
+</style>
+
+<style>
+  #modal-proyecto.is-new-project .advanced-field,
+  #modal-proyecto.is-new-project .counters-section {
+    display: none !important;
+  }
+</style>
+</head>
       <body>
         <h1>${titleText}</h1>
         <div class="content">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
@@ -15992,6 +16038,23 @@ td.num{text-align:right;font-weight:700;}
   }
   .inventory-action-btn.delete-btn {
     color: var(--terracota-d) !important;
+  }
+</style>
+
+<style>
+@keyframes intenseBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.02); background-color: var(--terracota); color: #fff; box-shadow: 0 0 12px var(--terracota); border-color: var(--terracota); }
+}
+.blink-animation {
+  animation: intenseBlink 0.35s infinite !important;
+}
+</style>
+
+<style>
+  #modal-proyecto.is-new-project .advanced-field,
+  #modal-proyecto.is-new-project .counters-section {
+    display: none !important;
   }
 </style>
 </head>
