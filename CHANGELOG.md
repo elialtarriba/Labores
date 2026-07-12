@@ -2,6 +2,11 @@
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
+## [V21] - 2026-07-12
+
+### Nuevas Funcionalidades
+- **Nueva versión iniciada:** Preparativos para la V21.
+
 ## [V20] - 2026-07-12
 
 ### Nuevas Funcionalidades

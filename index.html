@@ -9282,6 +9282,12 @@ window.showView = function(v) {
     loadFirebaseConfig(); loadSharingProfileName(); renderCurrencyOptions(); renderAccessoryTypeOptions(); renderLocationOptions(); renderShopOptions(); renderBrandOptions(); renderCompositionOptions(); renderNeedleTypeOptions(); renderNeedleBrandOptions(); renderLlanaAgujaSelects(); renderProjectTypeOptions(); renderCalcGarmentOptions(); renderCalcPartOptions();
     var s=document.getElementById('theme-select'); if(s) s.value=localStorage.getItem('labores_theme')||'';
   }
+  
+  if (v === 'detalle') {
+    window.scrollTo(0, 0);
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) appContainer.scrollTop = 0;
+  }
 }
 
 window.handleBackBtn = function() {
@@ -14879,6 +14885,11 @@ function openModal(id) {
   overlay.classList.add('open');
   const modalBody = overlay.querySelector('.modal-body');
   if (modalBody) modalBody.scrollTop = 0;
+  const modalContent = overlay.querySelector('.modal-content');
+  if (modalContent) modalContent.scrollTop = 0;
+  // Fallback genérico para cualquier contenedor interno con scroll
+  const scrollableDivs = overlay.querySelectorAll('div[style*="overflow-y: auto"], div[style*="overflow-y:auto"]');
+  scrollableDivs.forEach(div => div.scrollTop = 0);
 }
 window.closeModal = function(id) {
   if (id === 'modal-add-accessory-type') restorePendingAccessoryTypeSelection();
@@ -16382,7 +16393,7 @@ ${reportToolbarHTML}
   </div>
 </div>
 
-<div id="app-version-badge" style="position:fixed; bottom:95px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V20</div>
+<div id="app-version-badge" style="position:fixed; bottom:95px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V21</div>
 
 
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
@@ -16806,7 +16817,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<div id="app-version-badge" style="position:fixed; bottom:95px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V20</div>
+<div id="app-version-badge" style="position:fixed; bottom:95px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V21</div>
 <!-- ═══════════════ MODAL: VISOR DE IMAGEN ═══════════════ -->
 <div class="modal-overlay" id="modal-image-viewer" onclick="if(event.target===this) closeModal('modal-image-viewer')">
   <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
