@@ -2,7 +2,7 @@
 
 Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto se documentarán en este archivo.
 
-## [V20] - 2026-07-12
+## [V19] - 2026-07-12
 
 ### Nuevas Funcionalidades
 - **Temporizador Flotante (Píldora):** Se ha implementado un temporizador en forma de píldora flotante de color verde pastel. Esta píldora se muestra de forma constante en la parte superior central de la pantalla mientras haya un temporizador activo (botón "Empezar" en la pestaña Tiempo de un proyecto).
@@ -18,6 +18,7 @@ Todas las modificaciones, mejoras y adiciones de funcionalidades a este proyecto
 - **Detalle de Proyecto (Limpieza Visual):** Se ha eliminado el encabezado "Información del proyecto" que aparecía encima de los campos principales, ya que resultaba redundante y ocupaba espacio innecesario.
 - **Pestañas de Detalle (Efecto 3D):** Se ha ajustado el espaciado (padding) inferior de las pestañas de proyecto (General, Tiempo, etc.) y se ha duplicado el tamaño de su sombra para que no se corten y muestren un aspecto 3D más profundo y realista.
 - **Botón de Instrucciones (Oculto):** El botón de instrucciones con icono de libro de la barra superior ahora se oculta de forma automática al entrar al detalle de cualquier proyecto para liberar espacio.
+- **Nueva versión:** Se ha actualizado la etiqueta de versión de la aplicación visible en la esquina inferior derecha a **V19**.
 
 ## [V17] - 2026-07-12
 
