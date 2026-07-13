@@ -4780,7 +4780,60 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
     display: none !important;
   }
 </style>
+
+<style id="mobile-layout-fix-v24">
+@media (max-width: 700px) {
+  body.view-proyectos #btn-nuevo-wrapper {
+    display: contents !important;
+  }
+  body.view-proyectos .home-actions-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 8px !important;
+  }
+  body.view-proyectos .home-search {
+    grid-column: span 3 !important;
+    order: 1 !important;
+  }
+  body.view-proyectos .home-database {
+    grid-column: span 2 !important;
+    order: 2 !important;
+    justify-content: center !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #btn-instrucciones-square {
+    grid-column: span 1 !important;
+    order: 3 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+  body.view-proyectos #home-sound-button {
+    grid-column: span 2 !important;
+    order: 4 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #home-theme-button {
+    grid-column: span 2 !important;
+    order: 5 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #btn-nuevo {
+    grid-column: span 2 !important;
+    order: 6 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+}
+</style>
 </head>
+
 
 
 
@@ -4857,7 +4910,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
           <input type="text" placeholder="Buscar..." id="search-input" oninput="handleSearch()">
           <button id="search-clear-btn" onclick="clearSearch()" style="display:none;border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:0;line-height:1;touch-action:manipulation;">✕</button>
         </div>
-        <div id="fb-pill" class="fb-pill home-tool home-database"><span id="fb-dot" class="fb-dot"></span><span id="fb-txt">Base de datos local</span></div>
+        <div id="fb-pill" class="fb-pill home-tool home-database"><span id="fb-dot" class="fb-dot"></span><span id="fb-txt">BD local</span></div>
         <button class="home-tool" id="home-sound-button" type="button" onclick="toggleAppSound()"><span>🔇</span><span class="home-sound-label">Sonido: no</span></button>
         <button class="home-tool" id="home-theme-button" type="button" onclick="openHomeThemePicker()"><span>🎨</span><span class="home-theme-label">Temas</span></button>
       </div>
@@ -4866,7 +4919,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
           <span style="margin:0; font-size: 18px;">📖</span>
         </button>
         <button class="btn btn-primary home-new-project" onclick="openNewModal()" id="btn-nuevo" title="Nuevo proyecto" style="flex:1;">
-          <span>＋</span> <span id="btn-nuevo-text">Insertar Proyecto</span>
+          <span>＋</span> <span id="btn-nuevo-text">Nuevo</span>
         </button>
       </div>
     </div>
@@ -9259,7 +9312,7 @@ const viewTitles = {
   detalle:       ['', ''],
 };
 const btnTexts = {
-  proyectos:'Insertar Proyecto', llanas:'Añadir lanas',
+  proyectos:'Nuevo', llanas:'Añadir lanas',
   agujas:'Añadir agujas', accesorios:'Añadir accesorios', medidas:'Añadir medidas', configuracion:null
 };
 
@@ -12283,7 +12336,60 @@ window.printNoteZoom = function() {
     display: none !important;
   }
 </style>
+
+<style id="mobile-layout-fix-v24">
+@media (max-width: 700px) {
+  body.view-proyectos #btn-nuevo-wrapper {
+    display: contents !important;
+  }
+  body.view-proyectos .home-actions-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 8px !important;
+  }
+  body.view-proyectos .home-search {
+    grid-column: span 3 !important;
+    order: 1 !important;
+  }
+  body.view-proyectos .home-database {
+    grid-column: span 2 !important;
+    order: 2 !important;
+    justify-content: center !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #btn-instrucciones-square {
+    grid-column: span 1 !important;
+    order: 3 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+  body.view-proyectos #home-sound-button {
+    grid-column: span 2 !important;
+    order: 4 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #home-theme-button {
+    grid-column: span 2 !important;
+    order: 5 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #btn-nuevo {
+    grid-column: span 2 !important;
+    order: 6 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+}
+</style>
 </head>
+
       <body>
         <h1>${titleText}</h1>
         <div class="content">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
@@ -16329,7 +16435,60 @@ td.num{text-align:right;font-weight:700;}
     display: none !important;
   }
 </style>
+
+<style id="mobile-layout-fix-v24">
+@media (max-width: 700px) {
+  body.view-proyectos #btn-nuevo-wrapper {
+    display: contents !important;
+  }
+  body.view-proyectos .home-actions-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 8px !important;
+  }
+  body.view-proyectos .home-search {
+    grid-column: span 3 !important;
+    order: 1 !important;
+  }
+  body.view-proyectos .home-database {
+    grid-column: span 2 !important;
+    order: 2 !important;
+    justify-content: center !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #btn-instrucciones-square {
+    grid-column: span 1 !important;
+    order: 3 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+  body.view-proyectos #home-sound-button {
+    grid-column: span 2 !important;
+    order: 4 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #home-theme-button {
+    grid-column: span 2 !important;
+    order: 5 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  body.view-proyectos #btn-nuevo {
+    grid-column: span 2 !important;
+    order: 6 !important;
+    width: 100% !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+}
+</style>
 </head>
+
 <body>
 ${reportToolbarHTML}
 <div class="page">
@@ -16591,7 +16750,7 @@ window._fbReady = false;
       p.style.color='var(--text-muted)';
       p.style.borderColor='var(--cream-dark)';
       if(d) d.style.background='#10B981';
-      if(t) t.textContent='Base de datos local';
+      if(t) t.textContent='BD local';
     }
   }, 100);
 })();
