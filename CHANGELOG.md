@@ -1,5 +1,17 @@
 # Changelog - LaboresSinConex
 
+## [V24] - 2026-07-13
+
+### Añadido
+- **Aviso de Copias de Seguridad (Animado):** El texto "Guarda tus datos regularmente" en la esquina inferior ahora tiene un efecto dinámico. Empieza con un color oscuro del tema y, cada 10 segundos, una ola de color lo recorre de izquierda a derecha durante 5 segundos, cambiando alternativamente entre colores oscuros y los colores pastel fijos (verde, azul, amarillo, rosa, lila). Se puede pausar o reanudar el efecto haciendo doble clic sobre el texto. Además, en dispositivos móviles, este texto se alinea a la izquierda de la pantalla para mejor legibilidad, separándose de la versión (V24).
+- **Total en Historial de Inventario:** Se ha añadido una pequeña etiqueta en la parte superior derecha de la ventana de "Historial de Movimientos" que muestra siempre la cantidad total (stock) disponible en ese momento, para mayor comodidad.
+- **Animación del Botón Manual:** Ahora, al entrar a la aplicación, el botón del manual produce un destello suave y genera estrellitas animadas (✨) a su alrededor durante 5 segundos para recordar la importancia de las copias de seguridad.
+- **Reubicación del Botón Manual:** El botón del manual de instrucciones (📖) se ha movido a la cuadrícula de acciones principales de la pantalla de inicio, haciéndose cuadrado y adoptando el color del tema, situándose justo al lado del botón "Insertar Proyecto".
+- **Lluvia de Confeti Ampliada:** En la carpeta de proyectos terminados, la animación de la lluvia de confeti ahora dura 3 segundos más (un total de 8 segundos aproximadamente) y cubre mejor toda la pantalla gracias a un mayor volumen de partículas.
+- **Manual de Instrucciones (Actualización):** Se ha insertado un nuevo punto "2. Importante antes de empezar a usar la aplicación" en el índice. En él se explica detalladamente, paso a paso y con iconos ilustrativos (💾, 📤, 📥), la importancia de realizar copias de seguridad y cómo exportar e importar los datos de la app. Todos los puntos posteriores del manual han sido renumerados.
+- **Configuración:** Se ha ocultado temporalmente el apartado de Firebase, ya que la aplicación funciona íntegramente en local sin conexión, para evitar confusiones en los ajustes.
+- Se ha actualizado la etiqueta de la versión a **V24**.
+
 ## [V23] - 2026-07-12
 
 ### Añadido

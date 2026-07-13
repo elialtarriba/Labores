@@ -4539,6 +4539,11 @@ if ('serviceWorker' in navigator) {
     text-align: left !important;
   }
   
+  /* Ocultar botón de manual en otras pantallas */
+  body:not(.view-proyectos):not(.view-detalle) #btn-instrucciones-square {
+    display: none !important;
+  }
+  
   /* 2. Fix Mobile layout for inner views (Search bar below) */
   @media (max-width: 700px) {
     body:not(.view-proyectos) .home-actions-grid {
@@ -4556,8 +4561,12 @@ if ('serviceWorker' in navigator) {
       grid-area: inicio;
       min-width: 0 !important;
     }
-    body:not(.view-proyectos) #btn-nuevo {
+    body:not(.view-proyectos) #btn-nuevo-wrapper {
       grid-area: anadir;
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+    body:not(.view-proyectos) #btn-nuevo {
       width: 100% !important;
       min-width: 0 !important;
       padding: 0 16px !important; /* Reduce padding so text fits */
@@ -4833,9 +4842,6 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
   <div class="topbar">
     <div class="title-profile-wrap">
       <div class="topbar-title" id="topbar-title">Mis <span>Proyectos</span></div>
-      <button class="btn btn-secondary btn-instrucciones" onclick="openModal('modal-instrucciones')" id="btn-instrucciones" title="Ver manual de instrucciones">
-        <span>📖</span><span>Instrucciones</span>
-      </button>
       <div class="profile-card" id="profile-card" onclick="event.stopPropagation()" style="display:none;">
         <img class="profile-logo" src="elibi-logo.png" alt="EliBi" onerror="this.style.display='none';this.closest('.profile-card').classList.add('logo-fallback')">
         <div>lisaltarriba@gmail.com</div>
@@ -4855,9 +4861,14 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
         <button class="home-tool" id="home-sound-button" type="button" onclick="toggleAppSound()"><span>🔇</span><span class="home-sound-label">Sonido: no</span></button>
         <button class="home-tool" id="home-theme-button" type="button" onclick="openHomeThemePicker()"><span>🎨</span><span class="home-theme-label">Temas</span></button>
       </div>
-      <button class="btn btn-primary home-new-project" onclick="openNewModal()" id="btn-nuevo" title="Nuevo proyecto">
-        <span>＋</span> <span id="btn-nuevo-text">Insertar Proyecto</span>
-      </button>
+      <div id="btn-nuevo-wrapper" style="display: flex; gap: 8px; align-items: center; width: 100%;">
+        <button class="btn btn-primary btn-instrucciones-square" onclick="openModal('modal-instrucciones')" id="btn-instrucciones-square" title="Ver manual de instrucciones" style="padding: 0; min-width: 38px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 12px; position: relative;">
+          <span style="margin:0; font-size: 18px;">📖</span>
+        </button>
+        <button class="btn btn-primary home-new-project" onclick="openNewModal()" id="btn-nuevo" title="Nuevo proyecto" style="flex:1;">
+          <span>＋</span> <span id="btn-nuevo-text">Insertar Proyecto</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -5506,7 +5517,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
         </div>
       </div>
 
-      <div class="form-section">
+      <div class="form-section" id="firebase-config-section" style="display:none;">
         <h3>🔥 Configuración de Firebase</h3>
 
         <div id="fb-status" style="font-size:12px;color:var(--text-muted);margin-bottom:12px;"></div>
@@ -5669,15 +5680,16 @@ service cloud.firestore {<br>
         <h3 style="margin-top:0;margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:6px;">📑 Índice del Manual</h3>
         <div class="manual-index-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:8px;">
           <a href="#" onclick="document.getElementById('manual-instalar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">1. Instalar la app</a>
-          <a href="#" onclick="document.getElementById('manual-inicio').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Pantalla de Inicio</a>
-          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Empezar una labor</a>
-          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Dentro del proyecto</a>
-          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Inventario</a>
-          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Medidas / calculadora</a>
-          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Dictado por voz 🎙️</a>
-          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Compartir proyectos</a>
-          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">9. Configuración / Copias</a>
-          <a href="#" onclick="document.getElementById('manual-copyright').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">10. Copyright</a>
+          <a href="#" onclick="document.getElementById('manual-copias').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--terracota-l);border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Importante (Copias)</a>
+          <a href="#" onclick="document.getElementById('manual-inicio').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Pantalla de Inicio</a>
+          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Empezar una labor</a>
+          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Dentro del proyecto</a>
+          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Inventario</a>
+          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Medidas / calculadora</a>
+          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Dictado por voz 🎙️</a>
+          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">9. Compartir proyectos</a>
+          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">10. Configuración / Copias</a>
+          <a href="#" onclick="document.getElementById('manual-copyright').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">11. Copyright</a>
         </div>
       </nav>
       <div class="manual-hero">
@@ -6685,6 +6697,7 @@ service cloud.firestore {<br>
   <div class="modal" style="max-width: 500px;">
     <div class="modal-header">
       <h2 id="modal-historial-titulo" style="font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; padding-right: 10px; flex: 1; min-width: 0;">📊 Historial de Movimientos</h2>
+      <div id="modal-historial-total" style="font-size: 14px; font-weight: bold; color: var(--bark); background: var(--camel-l); padding: 4px 12px; border-radius: 20px; margin-right: 15px; display: none; white-space: nowrap;">Total: 0</div>
       <button class="modal-close" onclick="closeModal('modal-historial')">✕</button>
     </div>
     <div class="modal-body" style="max-height: 60vh; overflow-y: auto; padding: 20px;">
@@ -9541,20 +9554,20 @@ window.playTerminadosConfetti = function() {
   document.body.appendChild(container);
 
   const colors = ['#E8A8B4', '#A8E8B4', '#B4A8E8', '#E8D0A8', '#A8D0E8', '#F3B562', '#F2607D'];
-  for(let i=0; i<150; i++) {
+  for(let i=0; i<350; i++) {
     const conf = document.createElement('div');
     conf.className = 'confetti';
     conf.style.left = (Math.random() * 100) + '%';
     conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
     conf.style.animationDelay = (Math.random() * 1.5) + 's';
-    conf.style.animationDuration = '2.5s';
+    conf.style.animationDuration = '5.5s';
     conf.style.borderRadius = '50%';
     conf.style.width = '6px';
     conf.style.height = '6px';
     container.appendChild(conf);
   }
 
-  setTimeout(() => container.remove(), 4000);
+  setTimeout(() => container.remove(), 7000);
 }
 
 window.setFilter = function(f, el) {
@@ -13583,6 +13596,12 @@ window.renderStockHistory = function() {
   
   title.textContent = `📊 Historial: ${escapeAttr(item.nombre || item.marca || item.numero || 'Artículo')}`;
   
+  const totalEl = document.getElementById('modal-historial-total');
+  if (totalEl) {
+    totalEl.style.display = 'block';
+    totalEl.textContent = `Total: ${item.cantidad || 0}`;
+  }
+  
   const movs = item.movimientos || [];
   if (movs.length === 0) {
     container.innerHTML = `
@@ -16406,7 +16425,6 @@ ${reportToolbarHTML}
   </div>
 </div>
 
-<div id="app-version-badge" style="position:fixed; bottom:95px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V23</div>
 
 
 <div id="finish-anim-overlay" style="display:none; position:fixed; inset:0; z-index:10000; pointer-events:none; align-items:center; justify-content:center;">
@@ -16830,7 +16848,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<div id="app-version-badge" style="position:fixed; bottom:95px; right:10px; font-size:12px; font-weight:bold; color:rgba(0,0,0,0.5); z-index:9999; pointer-events:none;">V23</div>
 <!-- ═══════════════ MODAL: VISOR DE IMAGEN ═══════════════ -->
 <div class="modal-overlay" id="modal-image-viewer" onclick="if(event.target===this) closeModal('modal-image-viewer')">
   <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
@@ -17951,6 +17968,141 @@ window.copyWebLink = function() {
     </div>
   </div>
 </div>
-</body>
 
+<style>
+@keyframes manualFlash {
+  0% { box-shadow: 0 0 0px 0px var(--terracota); background-color: var(--terracota); transform: scale(1); }
+  25% { box-shadow: 0 0 20px 5px var(--terracota-l); background-color: var(--terracota-l); transform: scale(1.05); }
+  50% { box-shadow: 0 0 5px 2px var(--terracota); background-color: var(--terracota); transform: scale(1); }
+  75% { box-shadow: 0 0 20px 5px var(--terracota-l); background-color: var(--terracota-l); transform: scale(1.05); }
+  100% { box-shadow: 0 0 0px 0px transparent; background-color: var(--bark); transform: scale(1); }
+}
+@keyframes starFloat {
+  0% { transform: translate(0, 0) scale(0) rotate(0deg); opacity: 0; }
+  20% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(45deg); }
+  80% { opacity: 1; transform: translate(calc(var(--tx) * 1.5), calc(var(--ty) * 1.5)) scale(0.8) rotate(90deg); }
+  100% { transform: translate(calc(var(--tx) * 2), calc(var(--ty) * 2)) scale(0) rotate(180deg); opacity: 0; }
+}
+.manual-btn-anim { animation: manualFlash 5s ease-in-out forwards; }
+.manual-star { position: absolute; top: 50%; left: 50%; font-size: 14px; pointer-events: none; opacity: 0; z-index: 10; }
+.manual-star.active { animation: starFloat 5s ease-out forwards; }
+</style>
+
+<style>
+#app-version-badge {
+  position: fixed;
+  bottom: 95px;
+  right: 10px;
+  font-size: 12px;
+  font-weight: normal;
+  color: rgba(0,0,0,0.5);
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+@media (max-width: 600px) {
+  #app-version-badge {
+    left: 10px;
+    justify-content: space-between;
+  }
+}
+</style>
+<div id="app-version-badge">
+  <span id="backup-warning-text" style="color:var(--bark); font-weight:normal; font-size: 12px; pointer-events:auto; cursor:pointer;" ondblclick="toggleBackupWave()">Guarda tus datos regularmente</span>
+  <span style="color:var(--text-muted); font-weight:normal;">V24</span>
+</div>
+
+<script>
+window.backupWaveColors = [
+  'var(--bark)', '#A8E8B4', // Verde pastel
+  'var(--bark)', '#A8D0E8', // Azul pastel
+  'var(--bark)', '#FCECC0', // Amarillo pastel
+  'var(--bark)', '#E8A8B4', // Rosa pastel
+  'var(--bark)', '#B4A8E8'  // Lila pastel
+];
+window.backupWaveIndex = 0;
+window.backupWavePlaying = true;
+
+function doBackupWave() {
+  if (!window.backupWavePlaying) return;
+  const el = document.getElementById('backup-warning-text');
+  if(!el) return;
+  
+  const c1 = window.backupWaveColors[window.backupWaveIndex % window.backupWaveColors.length];
+  const c2 = window.backupWaveColors[(window.backupWaveIndex + 1) % window.backupWaveColors.length];
+  window.backupWaveIndex++;
+  
+  el.style.backgroundImage = `linear-gradient(90deg, ${c2} 0%, ${c1} 50%, ${c2} 100%)`;
+  el.style.backgroundSize = "200% 100%";
+  el.style.backgroundClip = "text";
+  el.style.webkitBackgroundClip = "text";
+  el.style.webkitTextFillColor = "transparent";
+  
+  el.style.transition = "none";
+  el.style.backgroundPosition = "100% 0";
+  
+  void el.offsetWidth;
+  
+  el.style.transition = "background-position 5s linear";
+  el.style.backgroundPosition = "0% 0";
+  
+  setTimeout(() => {
+    if(!window.backupWavePlaying) return;
+    el.style.backgroundImage = 'none';
+    el.style.webkitTextFillColor = c2;
+    el.style.color = c2;
+  }, 5000);
+}
+
+function startBackupWaveCycle() {
+  setTimeout(doBackupWave, 1000);
+  setInterval(doBackupWave, 10000);
+}
+
+function toggleBackupWave() {
+  window.backupWavePlaying = !window.backupWavePlaying;
+  const el = document.getElementById('backup-warning-text');
+  if(!window.backupWavePlaying && el) {
+     el.style.transition = "none";
+     el.style.backgroundImage = 'none';
+     el.style.webkitTextFillColor = 'var(--bark)';
+     el.style.color = 'var(--bark)';
+  } else if (window.backupWavePlaying && el) {
+     doBackupWave();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  startBackupWaveCycle();
+  
+  const manualBtn = document.getElementById('btn-instrucciones-square');
+  if (manualBtn) {
+    manualBtn.classList.add('manual-btn-anim');
+    
+    // Create stars
+    const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
+    starAngles.forEach((angle, i) => {
+      const star = document.createElement('div');
+      star.textContent = '✨';
+      star.className = 'manual-star active';
+      
+      const rad = angle * Math.PI / 180;
+      const dist = 25;
+      star.style.setProperty('--tx', (Math.cos(rad) * dist) + 'px');
+      star.style.setProperty('--ty', (Math.sin(rad) * dist) + 'px');
+      
+      manualBtn.appendChild(star);
+      
+      setTimeout(() => star.remove(), 5000);
+    });
+    
+    setTimeout(() => {
+      manualBtn.classList.remove('manual-btn-anim');
+    }, 5000);
+  }
+});
+</script>
+</body>
 </html>
