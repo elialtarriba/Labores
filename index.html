@@ -26,15 +26,7 @@ avisa a la creadora a través de su email.
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker registrado con éxito', reg))
-      .catch(err => console.warn('Error al registrar Service Worker', err));
-  });
-}
-</script>
+<!-- SW registration moved to bottom of body to handle file:// gracefully -->
 
 <style>
   /* ─── VARIABLES ─────────────────────────────────────────── */
@@ -4443,6 +4435,10 @@ if ('serviceWorker' in navigator) {
 
 <!-- CSS PARA VISTAS SECUNDARIAS -->
 <style id="view-fixes-v86">
+  body.view-instrucciones .sidebar, body.view-welcome .sidebar { display: none !important; }
+  body.view-instrucciones .topbar, body.view-welcome .topbar { display: none !important; }
+  body.view-welcome .bottom-nav { display: none !important; }
+
   body:not(.view-proyectos) .home-database,
   body:not(.view-proyectos) #home-sound-button,
   body:not(.view-proyectos) #home-theme-button {
@@ -4854,7 +4850,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-label">Inicio</div>
-    <div class="nav-item active" data-view="proyectos" onclick="showView('proyectos')">
+    <div class="nav-item" data-view="proyectos" onclick="showView('proyectos')">
       <span class="nav-icon">🧵</span>
       <span class="nav-label">Proyectos</span>
       <span class="nav-badge" id="badge-proyectos">0</span>
@@ -4915,7 +4911,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
         <button class="home-tool" id="home-theme-button" type="button" onclick="openHomeThemePicker()"><span>🎨</span><span class="home-theme-label">Temas</span></button>
       </div>
       <div id="btn-nuevo-wrapper" style="display: flex; gap: 8px; align-items: center; width: 100%;">
-        <button class="btn btn-primary btn-instrucciones-square" onclick="openModal('modal-instrucciones')" id="btn-instrucciones-square" title="Ver manual de instrucciones" style="padding: 0; min-width: 38px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 12px; position: relative;">
+        <button class="btn btn-primary btn-instrucciones-square" onclick="showView('instrucciones')" id="btn-instrucciones-square" title="Ver manual de instrucciones" style="padding: 0; min-width: 38px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 12px; position: relative;">
           <span style="margin:0; font-size: 18px;">📖</span>
         </button>
         <button class="btn btn-primary home-new-project" onclick="openNewModal()" id="btn-nuevo" title="Nuevo proyecto" style="flex:1;">
@@ -4938,8 +4934,10 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
 
   <div class="content">
 
+    <!-- ══════════ VIEW: WELCOME (REMOVED) ══════════ -->
+
     <!-- ══════════ VIEW: PROYECTOS ══════════ -->
-    <div class="view active" id="view-proyectos">
+    <div class="view" id="view-proyectos">
 
 
 
@@ -5637,9 +5635,280 @@ service cloud.firestore {<br>
       </div>
     </div>
 
+<!-- ═══════════════ VIEW: WELCOME (PORTADA) ═══════════════ -->
+<style>
+@keyframes floatWelcome {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes pulseButton {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+  100% { transform: scale(1); }
+}
+.btn-welcome-start:active {
+  transform: translateY(4px) scale(0.98) !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 -1px 0 rgba(0,0,0,0.1) !important;
+}
+
+/* Hide the version badge to prevent overlapping the button */
+body.view-instrucciones #app-version-badge,
+body.view-welcome #app-version-badge {
+  display: none !important;
+}
+
+/* Make font sizes responsive to fit on mobile */
+.welcome-cover-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, var(--terracota-l) 0%, var(--terracota) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 15px;
+  box-sizing: border-box;
+  position: relative;
+}
+.welcome-emoji {
+  font-size: clamp(50px, 10vh, 100px);
+  margin-top: clamp(20px, 8vh, 60px);
+  margin-bottom: clamp(10px, 3vh, 25px);
+  animation: floatWelcome 4s ease-in-out infinite;
+  filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
+}
+.welcome-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 5vh, 38px);
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: clamp(10px, 3vh, 25px);
+  line-height: 1.2;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.welcome-text {
+  font-size: clamp(14px, 2.5vh, 18px);
+  color: rgba(255,255,255,0.95);
+  margin-bottom: clamp(20px, 5vh, 50px);
+  line-height: 1.5;
+  max-width: 500px;
+  font-weight: 500;
+  padding: 0 10px;
+}
+.welcome-button {
+  font-size: clamp(16px, 3vh, 22px);
+  padding: clamp(12px, 2vh, 20px) clamp(20px, 4vw, 35px);
+  border-radius: 50px;
+  font-weight: 800;
+  background: #FFFFFF;
+  color: var(--terracota);
+  border: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  width: 90%;
+  max-width: 320px;
+  animation: pulseButton 2s infinite;
+  cursor: pointer;
+  margin-bottom: clamp(20px, 4vh, 40px);
+}
+.welcome-scroll-hint {
+  margin-top: auto;
+  padding-bottom: 20px;
+  font-size: clamp(14px, 2vh, 16px);
+  font-weight: bold;
+  color: rgba(255,255,255,0.8);
+  animation: floatWelcome 3s infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+</style>
+
+<!-- ═══════════════ VIEW: INSTRUCCIONES (MANUAL) ═══════════════ -->
+<div class="view" id="view-instrucciones" style="padding-bottom: 0; min-height: 100vh; background: var(--cream);">
+  <div class="welcome-cover-container">
+    <div class="welcome-emoji">🧶</div>
+    <h1 class="welcome-title">¡Bienvenida a tu Taller!</h1>
+    <p class="welcome-text">
+      Entra en una labor para tener toda la información que necesitas y más.<br><br>
+      Empieza pulsando el botón <strong>¡Comenzar ahora!</strong>
+    </p>
+    <button class="btn btn-welcome-start welcome-button" onclick="showView('proyectos')">
+      👉 ¡Comenzar ahora!
+    </button>
+    <div class="welcome-scroll-hint" onclick="document.querySelector('.instrucciones-container').scrollIntoView({behavior: 'smooth'})">
+      Manual
+      <span style="font-size: 20px;">↓</span>
+    </div>
+  </div>
+<!-- MANUAL ORIGINAL -->
+
+  <div class="instrucciones-container" style="max-width:800px; width:100%; margin: 0 auto; padding: 40px 20px; box-sizing: border-box; background: var(--cream);">
+    <div class="inst-header" style="padding-bottom: 25px; text-align: center; justify-content: center;">
+      <h3 style="font-family:'Playfair Display',serif; font-size:24px; color: var(--bark); display:flex; align-items:center; justify-content: center; gap:8px; margin: 0; user-select: none; opacity: 0.9; position: relative;">
+        📖 Manual de Instrucciones
+        <span onclick="toggleInstructionsEdit()" style="cursor: pointer; opacity: 0.3; font-size: 14px; margin-left: 6px; user-select: none;" id="lock-btn" title="Editar instrucciones">🔒</span>
+      </h3>
+    </div>
+
+    <div class="inst-body" data-manual-version="84" style="scroll-behavior:smooth;">
+      <nav class="manual-index" aria-label="Índice del manual" style="background:var(--warm-white);border:1.5px solid var(--cream-dark);border-radius:16px;padding:16px;margin-bottom:30px;box-shadow: 0 4px 15px rgba(110,74,58,0.05);">
+        <h3 style="margin: 0 0 10px; font-size:16px; color:var(--bark);">Índice</h3>
+        <div class="manual-index-grid" style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;">
+          <a href="#manual-instalar" style="text-decoration:none;color:var(--terracota);font-weight:600;">📱 Instalar</a>
+          <a href="#manual-inicio" style="text-decoration:none;color:var(--terracota);font-weight:600;">🏠 Inicio</a>
+          <a href="#manual-empezar" style="text-decoration:none;color:var(--terracota);font-weight:600;">🧵 Empezar labor</a>
+          <a href="#manual-proyecto" style="text-decoration:none;color:var(--terracota);font-weight:600;">📚 Proyecto</a>
+          <a href="#manual-inventario" style="text-decoration:none;color:var(--terracota);font-weight:600;">🧶 Lanas/Agujas</a>
+          <a href="#manual-medidas" style="text-decoration:none;color:var(--terracota);font-weight:600;">📏 Medidas</a>
+          <a href="#manual-dictado" style="text-decoration:none;color:var(--terracota);font-weight:600;">🎙️ Dictado</a>
+          <a href="#manual-compartir" style="text-decoration:none;color:var(--terracota);font-weight:600;">🤝 Compartir</a>
+          <a href="#manual-configuracion" style="text-decoration:none;color:var(--terracota);font-weight:600;">⚙️ Configuración</a>
+        </div>
+      </nav>
+
+      <div class="inst-section" id="manual-instalar">
+        <h3 class="inst-title">📱 Instalar como una app</h3>
+        <div class="inst-content">
+          <p><strong>iPhone/iPad:</strong> abre el enlace con Safari, pulsa Compartir ⬆️ y <strong>Añadir a pantalla de inicio</strong>.</p>
+          <p><strong>Android:</strong> abre el enlace con Chrome, pulsa ⋮ y elige <strong>Instalar aplicación</strong> o <strong>Añadir a pantalla de inicio</strong>.</p>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-inicio">
+        <h3 class="inst-title">🏠 Pantalla de Inicio</h3>
+        <div class="inst-content">
+          <p>Esta es la pantalla principal desde donde controlas toda la app. Aquí tienes explicados todos sus botones y funciones:</p>
+          <ul>
+            <li><strong>🔍 Buscar:</strong> Barra superior para localizar rápidamente cualquier proyecto escribiendo su nombre.</li>
+            <li><strong>💾 BD local:</strong> Es un indicador de estado. Si tiene un punto de color verde, significa que está conectada correctamente a la base de datos de tu dispositivo y la app funcionará bien. Si el punto es rojo, significa que no hay conexión y la app no podrá guardar tus datos.</li>
+            <li><strong>📖 Manual de la aplicación:</strong> En él te explica como funciona la aplicación y si tienes algún problema ponte en contacto con la autora.</li>
+            <li><strong>🔔 Sonido (sí/no):</strong> Activa o desactiva todos los sonidos y efectos musicales de la aplicación.</li>
+            <li><strong>🎨 Temas:</strong> Permite cambiar toda la gama de colores de la aplicación.</li>
+            <li><strong>Nuevo:</strong> Pulsando este botón, inicias una nueva labor, pidiendo los datos mínimos indispensables para su inicio. Una vez guardado, se crea un nuevo proyecto y al entrar en él, tienes más opciones para tu proyecto.</li>
+            <li><strong>Proyectos (botón superior):</strong> Te muestra la lista completa de todos los proyectos que has creado o importado. Los proyectos se visualizaran debajo de los botones centrales.</li>
+            <li><strong>Filtros (En Curso, Terminados, Ideas, En Pausa):</strong> Botones rápidos para filtrar la lista y mostrar solo los proyectos que se encuentran en ese estado. Puedes poner un proyecto en cualquiera de estos estados, entrando en el proyecto, en el apartado 'Estado'.</li>
+            <li><strong>🧮 Calculadora:</strong> Calculadora sencilla para tus cálculos del día a día.</li>
+            <li><strong>Botones inferiores en línea (Lanas o Hilos, Agujas, Accesorios, Medidas y Configuración):</strong> Accesos directos a tu inventario de materiales para gestionarlos sin estar dentro de un proyecto y su configuración.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-empezar">
+        <h3 class="inst-title">🧵 Empezar una labor</h3>
+        <div class="inst-content">
+          <div class="manual-steps">
+            <div class="manual-step"><span class="manual-step-number">1</span><p>Pulsa <strong>Nuevo proyecto</strong> y escribe nombre, tipo, estado, fechas y notas.</p></div>
+            <div class="manual-step"><span class="manual-step-number">2</span><p>Abre su tarjeta. En <strong>General</strong> puedes cambiar datos, añadir notas, fotos de evolución, patrón PDF, materiales y una ficha de medidas.</p></div>
+            <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Guardar</strong> después de modificar la ficha. El botón grande <strong>← Inicio</strong> vuelve a la página principal.</p></div>
+          </div>
+          <div class="manual-chip-row"><span class="manual-chip">🔍 Lupa: ampliar</span><span class="manual-chip">🗑 Papelera: borrar</span><span class="manual-chip">⧉ Duplicar ficha</span></div>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-proyecto">
+        <h3 class="inst-title">📚 Todo lo que hay dentro del proyecto</h3>
+        <div class="inst-content">
+          <ul>
+            <li><strong>📋 General:</strong> información, diario de notas, lanas, agujas, accesorios, medidas, portada, galería y varios PDF.</li>
+            <li><strong>⏱ Tiempo y Píldora 3D:</strong> pulsa <strong>Empezar</strong> al tejer y <strong>Parar</strong> al terminar. Aparecerá una <strong>píldora flotante</strong> 3D. Puedes arrastrarla a donde quieras, pulsarla rápido para ir directo a la pestaña de Tiempo de su proyecto, o mantenerla pulsada (se hunde) para moverla. Además, si intentas iniciar el tiempo de un proyecto distinto teniendo una píldora en marcha, la app te avisará para cerrar el anterior primero, evitando duplicidades.</li>
+            <li><strong>🔢 Contadores:</strong> crea uno por vueltas, mangas o dibujos. Usa ＋/−, escribe notas y toca el número para verlo grande.</li>
+            <li><strong>🧶 Calculadora:</strong> indica medida, muestra de 10 cm y holgura; calcula puntos o vueltas y guarda el resultado.</li>
+            <li><strong>💶 Finanzas:</strong> reúne materiales, tiempo y mano de obra. <strong>Informe</strong> crea el resumen; <strong>Informe Completo</strong> añade evolución, notas y diario. Puedes imprimirlo o enviarlo por WhatsApp/email.</li>
+            <li><strong>📅 Fechas inalterables:</strong> Al editar un proyecto, debajo de las notas verás una línea con la <strong>fecha de inicio</strong> y la <strong>fecha fin</strong>. Estas fechas son automáticas e independientes del calendario normal, no se pueden modificar a mano y sirven como un registro fiable de cuándo creaste el proyecto por primera vez y cuándo lo marcaste como "Terminado".</li>
+          </ul>
+          <div class="manual-tip">💡 Los materiales reservados para una labor descuentan existencias. Al devolverlos o borrar el proyecto, vuelven al inventario y queda anotado en su historial.</div>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-inventario">
+        <h3 class="inst-title">🧶 Lanas, agujas y accesorios</h3>
+        <div class="inst-content">
+          <ul>
+            <li>Entra en cada apartado del menú y pulsa <strong>Añadir</strong>. Guarda cantidad, precio, tienda, ubicación, fotos y notas.</li>
+            <li>La cantidad puede ser <strong>0</strong>. Al editar, el <strong>Historial</strong> muestra cambios de ficha y entradas o salidas relacionadas con proyectos.</li>
+            <li>En <strong>Tipo</strong> de accesorio, elige <strong>➕ Añadir…</strong> para crear uno nuevo. Quedará también en Configuración.</li>
+            <li>Usa la búsqueda superior para localizar rápidamente una lana, aguja, accesorio o proyecto.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-medidas">
+        <h3 class="inst-title">📏 Medidas y calculadora rápida</h3>
+        <div class="inst-content">
+          <ul>
+            <li>En <strong>Medidas</strong>, crea fichas para ti o para otra persona, con foto, talla y medidas detalladas.</li>
+            <li>Después puedes vincular una ficha al proyecto y consultarla sin volver a escribirla.</li>
+            <li>La tarjeta <strong>🧮 Calculadora</strong> de Inicio sirve para un cálculo rápido; la calculadora interior guarda el cálculo en la labor abierta.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-dictado">
+        <h3 class="inst-title" style="color:var(--terracota-d);">🎙️ Dictado por voz</h3>
+        <div class="inst-content">
+          <p>Apunta tu progreso o ideas sin soltar las agujas, simplemente usando tu voz.</p>
+          <div class="manual-steps">
+            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">1</span><p>Dentro de un proyecto, ve a <strong>Notas del proyecto</strong> y pulsa el botón con el icono de micrófono (🎙️).</p></div>
+            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">2</span><p>La primera vez tu navegador pedirá permiso. Cuando el piloto parpadee ("Escuchando..."), <strong>empieza a hablar</strong>. Verás las palabras escribirse solas.</p></div>
+            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">3</span><p>Revisa el texto y pulsa <strong>Guardar Nota</strong>. Todo se procesa de forma segura en tu propio móvil, respetando tu privacidad.</p></div>
+          </div>
+          <div class="manual-tip">💡 <strong>Consejo:</strong> Si el reconocimiento se equivoca en alguna palabra, puedes tocar el recuadro y corregirla manualmente con el teclado antes de guardarla.</div>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-compartir">
+        <h3 class="inst-title">🤝 Compartir y recibir proyectos</h3>
+        <div class="inst-content">
+          <p>La app te permite enviarle tus proyectos completos a otras personas y recibir los suyos. Al hacerlo, viaja absolutamente todo: fotos, patrones en PDF, tiempo, contadores, cálculos, notas y materiales.</p>
+          <h4 style="margin: 16px 0 8px; font-size: 15px; color: var(--bark);">📤 Cómo enviar un proyecto</h4>
+          <p style="margin-top:0;">Abre tu proyecto, pulsa el botón superior <strong>🤝 Compartir</strong>, escribe a quién se lo envías y elige por dónde mandarlo (WhatsApp, Mail, AirDrop...).</p>
+          <h4 style="margin: 20px 0 8px; font-size: 15px; color: var(--bark);">📥 Cómo recibir e importar</h4>
+          <div class="manual-steps">
+            <div class="manual-step"><span class="manual-step-number">1</span><p>En la pantalla de Inicio, pulsa la barra alargada de <strong>Compartidos</strong> y luego <strong>Importar proyecto</strong>. Selecciona el archivo que te han enviado. Cuando termine, la barra parpadeará confirmando el éxito.</p></div>
+            <div class="manual-step"><span class="manual-step-number">2</span><p><strong>Modo Solo Lectura:</strong> Los proyectos de la carpeta "Compartidos" se pueden visualizar al completo y puedes descargar sus PDFs, pero <strong>no se pueden modificar</strong> (botones apagados, no suma tiempo ni notas). Así evitas alterar o borrar sin querer el archivo original.</p></div>
+            <div class="manual-step"><span class="manual-step-number">3</span><p><strong>Pasar a Mis Proyectos:</strong> Si quieres empezar a tejerlo y modificarlo, entra en él y pulsa <strong>📥 Pasar a mis proyectos</strong>. (El sistema te avisará si ya lo habías copiado antes para evitar duplicados infinitos). Al pasarlo, el botón "Todos" parpadeará y se creará tu propia copia oficial editable, que lucirá una bonita etiqueta verde indicando quién te lo regaló.</p></div>
+          </div>
+          <div class="manual-tip" style="margin-top: 10px; background: #fff5eb; border-left: 3px solid var(--terracota);">
+            <strong>⚠️ Nota sobre el archivo "texto.txt":</strong> Al compartir desde un iPhone/iPad usando WhatsApp o correo, a veces se envían <strong>dos archivos</strong>: el proyecto (terminado en <code>.labores</code>) y un <code>texto.txt</code>. Este último solo contiene un saludo automático y <strong>puedes ignorarlo</strong>; debes importar el archivo principal.
+          </div>
+        </div>
+      </div>
+
+      <div class="inst-section" id="manual-configuracion">
+        <h3 class="inst-title">⚙️ Configuración y copias</h3>
+        <div class="inst-content">
+          <ul>
+            <li>Cambia el <strong>tema de color</strong> y personaliza listas de tallas, tipos, marcas, ubicaciones, tiendas, prendas, composiciones y monedas.</li>
+            <li>Escribe <strong>Mi nombre para compartir</strong> para que la persona receptora sepa quién envía la labor.</li>
+            <li><strong>Exportar copia</strong> guarda proyectos, inventario, fotos y PDF. <strong>Importar copia</strong> restaura esa copia en otro dispositivo.</li>
+          </ul>
+          <div class="manual-tip">🔐 Haz una copia después de cambios importantes. Tus datos son privados y se guardan localmente en el dispositivo.</div>
+        </div>
+      </div>
+
+      <div class="manual-contact" id="manual-copyright">
+        <strong>¿Tienes una sugerencia o una mejora?</strong><br>
+        Puedes escribir a <a href="mailto:lisaltarriba@gmail.com">lisaltarriba@gmail.com</a>.
+      </div>
+      <div class="manual-contact" style="margin-top: 12px; font-size: 13px; opacity: 0.8;">
+        <strong>© 2026 Elisabeth Altarriba</strong><br>
+        Licencia: Uso personal permitido. Prohibido uso comercial.<br>
+        Se requiere atribución al compartir esta app.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
   </div><!-- /content -->
 </main>
-
+  </div><!-- /content -->
+</div>
 <!-- ═══════════════ MODAL: COMPARTIR PROYECTO ═══════════════ -->
 <div class="modal-overlay" id="modal-share-project">
   <div class="modal" style="max-width:560px;">
@@ -5718,185 +5987,9 @@ service cloud.firestore {<br>
   </div>
 </div>
 
-<!-- ═══════════════ MODAL: INSTRUCCIONES ═══════════════ -->
-<div class="modal-overlay" id="modal-instrucciones">
-  <div class="modal" style="max-width:700px; width:95%;">
-    <div class="modal-header">
-      <h2 style="font-family:'Playfair Display',serif; font-size:24px; display:flex; align-items:center; gap:8px; margin: 0; user-select: none;">
-        📖 Manual de Instrucciones
-        <span onclick="toggleInstructionsEdit()" style="cursor: pointer; opacity: 0.3; font-size: 14px; margin-left: 6px; user-select: none;" id="lock-btn" title="Editar instrucciones">🔒</span>
-      </h2>
-      <button class="modal-close" onclick="closeModal('modal-instrucciones')">✕</button>
-    </div>
-    <div class="modal-body" data-manual-version="74" style="padding: 20px; max-height: 70dvh; scroll-behavior:smooth;">
-      <nav class="manual-index" aria-label="Índice del manual" style="background:var(--cream);border:1.5px solid var(--cream-dark);border-radius:16px;padding:16px;margin-bottom:20px;">
-        <h3 style="margin-top:0;margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:6px;">📑 Índice del Manual</h3>
-        <div class="manual-index-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:8px;">
-          <a href="#" onclick="document.getElementById('manual-instalar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">1. Instalar la app</a>
-          <a href="#" onclick="document.getElementById('manual-copias').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--terracota-l);border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">2. Importante (Copias)</a>
-          <a href="#" onclick="document.getElementById('manual-inicio').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">3. Pantalla de Inicio</a>
-          <a href="#" onclick="document.getElementById('manual-empezar').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">4. Empezar una labor</a>
-          <a href="#" onclick="document.getElementById('manual-proyecto').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">5. Dentro del proyecto</a>
-          <a href="#" onclick="document.getElementById('manual-inventario').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">6. Inventario</a>
-          <a href="#" onclick="document.getElementById('manual-medidas').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">7. Medidas / calculadora</a>
-          <a href="#" onclick="document.getElementById('manual-dictado').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:var(--camel-l);border-radius:8px;color:var(--bark);font-weight:900;box-shadow:var(--shadow-sm);transition:all var(--transition);">8. Dictado por voz 🎙️</a>
-          <a href="#" onclick="document.getElementById('manual-compartir').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">9. Compartir proyectos</a>
-          <a href="#" onclick="document.getElementById('manual-configuracion').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">10. Configuración / Copias</a>
-          <a href="#" onclick="document.getElementById('manual-copyright').scrollIntoView({behavior:'smooth'}); return false;" style="text-decoration:none;padding:8px 12px;background:#fff;border-radius:8px;color:var(--bark);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--transition);">11. Copyright</a>
-        </div>
-      </nav>
-      <div class="manual-hero">
-        <div class="manual-hero-icon">🧶</div>
-        <h3>Tu taller de labores, paso a paso</h3>
-        <p>Todo se guarda en este dispositivo. Entra en una labor para tener juntos patrón, materiales, tiempo, cuentas y recuerdos.</p>
-        <div class="manual-quick-grid">
-          <div class="manual-quick-card"><span>1️⃣</span>Crea o abre un proyecto</div>
-          <div class="manual-quick-card"><span>2️⃣</span>Añade patrón y materiales</div>
-          <div class="manual-quick-card"><span>3️⃣</span>Guarda mientras trabajas</div>
-        </div>
-      </div>
 
-      <div class="inst-section" id="manual-instalar">
-        <h3 class="inst-title">📱 Instalar como una app</h3>
-        <div class="inst-content">
-          <p><strong>iPhone/iPad:</strong> abre el enlace con Safari, pulsa Compartir ⬆️ y <strong>Añadir a pantalla de inicio</strong>.</p>
-          <p><strong>Android:</strong> abre el enlace con Chrome, pulsa ⋮ y elige <strong>Instalar aplicación</strong> o <strong>Añadir a pantalla de inicio</strong>.</p>
-        </div>
-      </div>
 
-      <div class="inst-section" id="manual-inicio">
-        <h3 class="inst-title">🏠 Pantalla de Inicio</h3>
-        <div class="inst-content">
-          <p>Esta es la pantalla principal desde donde controlas toda la app. Aquí tienes explicados todos sus botones y funciones:</p>
-          <ul>
-            <li><strong>🔍 Buscar:</strong> Barra superior para localizar rápidamente cualquier proyecto escribiendo su nombre.</li>
-            <li><strong>💾 Base de datos local:</strong> Es un indicador de estado. Si tiene un punto de color verde, significa que está conectada correctamente a la base de datos de tu dispositivo y la app funcionará bien. Si el punto es rojo, significa que no hay conexión y la app no podrá guardar tus datos.</li>
-            <li><strong>🔔 Sonido (sí/no):</strong> Activa o desactiva todos los sonidos y efectos musicales de la aplicación.</li>
-            <li><strong>➕ Nuevo Proyecto:</strong> Inicia la creación de una labor nueva pidiendo los datos mínimos indispensables.</li>
-            <li><strong>📂 Mis Proyectos (Todos):</strong> Te muestra la lista completa de todos los proyectos que has creado o importado.</li>
-            <li><strong>Filtros (En Curso, Terminados, Ideas, Pausa):</strong> Botones rápidos para filtrar la lista y mostrar solo los proyectos que se encuentran en ese estado.</li>
-            <li><strong>📊 Estadísticas:</strong> Pequeñas tarjetas que cuentan cuántos proyectos tienes en cada estado para que veas tu progreso de un vistazo.</li>
-            <li><strong>🎨 Temas:</strong> Permite cambiar toda la gama de colores de la aplicación.</li>
-            <li><strong>Configuración (Lanas, Agujas, Accesorios):</strong> Accesos directos a tu inventario de materiales para gestionarlos sin estar dentro de un proyecto.</li>
-          </ul>
-        </div>
-      </div>
 
-      <div class="inst-section" id="manual-empezar">
-        <h3 class="inst-title">🧵 Empezar una labor</h3>
-        <div class="inst-content">
-          <div class="manual-steps">
-            <div class="manual-step"><span class="manual-step-number">1</span><p>Pulsa <strong>Nuevo proyecto</strong> y escribe nombre, tipo, estado, fechas y notas.</p></div>
-            <div class="manual-step"><span class="manual-step-number">2</span><p>Abre su tarjeta. En <strong>General</strong> puedes cambiar datos, añadir notas, fotos de evolución, patrón PDF, materiales y una ficha de medidas.</p></div>
-            <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Guardar</strong> después de modificar la ficha. El botón grande <strong>← Inicio</strong> vuelve a la página principal.</p></div>
-          </div>
-          
-          <div class="manual-chip-row"><span class="manual-chip">🔍 Lupa: ampliar</span><span class="manual-chip">🗑 Papelera: borrar</span><span class="manual-chip">⧉ Duplicar ficha</span></div>
-        </div>
-      </div>
-
-      <div class="inst-section" id="manual-proyecto">
-        <h3 class="inst-title">📚 Todo lo que hay dentro del proyecto</h3>
-        <div class="inst-content">
-          <ul>
-            <li><strong>📋 General:</strong> información, diario de notas, lanas, agujas, accesorios, medidas, portada, galería y varios PDF.</li>
-            <li><strong>⏱ Tiempo y Píldora 3D:</strong> pulsa <strong>Empezar</strong> al tejer y <strong>Parar</strong> al terminar. Aparecerá una <strong>píldora flotante</strong> 3D. Puedes arrastrarla a donde quieras, pulsarla rápido para ir directo a la pestaña de Tiempo de su proyecto, o mantenerla pulsada (se hunde) para moverla. Además, si intentas iniciar el tiempo de un proyecto distinto teniendo una píldora en marcha, la app te avisará para cerrar el anterior primero, evitando duplicidades.</li>
-            <li><strong>🔢 Contadores:</strong> crea uno por vueltas, mangas o dibujos. Usa ＋/−, escribe notas y toca el número para verlo grande.</li>
-            <li><strong>🧶 Calculadora:</strong> indica medida, muestra de 10 cm y holgura; calcula puntos o vueltas y guarda el resultado.</li>
-            <li><strong>💶 Finanzas:</strong> reúne materiales, tiempo y mano de obra. <strong>Informe</strong> crea el resumen; <strong>Informe Completo</strong> añade evolución, notas y diario. Puedes imprimirlo o enviarlo por WhatsApp/email.</li>
-            <li><strong>📅 Fechas inalterables:</strong> Al editar un proyecto, debajo de las notas verás una línea con la <strong>fecha de inicio</strong> y la <strong>fecha fin</strong>. Estas fechas son automáticas e independientes del calendario normal, no se pueden modificar a mano y sirven como un registro fiable de cuándo creaste el proyecto por primera vez y cuándo lo marcaste como "Terminado".</li>
-          </ul>
-          <div class="manual-tip">💡 Los materiales reservados para una labor descuentan existencias. Al devolverlos o borrar el proyecto, vuelven al inventario y queda anotado en su historial.</div>
-        </div>
-      </div>
-
-      <div class="inst-section" id="manual-inventario">
-        <h3 class="inst-title">🧶 Lanas, agujas y accesorios</h3>
-        <div class="inst-content">
-          <ul>
-            <li>Entra en cada apartado del menú y pulsa <strong>Añadir</strong>. Guarda cantidad, precio, tienda, ubicación, fotos y notas.</li>
-            <li>La cantidad puede ser <strong>0</strong>. Al editar, el <strong>Historial</strong> muestra cambios de ficha y entradas o salidas relacionadas con proyectos.</li>
-            <li>En <strong>Tipo</strong> de accesorio, elige <strong>➕ Añadir…</strong> para crear uno nuevo. Quedará también en Configuración.</li>
-            <li>Usa la búsqueda superior para localizar rápidamente una lana, aguja, accesorio o proyecto.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="inst-section" id="manual-medidas">
-        <h3 class="inst-title">📏 Medidas y calculadora rápida</h3>
-        <div class="inst-content">
-          <ul>
-            <li>En <strong>Medidas</strong>, crea fichas para ti o para otra persona, con foto, talla y medidas detalladas.</li>
-            <li>Después puedes vincular una ficha al proyecto y consultarla sin volver a escribirla.</li>
-            <li>La tarjeta <strong>🧮 Calculadora</strong> de Inicio sirve para un cálculo rápido; la calculadora interior guarda el cálculo en la labor abierta.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="inst-section" id="manual-dictado">
-        <h3 class="inst-title" style="color:var(--terracota-d);">🎙️ Dictado por voz</h3>
-        <div class="inst-content">
-          <p>Apunta tu progreso o ideas sin soltar las agujas, simplemente usando tu voz.</p>
-          <div class="manual-steps">
-            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">1</span><p>Dentro de un proyecto, ve a <strong>Notas del proyecto</strong> y pulsa el botón con el icono de micrófono (🎙️).</p></div>
-            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">2</span><p>La primera vez tu navegador pedirá permiso. Cuando el piloto parpadee ("Escuchando..."), <strong>empieza a hablar</strong>. Verás las palabras escribirse solas.</p></div>
-            <div class="manual-step"><span class="manual-step-number" style="background:var(--terracota-d);color:#fff;">3</span><p>Revisa el texto y pulsa <strong>Guardar Nota</strong>. Todo se procesa de forma segura en tu propio móvil, respetando tu privacidad.</p></div>
-          </div>
-          <div class="manual-tip">💡 <strong>Consejo:</strong> Si el reconocimiento se equivoca en alguna palabra, puedes tocar el recuadro y corregirla manualmente con el teclado antes de guardarla.</div>
-        </div>
-      </div>
-
-      <div class="inst-section" id="manual-compartir">
-        <h3 class="inst-title">🤝 Compartir y recibir proyectos</h3>
-        <div class="inst-content">
-          <p>La app te permite enviarle tus proyectos completos a otras personas y recibir los suyos. Al hacerlo, viaja absolutamente todo: fotos, patrones en PDF, tiempo, contadores, cálculos, notas y materiales.</p>
-          
-          <h4 style="margin: 16px 0 8px; font-size: 15px; color: var(--bark);">📤 Cómo enviar un proyecto</h4>
-          <p style="margin-top:0;">Abre tu proyecto, pulsa el botón superior <strong>🤝 Compartir</strong>, escribe a quién se lo envías y elige por dónde mandarlo (WhatsApp, Mail, AirDrop...).</p>
-          
-          <h4 style="margin: 20px 0 8px; font-size: 15px; color: var(--bark);">📥 Cómo recibir e importar</h4>
-          <div class="manual-steps">
-            <div class="manual-step"><span class="manual-step-number">1</span><p>En la pantalla de Inicio, pulsa la barra alargada de <strong>Compartidos</strong> y luego <strong>Importar proyecto</strong>. Selecciona el archivo que te han enviado. Cuando termine, la barra parpadeará confirmando el éxito.</p></div>
-            <div class="manual-step"><span class="manual-step-number">2</span><p><strong>Modo Solo Lectura:</strong> Los proyectos de la carpeta "Compartidos" se pueden visualizar al completo y puedes descargar sus PDFs, pero <strong>no se pueden modificar</strong> (botones apagados, no suma tiempo ni notas). Así evitas alterar o borrar sin querer el archivo original.</p></div>
-            <div class="manual-step"><span class="manual-step-number">3</span><p><strong>Pasar a Mis Proyectos:</strong> Si quieres empezar a tejerlo y modificarlo, entra en él y pulsa <strong>📥 Pasar a mis proyectos</strong>. (El sistema te avisará si ya lo habías copiado antes para evitar duplicados infinitos). Al pasarlo, el botón "Todos" parpadeará y se creará tu propia copia oficial editable, que lucirá una bonita etiqueta verde indicando quién te lo regaló.</p></div>
-          </div>
-
-          <div class="manual-tip" style="margin-top: 10px; background: #fff5eb; border-left: 3px solid var(--terracota);">
-            <strong>⚠️ Nota sobre el archivo "texto.txt":</strong> Al compartir desde un iPhone/iPad usando WhatsApp o correo, a veces se envían <strong>dos archivos</strong>: el proyecto (terminado en <code>.labores</code>) y un <code>texto.txt</code>. Este último solo contiene un saludo automático y <strong>puedes ignorarlo</strong>; debes importar el archivo principal.
-          </div>
-        </div>
-      </div>
-
-      <div class="inst-section" id="manual-configuracion">
-        <h3 class="inst-title">⚙️ Configuración y copias</h3>
-        <div class="inst-content">
-          <ul>
-            <li>Cambia el <strong>tema de color</strong> y personaliza listas de tallas, tipos, marcas, ubicaciones, tiendas, prendas, composiciones y monedas.</li>
-            <li>Escribe <strong>Mi nombre para compartir</strong> para que la persona receptora sepa quién envía la labor.</li>
-            <li><strong>Exportar copia</strong> guarda proyectos, inventario, fotos y PDF. <strong>Importar copia</strong> restaura esa copia en otro dispositivo.</li>
-          </ul>
-          <div class="manual-tip">🔐 Haz una copia después de cambios importantes. Tus datos son privados y se guardan localmente en el dispositivo.</div>
-        </div>
-      </div>
-
-      <div class="manual-contact" id="manual-copyright">
-        <strong>¿Tienes una sugerencia o una mejora?</strong><br>
-        Puedes escribir a <a href="mailto:lisaltarriba@gmail.com">lisaltarriba@gmail.com</a>.
-      </div>
-
-      <div class="manual-contact" style="margin-top: 12px; font-size: 13px; opacity: 0.8;">
-        <strong>© 2026 Elisabeth Altarriba</strong><br>
-        Licencia: Uso personal permitido. Prohibido uso comercial.<br>
-        Se requiere atribución al compartir esta app.
-      </div>
-
-    </div>
-    <div class="modal-footer" style="display:flex; flex-direction:column; align-items:center; gap:10px; padding-top:10px; border-top:1px solid var(--cream-dark);">
-      <button class="btn btn-primary" onclick="closeModal('modal-instrucciones')" style="width: 100%;">¡Entendido!</button>
-      <button onclick="openCopyright(event)" style="background:transparent; border:none; color:var(--text-muted); opacity:0.5; cursor:pointer; font-size:14px; padding:5px;">©</button>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════ MODAL: NOTA GRANDE ═══════════════ -->
 <div class="modal-overlay" id="modal-note-zoom">
@@ -6995,9 +7088,10 @@ window.addEventListener('DOMContentLoaded', () => {
   resolvePageMedia();
   
   // Custom edits are versioned so an older saved manual cannot hide a new built-in guide.
-  const savedManual = localStorage.getItem('labores_manual_html_v74');
-  if (savedManual) {
-    const modalBody = document.querySelector('#modal-instrucciones .modal-body');
+  // The built-in guide now contains the Welcome Hero Banner and redesigned structure.
+  const savedManual = localStorage.getItem('labores_manual_html_v87');
+  if (savedManual && savedManual.trim().length > 100) {
+    const modalBody = document.querySelector('#view-instrucciones .inst-body');
     if (modalBody) {
       modalBody.innerHTML = savedManual;
     }
@@ -7196,7 +7290,7 @@ function formatPrice(precio, divisa) {
 }
 
 /* ─── STATE ─────────────────────────────────────────────── */
-let currentView = 'proyectos';
+let currentView = 'instrucciones';
 let currentProject = null;
 let currentMeasurePerson = null;
 let measurementContext = 'project';
@@ -9310,16 +9404,23 @@ const viewTitles = {
   medidas:       ['Mis', 'Medidas'],
   configuracion: ['', 'Configuración'],
   detalle:       ['', ''],
+  instrucciones: ['', 'Manual'],
 };
 const btnTexts = {
   proyectos:'Nuevo', llanas:'Añadir lanas',
-  agujas:'Añadir agujas', accesorios:'Añadir accesorios', medidas:'Añadir medidas', configuracion:null
+  agujas:'Añadir agujas', accesorios:'Añadir accesorios', medidas:'Añadir medidas', configuracion:null, instrucciones:null
 };
 
 window.showView = function(v) {
+  if (v === 'welcome' || v === 'proyectos' || v === 'instrucciones') {
+    if (window.location.hash) {
+      history.replaceState(null, null, ' ');
+    }
+    window.scrollTo(0, 0);
+  }
   restoreAppScrolling();
   if (v !== 'detalle') document.body.classList.remove('shared-project-mode');
-  document.body.classList.remove('view-proyectos','view-llanas','view-agujas','view-accesorios','view-medidas','view-configuracion','view-detalle');
+  document.body.classList.remove('view-proyectos','view-llanas','view-agujas','view-accesorios','view-medidas','view-configuracion','view-detalle','view-instrucciones','view-welcome');
   document.body.classList.add('view-' + v);
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -14854,7 +14955,7 @@ window.toggleInstructionsEdit = function() {
 
 function enterInstructionsEditMode() {
   document.body.classList.add('edit-mode-instrucciones');
-  const modalBody = document.querySelector('#modal-instrucciones .modal-body');
+  const modalBody = document.querySelector('#view-instrucciones .inst-body');
   
   if (!document.getElementById('edit-instructions-banner')) {
     const banner = document.createElement('div');
@@ -14938,7 +15039,7 @@ window.downloadUpdatedHtmlFile = function() {
   }
   
   // Remove contenteditable attributes
-  const modalBody = clone.querySelector('#modal-instrucciones .modal-body');
+  const modalBody = clone.querySelector('#view-instrucciones .inst-body');
   if (modalBody) {
     modalBody.removeAttribute('contenteditable');
   }
@@ -14968,7 +15069,7 @@ window.downloadUpdatedHtmlFile = function() {
 };
 
 window.copyInstructionsCode = function() {
-  const temp = document.querySelector('#modal-instrucciones .modal-body').cloneNode(true);
+  const temp = document.querySelector('#view-instrucciones .inst-body').cloneNode(true);
   const banner = temp.querySelector('#edit-instructions-banner');
   if (banner) banner.remove();
   
@@ -14987,20 +15088,20 @@ window.copyInstructionsCode = function() {
 
 window.restoreOriginalInstructions = function() {
   if (confirm("¿Seguro que quieres borrar tus cambios y restaurar el manual original?")) {
-    localStorage.removeItem('labores_manual_html_v74');
+    localStorage.removeItem('labores_manual_html_v87');
     location.reload();
   }
 };
 
 function saveInstructionsEdit() {
-  const modalBody = document.querySelector('#modal-instrucciones .modal-body');
+  const modalBody = document.querySelector('#view-instrucciones .inst-body');
   const banner = document.getElementById('edit-instructions-banner');
   if (banner) banner.remove();
   
   modalBody.contentEditable = "false";
   modalBody.removeAttribute('contenteditable');
   const cleanHtml = modalBody.innerHTML;
-  localStorage.setItem('labores_manual_html_v74', cleanHtml);
+  localStorage.setItem('labores_manual_html_v87', cleanHtml);
   
   document.getElementById('lock-btn').textContent = "🔒";
   document.getElementById('lock-btn').title = "Editar instrucciones";
@@ -16735,6 +16836,9 @@ renderCalcPartOptions();
 renderCurrencyOptions();
 setInterval(refreshProjectCardTimes, 1000);
 setTimeout(checkOverdueProjects, 300);
+
+// Always show the welcome cover on startup
+showView('instrucciones');
 </script>
 
 <!-- ═══ LOCAL STATUS ═══════════════════════════════════════ -->
@@ -18148,6 +18252,9 @@ window.copyWebLink = function() {
 </style>
 
 <style>
+  body.modal-open #app-version-badge {
+    display: none !important;
+  }
 #app-version-badge {
   position: fixed;
   bottom: 95px;
@@ -18155,7 +18262,7 @@ window.copyWebLink = function() {
   font-size: 12px;
   font-weight: normal;
   color: rgba(0,0,0,0.5);
-  z-index: 9999;
+  z-index: 90;
   pointer-events: none;
   display: flex;
   gap: 8px;
@@ -18167,99 +18274,44 @@ window.copyWebLink = function() {
     justify-content: space-between;
   }
 }
+@keyframes backupWaveAnim {
+  0% { color: #A8E8B4; }
+  20% { color: #A8D0E8; }
+  40% { color: #FCECC0; }
+  60% { color: #E8A8B4; }
+  80% { color: #B4A8E8; }
+  100% { color: #A8E8B4; }
+}
+.backup-wave-active {
+  animation: backupWaveAnim 10s infinite;
+}
 </style>
 <div id="app-version-badge">
-  <span id="backup-warning-text" style="color:var(--bark); font-weight:normal; font-size: 12px; pointer-events:auto; cursor:pointer;" ondblclick="toggleBackupWave()">Guarda tus datos regularmente</span>
-  <span style="color:var(--text-muted); font-weight:normal;">V24</span>
+  <span id="backup-warning-text" style="color:var(--bark); font-weight:normal; font-size: 12px; pointer-events:auto; cursor:pointer;" ondblclick="toggleBackupWave()"></span>
+  <span style="color:var(--text-muted); font-weight: normal; opacity:0.6; font-size:12px; letter-spacing:0.5px;">V25</span>
 </div>
 
 <script>
-window.backupWaveColors = [
-  'var(--bark)', '#A8E8B4', // Verde pastel
-  'var(--bark)', '#A8D0E8', // Azul pastel
-  'var(--bark)', '#FCECC0', // Amarillo pastel
-  'var(--bark)', '#E8A8B4', // Rosa pastel
-  'var(--bark)', '#B4A8E8'  // Lila pastel
-];
-window.backupWaveIndex = 0;
 window.backupWavePlaying = true;
-
-function doBackupWave() {
-  if (!window.backupWavePlaying) return;
-  const el = document.getElementById('backup-warning-text');
-  if(!el) return;
-  
-  const c1 = window.backupWaveColors[window.backupWaveIndex % window.backupWaveColors.length];
-  const c2 = window.backupWaveColors[(window.backupWaveIndex + 1) % window.backupWaveColors.length];
-  window.backupWaveIndex++;
-  
-  el.style.backgroundImage = `linear-gradient(90deg, ${c2} 0%, ${c1} 50%, ${c2} 100%)`;
-  el.style.backgroundSize = "200% 100%";
-  el.style.backgroundClip = "text";
-  el.style.webkitBackgroundClip = "text";
-  el.style.webkitTextFillColor = "transparent";
-  
-  el.style.transition = "none";
-  el.style.backgroundPosition = "100% 0";
-  
-  void el.offsetWidth;
-  
-  el.style.transition = "background-position 5s linear";
-  el.style.backgroundPosition = "0% 0";
-  
-  setTimeout(() => {
-    if(!window.backupWavePlaying) return;
-    el.style.backgroundImage = 'none';
-    el.style.webkitTextFillColor = c2;
-    el.style.color = c2;
-  }, 5000);
-}
-
-function startBackupWaveCycle() {
-  setTimeout(doBackupWave, 1000);
-  setInterval(doBackupWave, 10000);
-}
 
 function toggleBackupWave() {
   window.backupWavePlaying = !window.backupWavePlaying;
   const el = document.getElementById('backup-warning-text');
-  if(!window.backupWavePlaying && el) {
-     el.style.transition = "none";
-     el.style.backgroundImage = 'none';
-     el.style.webkitTextFillColor = 'var(--bark)';
-     el.style.color = 'var(--bark)';
-  } else if (window.backupWavePlaying && el) {
-     doBackupWave();
+  if (el) {
+    if (window.backupWavePlaying) {
+      el.classList.add('backup-wave-active');
+      el.style.color = '';
+    } else {
+      el.classList.remove('backup-wave-active');
+      el.style.color = 'var(--bark)';
+    }
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  startBackupWaveCycle();
-  
-  const manualBtn = document.getElementById('btn-instrucciones-square');
-  if (manualBtn) {
-    manualBtn.classList.add('manual-btn-anim');
-    
-    // Create stars
-    const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
-    starAngles.forEach((angle, i) => {
-      const star = document.createElement('div');
-      star.textContent = '✨';
-      star.className = 'manual-star active';
-      
-      const rad = angle * Math.PI / 180;
-      const dist = 25;
-      star.style.setProperty('--tx', (Math.cos(rad) * dist) + 'px');
-      star.style.setProperty('--ty', (Math.sin(rad) * dist) + 'px');
-      
-      manualBtn.appendChild(star);
-      
-      setTimeout(() => star.remove(), 5000);
-    });
-    
-    setTimeout(() => {
-      manualBtn.classList.remove('manual-btn-anim');
-    }, 5000);
+  const el = document.getElementById('backup-warning-text');
+  if (el && window.backupWavePlaying) {
+    el.classList.add('backup-wave-active');
   }
 });
 </script>
