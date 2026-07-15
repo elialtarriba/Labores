@@ -1083,6 +1083,35 @@ avisa a la creadora a través de su email.
   .counter-big-display span { font-size: 28px; color: var(--text-muted); }
   .counter-big-controls { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
   .counter-big-controls .counter-btn { width: 70px; height: 70px; font-size: 34px; }
+  #modal-contador {
+    padding: 0 !important;
+    align-items: stretch !important;
+  }
+  #modal-contador .modal {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #modal-contador .modal-header {
+    flex: 0 0 auto;
+    padding-top: calc(18px + env(safe-area-inset-top));
+  }
+  #modal-contador .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
   .material-picker {
     display: grid;
     grid-template-columns: 46px minmax(260px, 1fr) 150px auto;
@@ -2245,6 +2274,20 @@ avisa a la creadora a través de su email.
     background: #D1FAE5;
     border-color: #6EE7B7;
   }
+  #modal-active-timer-warning .modal {
+    overflow:hidden;
+    border:2px solid #c99e73;
+    background:linear-gradient(145deg,#fff4c9 0%,#f3dfb4 38%,#dfc1a8 70%,#cfa58d 100%);
+    box-shadow:0 12px 0 #9a6c52,0 20px 40px rgba(87,55,39,.3),inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  #modal-active-timer-warning .modal-header,
+  #modal-active-timer-warning .modal-footer { background:rgba(255,250,227,.38); }
+  #modal-active-timer-warning .modal-header h2 { color:#6e4a3a; }
+  .active-timer-warning-yarn {
+    font-size:64px; line-height:1; text-align:center; margin:2px 0 16px;
+    filter:drop-shadow(0 7px 5px rgba(110,74,58,.25));
+  }
+  #active-timer-warning-text { color:#6e4a3a !important; }
   .resource-block { margin-top: 18px; }
   .resource-block h4 {
     font-size: 13px;
@@ -2771,15 +2814,33 @@ avisa a la creadora a través de su email.
   }
   .detail-origin-badge.visible { display: inline-flex; align-items: center; gap: 5px; }
   .manual-index {
-    margin: 16px 0 20px; padding: 14px; border: 1.5px solid var(--cream-dark);
-    border-radius: 16px; background: var(--cream);
+    margin: 0 0 20px; padding: 16px; border: 1.5px solid #e8c9b5;
+    border-radius: 18px; background: linear-gradient(145deg, #fff8ef 0%, #fbe9dc 100%);
+    box-shadow: 0 6px 18px rgba(110,74,58,.09);
+    scroll-margin-top: 88px;
   }
   .manual-index h3 { margin: 0 0 10px; color: var(--bark); }
   .manual-index-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-  .manual-index a {
-    display:block; padding:9px 10px; border-radius:10px; background:var(--warm-white);
-    color:var(--bark); font-size:13px; font-weight:800; text-decoration:none;
+  .manual-index-grid a {
+    display:block; padding:10px 11px; border:1px solid rgba(217,132,99,.2); border-radius:11px;
+    background:rgba(255,255,255,.78); color:var(--terracota-d); font-size:13px;
+    font-weight:800; text-decoration:none; box-shadow:0 2px 6px rgba(110,74,58,.05);
   }
+  .manual-nav-3d {
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    min-height:38px; padding:8px 16px; border:1.5px solid rgba(255,255,255,.85);
+    border-radius:999px; background:linear-gradient(180deg,#ef9a78 0%,var(--terracota) 58%,var(--terracota-d) 100%);
+    color:#fff; font-size:13px; font-weight:900; text-decoration:none;
+    box-shadow:0 5px 0 #8d4d37,0 8px 14px rgba(110,74,58,.2),inset 0 1px 0 rgba(255,255,255,.45);
+    transition:transform 80ms ease,box-shadow 80ms ease;
+  }
+  .manual-nav-3d:active {
+    transform:translateY(4px);
+    box-shadow:0 1px 0 #8d4d37,0 3px 7px rgba(110,74,58,.16),inset 0 2px 4px rgba(90,45,30,.2);
+  }
+  .manual-mini-guide { margin-top:17px; }
+  .manual-index-start { text-align:center; margin:0 0 17px; }
+  .manual-block-return { display:flex; justify-content:flex-end; margin-top:15px; padding-bottom:4px; }
   .manual-contact { margin-top:20px; padding:16px; border-radius:16px; background:var(--cream); text-align:center; color:var(--bark); }
   .calculator-shell {
     --calc-accent: #D98463;
@@ -3942,12 +4003,16 @@ avisa a la creadora a través de su email.
   }
   .inst-section {
     margin-bottom: 14px;
-    border: 1.5px solid var(--cream-dark);
-    border-radius: 16px;
-    padding: 16px;
-    background: var(--warm-white);
-    box-shadow: 0 4px 12px rgba(110,74,58,.07);
+    border: 1.5px solid #ead5c5;
+    border-radius: 18px;
+    padding: 17px;
+    background: linear-gradient(145deg, #fffdf9 0%, #fff5eb 100%);
+    box-shadow: 0 5px 14px rgba(110,74,58,.08);
+    scroll-margin-top: 88px;
   }
+  .inst-body > .inst-section:nth-of-type(3n+1) { background:linear-gradient(145deg,#fffdf9 0%,#fff1e6 100%); }
+  .inst-body > .inst-section:nth-of-type(3n+2) { background:linear-gradient(145deg,#fffdf9 0%,#f1f7ed 100%); border-color:#d7e5d0; }
+  .inst-body > .inst-section:nth-of-type(3n) { background:linear-gradient(145deg,#fffdf9 0%,#fff7dc 100%); border-color:#eadcaf; }
   .inst-section:last-child {
     margin-bottom: 0;
   }
@@ -3977,17 +4042,20 @@ avisa a la creadora a través de su email.
     line-height: 1.45;
   }
   .manual-hero {
-    padding: 18px;
-    margin-bottom: 14px;
-    border-radius: 18px;
+    padding: 24px 18px 20px;
+    margin-bottom: 20px;
+    border-radius: 22px;
     color: var(--bark);
-    background: linear-gradient(145deg, var(--cream), var(--warm-white));
-    border: 1.5px solid var(--cream-dark);
+    background: linear-gradient(145deg, #fffaf1 0%, #ffedda 52%, #eef5e8 100%);
+    border: 1.5px solid #e7cdb9;
+    box-shadow:0 8px 22px rgba(110,74,58,.1);
     text-align: center;
+    scroll-margin-top: 88px;
   }
-  .manual-hero-icon { font-size: 36px; line-height: 1; margin-bottom: 7px; }
-  .manual-hero h3 { font-family:'Playfair Display',serif; font-size:21px; margin:0 0 6px; }
-  .manual-hero p { font-size:14px; line-height:1.45; color:var(--text-soft); margin:0; }
+  #manual-copyright { scroll-margin-top:88px; }
+  .manual-hero-icon { font-size: 46px; line-height: 1; margin-bottom: 10px; filter:drop-shadow(0 3px 3px rgba(110,74,58,.15)); }
+  .manual-hero h3 { font-family:'Playfair Display',serif; font-size:24px; margin:0 0 10px; }
+  .manual-hero p { font-size:15px; line-height:1.5; color:var(--text-soft); margin:0 auto; max-width:560px; }
   .manual-quick-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3995,15 +4063,17 @@ avisa a la creadora a través de su email.
     margin-top: 14px;
   }
   .manual-quick-card {
-    padding: 11px 8px;
-    border-radius: 13px;
-    background: rgba(255,255,255,.55);
-    border: 1px solid var(--cream-dark);
-    font-size: 12px;
+    display:flex; align-items:center; gap:9px; text-align:left;
+    padding: 13px 11px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.82);
+    border: 1px solid rgba(217,132,99,.25);
+    font-size: 13px;
     line-height: 1.35;
     font-weight: 800;
+    box-shadow:0 3px 9px rgba(110,74,58,.07);
   }
-  .manual-quick-card span { display:block; font-size:22px; margin-bottom:4px; }
+  .manual-quick-card span { display:block; flex:0 0 auto; font-size:25px; margin:0; }
   .manual-steps { display:grid; gap:8px; margin-top:10px; }
   .manual-step { display:grid; grid-template-columns:30px 1fr; gap:9px; align-items:start; }
   .manual-step-number {
@@ -4024,8 +4094,7 @@ avisa a la creadora a través de su email.
   }
   @media (max-width: 560px) {
     .manual-quick-grid { grid-template-columns:1fr; }
-    .manual-quick-card { display:grid; grid-template-columns:30px 1fr; text-align:left; align-items:center; }
-    .manual-quick-card span { margin:0; }
+    .manual-hero h3 { font-size:22px; }
   }
 
   /* ── Galería compacta de accesorios ── */
@@ -5729,7 +5798,7 @@ body.view-welcome #app-version-badge {
 
 <!-- ═══════════════ VIEW: INSTRUCCIONES (MANUAL) ═══════════════ -->
 <div class="view" id="view-instrucciones" style="padding-bottom: 0; min-height: 100vh; background: var(--cream);">
-  <div class="welcome-cover-container">
+  <div class="welcome-cover-container" id="manual-portada">
     <div class="welcome-emoji">🧶</div>
     <h1 class="welcome-title">¡Bienvenida a tu Taller!</h1>
     <p class="welcome-text">
@@ -5754,19 +5823,34 @@ body.view-welcome #app-version-badge {
       </h3>
     </div>
 
-    <div class="inst-body" data-manual-version="84" style="scroll-behavior:smooth;">
-      <nav class="manual-index" aria-label="Índice del manual" style="background:var(--warm-white);border:1.5px solid var(--cream-dark);border-radius:16px;padding:16px;margin-bottom:30px;box-shadow: 0 4px 15px rgba(110,74,58,0.05);">
-        <h3 style="margin: 0 0 10px; font-size:16px; color:var(--bark);">Índice</h3>
-        <div class="manual-index-grid" style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;">
-          <a href="#manual-instalar" style="text-decoration:none;color:var(--terracota);font-weight:600;">📱 Instalar</a>
-          <a href="#manual-inicio" style="text-decoration:none;color:var(--terracota);font-weight:600;">🏠 Inicio</a>
-          <a href="#manual-empezar" style="text-decoration:none;color:var(--terracota);font-weight:600;">🧵 Empezar labor</a>
-          <a href="#manual-proyecto" style="text-decoration:none;color:var(--terracota);font-weight:600;">📚 Proyecto</a>
-          <a href="#manual-inventario" style="text-decoration:none;color:var(--terracota);font-weight:600;">🧶 Lanas/Agujas</a>
-          <a href="#manual-medidas" style="text-decoration:none;color:var(--terracota);font-weight:600;">📏 Medidas</a>
-          <a href="#manual-dictado" style="text-decoration:none;color:var(--terracota);font-weight:600;">🎙️ Dictado</a>
-          <a href="#manual-compartir" style="text-decoration:none;color:var(--terracota);font-weight:600;">🤝 Compartir</a>
-          <a href="#manual-configuracion" style="text-decoration:none;color:var(--terracota);font-weight:600;">⚙️ Configuración</a>
+    <div class="inst-body" data-manual-version="88" style="scroll-behavior:smooth;">
+      <div class="manual-hero" id="manual-resumen">
+        <div class="manual-hero-icon">🧶</div>
+        <h3>Tu taller de labores, paso a paso</h3>
+          <p>Todo se guarda en este dispositivo. Entra en una labor para tener juntos patrón, materiales, tiempo, cuentas y recuerdos.</p>
+        <div class="manual-quick-grid">
+          <div class="manual-quick-card"><span>1️⃣</span><strong>Crea o abre un proyecto</strong></div>
+          <div class="manual-quick-card"><span>2️⃣</span><strong>Añade patrón y materiales</strong></div>
+          <div class="manual-quick-card"><span>3️⃣</span><strong>Guarda mientras trabajas</strong></div>
+        </div>
+        <a class="manual-nav-3d manual-mini-guide" href="#manual-indice">Mini Guía</a>
+      </div>
+
+      <nav class="manual-index" id="manual-indice" aria-label="Índice del manual">
+        <div class="manual-index-start"><a class="manual-nav-3d" href="#manual-portada">Iniciar</a></div>
+        <h3 style="font-size:16px;">📑 Índice del Manual</h3>
+        <div class="manual-index-grid">
+          <a href="#manual-instalar">1. Instalar la app</a>
+          <a href="#manual-copias-importante">2. Importante (Copias)</a>
+          <a href="#manual-inicio">3. Pantalla de Inicio</a>
+          <a href="#manual-empezar">4. Empezar una labor</a>
+          <a href="#manual-proyecto">5. Dentro del proyecto</a>
+          <a href="#manual-inventario">6. Inventario</a>
+          <a href="#manual-medidas">7. Medidas / calculadora</a>
+          <a href="#manual-dictado">8. Dictado por voz 🎙️</a>
+          <a href="#manual-compartir">9. Compartir proyectos</a>
+          <a href="#manual-configuracion">10. Configuración / Copias</a>
+          <a href="#manual-copyright">11. Copyright</a>
         </div>
       </nav>
 
@@ -5776,6 +5860,17 @@ body.view-welcome #app-version-badge {
           <p><strong>iPhone/iPad:</strong> abre el enlace con Safari, pulsa Compartir ⬆️ y <strong>Añadir a pantalla de inicio</strong>.</p>
           <p><strong>Android:</strong> abre el enlace con Chrome, pulsa ⋮ y elige <strong>Instalar aplicación</strong> o <strong>Añadir a pantalla de inicio</strong>.</p>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
+      </div>
+
+      <div class="inst-section" id="manual-copias-importante">
+        <h3 class="inst-title">🔐 Importante: copias de seguridad</h3>
+        <div class="inst-content">
+          <p>La aplicación guarda tus proyectos, inventario, fotos y documentos localmente en este dispositivo para poder funcionar sin conexión.</p>
+          <p>Haz periódicamente una copia desde <strong>Configuración → Exportar copia</strong>, especialmente después de cambios importantes. Guarda el archivo en un lugar seguro.</p>
+          <p>Para recuperar tus datos en este u otro dispositivo, utiliza <strong>Configuración → Importar copia</strong> y selecciona el archivo exportado.</p>
+        </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-inicio">
@@ -5795,18 +5890,19 @@ body.view-welcome #app-version-badge {
             <li><strong>Botones inferiores en línea (Lanas o Hilos, Agujas, Accesorios, Medidas y Configuración):</strong> Accesos directos a tu inventario de materiales para gestionarlos sin estar dentro de un proyecto y su configuración.</li>
           </ul>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-empezar">
         <h3 class="inst-title">🧵 Empezar una labor</h3>
         <div class="inst-content">
           <div class="manual-steps">
-            <div class="manual-step"><span class="manual-step-number">1</span><p>Pulsa <strong>Nuevo proyecto</strong> y escribe nombre, tipo, estado, fechas y notas.</p></div>
-            <div class="manual-step"><span class="manual-step-number">2</span><p>Abre su tarjeta. En <strong>General</strong> puedes cambiar datos, añadir notas, fotos de evolución, patrón PDF, materiales y una ficha de medidas.</p></div>
-            <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Guardar</strong> después de modificar la ficha. El botón grande <strong>← Inicio</strong> vuelve a la página principal.</p></div>
+            <div class="manual-step"><span class="manual-step-number">1</span><p>Pulsa <strong>Nuevo</strong> y te sale un popup donde escribir el nombre del proyecto, el tipo, la técnica, el estado y la fecha de inicio.</p></div>
+            <div class="manual-step"><span class="manual-step-number">2</span><p>Una vez rellenados los datos solicitados, pulsas el botón, <strong>Crear Proyecto</strong>, en la parte inferior derecha del popup. Desaparecerá el popup y el proyecto aparecerá en la carpeta Proyectos y en cualquiera de los Estados que le hayas puesto (En Curso, Ideas, En Pausa o Terminados).</p></div>
+            <div class="manual-step"><span class="manual-step-number">3</span><p>Pulsa <strong>Cualquier Estado o Proyectos</strong>, para visualizar tu nuevo proyecto en la parte de debajo las carpetas de estado. Pulsa en el proyecto y se te abrirá para poder comenzar con <strong>Tu Proyecto!</strong></p></div>
           </div>
-          <div class="manual-chip-row"><span class="manual-chip">🔍 Lupa: ampliar</span><span class="manual-chip">🗑 Papelera: borrar</span><span class="manual-chip">⧉ Duplicar ficha</span></div>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-proyecto">
@@ -5814,14 +5910,25 @@ body.view-welcome #app-version-badge {
         <div class="inst-content">
           <ul>
             <li><strong>📋 General:</strong> información, diario de notas, lanas, agujas, accesorios, medidas, portada, galería y varios PDF.</li>
+            <li><strong>✍️ Nombre:</strong> puedes modificarlo cuando quieras. Pulsa <strong>Guardar</strong> para conservar el cambio.</li>
+            <li><strong>🧵 Tipo:</strong> elige el tipo de labor. Si falta alguno, créalo en <strong>Configuración → Tipos de proyecto</strong>.</li>
+            <li><strong>🟡 Técnica y aguja utilizada:</strong> elige la técnica y el número de aguja que usarás en el proyecto.</li>
+            <li><strong>📐 Medidas:</strong> vincula una ficha creada previamente desde el apartado inferior <strong>Medidas</strong>.</li>
+            <li><strong>💡 Estado:</strong> determina si la labor aparece en En Curso, Terminados, Ideas o En Pausa.</li>
+            <li><strong>🌍 Web:</strong> guarda el enlace del patrón, reel o vídeo para consultarlo después cuando tengas conexión.</li>
+            <li><strong>📅 Fechas inalterables:</strong> la fecha de creación y la fecha en que se marca como terminado se guardan automáticamente y no se modifican a mano.</li>
+            <li><strong>📝 Notas del proyecto:</strong> escribe cuanto necesites o usa el micrófono para dictar la nota.</li>
+            <li><strong>📥 Materiales utilizados:</strong> añade hilos, agujas y accesorios creados previamente en el inventario. Reservarlos descuenta sus existencias.</li>
+            <li><strong>📸 Portada, patrón y evolución:</strong> añade la imagen principal, varios PDF y fotografías para seguir el progreso de la labor.</li>
+            <li><strong>🤝 Proyectos compartidos:</strong> al final de la ficha puedes consultar con qué personas compartiste el proyecto.</li>
             <li><strong>⏱ Tiempo y Píldora 3D:</strong> pulsa <strong>Empezar</strong> al tejer y <strong>Parar</strong> al terminar. Aparecerá una <strong>píldora flotante</strong> 3D. Puedes arrastrarla a donde quieras, pulsarla rápido para ir directo a la pestaña de Tiempo de su proyecto, o mantenerla pulsada (se hunde) para moverla. Además, si intentas iniciar el tiempo de un proyecto distinto teniendo una píldora en marcha, la app te avisará para cerrar el anterior primero, evitando duplicidades.</li>
-            <li><strong>🔢 Contadores:</strong> crea uno por vueltas, mangas o dibujos. Usa ＋/−, escribe notas y toca el número para verlo grande.</li>
+            <li><strong>🔢 Contadores:</strong> crea uno por vueltas, mangas o dibujos. Usa ＋/− para contar, escribe notas, pulsa <strong>Ver grande</strong> para usar el contador a pantalla completa, 🔍 para ampliar la nota y 📋 para copiarla al portapapeles.</li>
             <li><strong>🧶 Calculadora:</strong> indica medida, muestra de 10 cm y holgura; calcula puntos o vueltas y guarda el resultado.</li>
             <li><strong>💶 Finanzas:</strong> reúne materiales, tiempo y mano de obra. <strong>Informe</strong> crea el resumen; <strong>Informe Completo</strong> añade evolución, notas y diario. Puedes imprimirlo o enviarlo por WhatsApp/email.</li>
-            <li><strong>📅 Fechas inalterables:</strong> Al editar un proyecto, debajo de las notas verás una línea con la <strong>fecha de inicio</strong> y la <strong>fecha fin</strong>. Estas fechas son automáticas e independientes del calendario normal, no se pueden modificar a mano y sirven como un registro fiable de cuándo creaste el proyecto por primera vez y cuándo lo marcaste como "Terminado".</li>
           </ul>
           <div class="manual-tip">💡 Los materiales reservados para una labor descuentan existencias. Al devolverlos o borrar el proyecto, vuelven al inventario y queda anotado en su historial.</div>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-inventario">
@@ -5834,6 +5941,7 @@ body.view-welcome #app-version-badge {
             <li>Usa la búsqueda superior para localizar rápidamente una lana, aguja, accesorio o proyecto.</li>
           </ul>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-medidas">
@@ -5845,6 +5953,7 @@ body.view-welcome #app-version-badge {
             <li>La tarjeta <strong>🧮 Calculadora</strong> de Inicio sirve para un cálculo rápido; la calculadora interior guarda el cálculo en la labor abierta.</li>
           </ul>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-dictado">
@@ -5858,6 +5967,7 @@ body.view-welcome #app-version-badge {
           </div>
           <div class="manual-tip">💡 <strong>Consejo:</strong> Si el reconocimiento se equivoca en alguna palabra, puedes tocar el recuadro y corregirla manualmente con el teclado antes de guardarla.</div>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-compartir">
@@ -5866,6 +5976,7 @@ body.view-welcome #app-version-badge {
           <p>La app te permite enviarle tus proyectos completos a otras personas y recibir los suyos. Al hacerlo, viaja absolutamente todo: fotos, patrones en PDF, tiempo, contadores, cálculos, notas y materiales.</p>
           <h4 style="margin: 16px 0 8px; font-size: 15px; color: var(--bark);">📤 Cómo enviar un proyecto</h4>
           <p style="margin-top:0;">Abre tu proyecto, pulsa el botón superior <strong>🤝 Compartir</strong>, escribe a quién se lo envías y elige por dónde mandarlo (WhatsApp, Mail, AirDrop...).</p>
+          <p>Si guardas tu nombre en <strong>Configuración → Mi nombre para compartir</strong>, aparecerá automáticamente cada vez que envíes una labor.</p>
           <h4 style="margin: 20px 0 8px; font-size: 15px; color: var(--bark);">📥 Cómo recibir e importar</h4>
           <div class="manual-steps">
             <div class="manual-step"><span class="manual-step-number">1</span><p>En la pantalla de Inicio, pulsa la barra alargada de <strong>Compartidos</strong> y luego <strong>Importar proyecto</strong>. Selecciona el archivo que te han enviado. Cuando termine, la barra parpadeará confirmando el éxito.</p></div>
@@ -5876,6 +5987,7 @@ body.view-welcome #app-version-badge {
             <strong>⚠️ Nota sobre el archivo "texto.txt":</strong> Al compartir desde un iPhone/iPad usando WhatsApp o correo, a veces se envían <strong>dos archivos</strong>: el proyecto (terminado en <code>.labores</code>) y un <code>texto.txt</code>. Este último solo contiene un saludo automático y <strong>puedes ignorarlo</strong>; debes importar el archivo principal.
           </div>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
       <div class="inst-section" id="manual-configuracion">
@@ -5888,16 +6000,18 @@ body.view-welcome #app-version-badge {
           </ul>
           <div class="manual-tip">🔐 Haz una copia después de cambios importantes. Tus datos son privados y se guardan localmente en el dispositivo.</div>
         </div>
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
 
-      <div class="manual-contact" id="manual-copyright">
+      <div class="manual-contact">
         <strong>¿Tienes una sugerencia o una mejora?</strong><br>
         Puedes escribir a <a href="mailto:lisaltarriba@gmail.com">lisaltarriba@gmail.com</a>.
       </div>
-      <div class="manual-contact" style="margin-top: 12px; font-size: 13px; opacity: 0.8;">
+      <div class="manual-contact" id="manual-copyright" style="margin-top: 12px; font-size: 13px; opacity: 0.8;">
         <strong>© 2026 Elisabeth Altarriba</strong><br>
         Licencia: Uso personal permitido. Prohibido uso comercial.<br>
         Se requiere atribución al compartir esta app.
+        <div class="manual-block-return"><a class="manual-nav-3d" href="#manual-indice">↑ Índice</a></div>
       </div>
     </div>
   </div>
@@ -5939,7 +6053,7 @@ body.view-welcome #app-version-badge {
 
 <!-- ═══════════════ MODAL: CONTADOR GRANDE ═══════════════ -->
 <div class="modal-overlay" id="modal-contador">
-  <div class="modal" style="max-width:520px;">
+  <div class="modal">
     <div class="modal-header">
       <h2 id="counter-zoom-title">Contador</h2>
       <button class="modal-close" onclick="closeModal('modal-contador')">✕</button>
@@ -6183,6 +6297,23 @@ body.view-welcome #app-version-badge {
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="cancelDuplicateAction()">No</button>
       <button class="btn btn-primary" onclick="confirmDuplicateAction()">Sí, duplicar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-active-timer-warning" style="z-index:190;">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h2>Tiempo en marcha</h2>
+      <button class="modal-close" onclick="cancelTimerSwitch()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="active-timer-warning-yarn" aria-hidden="true">🧶</div>
+      <p id="active-timer-warning-text" style="font-size:15px;color:var(--text-soft);line-height:1.55;margin:0;">Ya hay otro proyecto con el tiempo empezado.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cancelTimerSwitch()">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmTimerSwitch()">Aceptar</button>
     </div>
   </div>
 </div>
@@ -6858,6 +6989,25 @@ body.view-welcome #app-version-badge {
   </div>
 </div>
 
+<!-- ═══════════════ MODAL: CANTIDAD DE MATERIAL ═══════════════ -->
+<div class="modal-overlay" id="modal-cantidad-material" style="z-index: 220;">
+  <div class="modal" style="max-width: 430px;">
+    <div class="modal-header">
+      <h2 id="cantidad-material-titulo">Cantidad</h2>
+      <button class="modal-close" type="button" onclick="cancelQuantityDialog()">✕</button>
+    </div>
+    <div class="modal-body">
+      <label id="cantidad-material-pregunta" for="cantidad-material-input" style="display:block;font-size:16px;color:var(--text-soft);line-height:1.45;margin-bottom:12px;"></label>
+      <input id="cantidad-material-input" type="number" min="1" step="1" value="1" inputmode="numeric" style="width:100%;box-sizing:border-box;font-size:18px;">
+      <div id="cantidad-material-error" style="min-height:20px;margin-top:8px;font-size:13px;color:#c5221f;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" type="button" onclick="cancelQuantityDialog()">Cancelar</button>
+      <button class="btn btn-primary" type="button" onclick="acceptQuantityDialog()">Aceptar</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 window.onerror = function(message, source, lineno, colno, error) {
@@ -7298,6 +7448,7 @@ let pendingMeasurePersonType = '';
 let activeFilter = null;
 let editingId = null;
 let workTimerInterval = null;
+let pendingTimerSwitchProjectId = '';
 let overdueProjectQueue = [];
 let activeOverdueProjectId = '';
 
@@ -7346,6 +7497,63 @@ let db = {
   accesorios: loadStoredList('labores_accesorios'),
   medidasPersonas: loadStoredList('labores_medidas_personas'),
 };
+
+// Complete the factory example already stored on existing installations.
+try {
+  const exampleNeedleMigrationKey = 'labores_migracion_ejemplo_aguja_300';
+  if (!localStorage.getItem(exampleNeedleMigrationKey)) {
+    const exampleProject = db.proyectos.find(project =>
+      project.id === 'mri5rwe0xln4p12i7p' &&
+      project.nombre === 'Margarita en Maceta (ejemplo)'
+    );
+    if (exampleProject) {
+      exampleProject.agujaUtilizada = '3.00mm';
+      localStorage.setItem('labores_proyectos', JSON.stringify(db.proyectos));
+    }
+    localStorage.setItem(exampleNeedleMigrationKey, '1');
+  }
+} catch (e) {
+  console.warn('No se pudo completar la aguja del proyecto de ejemplo.', e);
+}
+
+// Leave factory inventory histories with only their real opening balance.
+try {
+  const exampleHistoryMigrationKey = 'labores_migracion_historiales_ejemplo_saldo';
+  if (!localStorage.getItem(exampleHistoryMigrationKey)) {
+    const exampleInventory = [
+      { type: 'llanas', id: 'mri7i64ubq25m0a7jr', movements: ['mri7i64ybglmir90z6j', 'mri8attjyiwawlabb1', 'mri8b53j40lc9hk8bo', 'mri8cnd6nrsdsm2ua6'] },
+      { type: 'agujas', id: 'mpnzz6dv9ag9a6e8jlj', movements: ['mri84ejd961frrigl4h', 'mri8c1lsjvuoqlvsepf', 'mri8cep1pysa2me7ds9'] },
+      { type: 'accesorios', id: 'mpob60d5t078nwc1bz8', movements: ['mri8cy28ftg4hc3cngc'] },
+      { type: 'accesorios', id: 'mppk2mlutmwsgw0otu', movements: [] },
+      { type: 'accesorios', id: 'mppk9ep65lfc3hrlwrd', movements: ['mri8cubiedgojrtg7ss'] }
+    ];
+    const changedTypes = new Set();
+    exampleInventory.forEach(example => {
+      const item = db[example.type].find(entry => entry.id === example.id);
+      if (!item) return;
+      const currentMovementIds = (item.movimientos || []).map(movement => movement.id);
+      const stillHasFactoryHistory =
+        currentMovementIds.length === example.movements.length &&
+        currentMovementIds.every((id, index) => id === example.movements[index]);
+      if (!stillHasFactoryHistory) return;
+      const balance = stockQuantity(item.cantidad, 0);
+      item.movimientos = [{
+        id: `saldo_ejemplo_${item.id}`,
+        tipo: 'saldo',
+        cantidad: 0,
+        saldo: balance,
+        fecha: new Date().toLocaleString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+        motivo: 'Saldo del ejemplo',
+        detalle: `Saldo actual: ${balance}`
+      }];
+      changedTypes.add(example.type);
+    });
+    changedTypes.forEach(type => localStorage.setItem(`labores_${type}`, JSON.stringify(db[type])));
+    localStorage.setItem(exampleHistoryMigrationKey, '1');
+  }
+} catch (e) {
+  console.warn('No se pudieron limpiar los historiales del inventario de ejemplo.', e);
+}
 
 const defaultAccessoryTypes = [
   {emoji:'🔵', name:'Marcador de puntos'}, {emoji:'✂️', name:'Tijeras'},
@@ -10117,6 +10325,7 @@ function renderDetail() {
         if (t === 'Punto') {
           return `<select onchange="updateField('agujaUtilizada', this.value)" ${dis}>
             <option value="">-- Selecciona --</option>
+            ${p.id === 'mri5rwe0xln4p12i7p' && p.agujaUtilizada === '3.00mm' ? '<option value="3.00mm" selected>🟠 3.00mm</option>' : ''}
             ${knittingSizes.map(s => `<option value="${escapeAttr(s.name)}" ${p.agujaUtilizada===s.name?'selected':''}>${escapeAttr((s.emoji||'🟠') + ' ' + s.name)}</option>`).join('')}
           </select>`;
         } else if (t === 'Ganchillo') {
@@ -10151,9 +10360,9 @@ function renderDetail() {
       </div>
     </div>
     <div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; gap: 16px; font-size: 13px; color: var(--text-soft); padding-top: 12px; margin-top: 8px; border-top: 1px solid var(--cream-dark); user-select:none;">
-      <span><strong style="color:var(--text-main); font-weight:600;">Inicio:</strong> ${p.fechaInicio ? p.fechaInicio.split('-').reverse().join('/') : '-'}</span>
+      <span><strong style="color:var(--text-main); font-weight:600;">Inicio:</strong> <span id="detail-created-date">${p.creadoEn ? new Date(p.creadoEn).toLocaleDateString('es-ES') : '-'}</span></span>
       <span style="opacity: 0.4;">|</span>
-      <span><strong style="color:var(--text-main); font-weight:600;">Fin:</strong> ${p.fechaFin ? p.fechaFin.split('-').reverse().join('/') : '-'}</span>
+      <span><strong style="color:var(--text-main); font-weight:600;">Fin:</strong> <span id="detail-finished-date">${p.terminadoEn ? new Date(p.terminadoEn).toLocaleDateString('es-ES') : '-'}</span></span>
     </div>
   `;
 
@@ -10221,9 +10430,20 @@ function updateField(field, val) {
   } else {
     currentProject[field] = val;
   }
+
+  if (field === 'estado') {
+    if (val === 'terminado' && !wasTerminado) {
+      currentProject.terminadoEn = new Date().toISOString();
+    } else if (val !== 'terminado') {
+      currentProject.terminadoEn = null;
+    }
+  }
   
   const idx = db.proyectos.findIndex(x => x.id === currentProject.id);
-  if (idx >= 0) db.proyectos[idx][field] = currentProject[field];
+  if (idx >= 0) {
+    db.proyectos[idx][field] = currentProject[field];
+    if (field === 'estado') db.proyectos[idx].terminadoEn = currentProject.terminadoEn;
+  }
   save();
   
   if (field === 'nombre' || field === 'tipo' || field === 'tecnica') {
@@ -10232,6 +10452,16 @@ function updateField(field, val) {
     document.getElementById('detail-tipo').textContent = projectTypeLabel(currentProject.tipo) + ' · ' + normalizeTechnique(currentProject.tecnica);
     const topbarTitle = document.getElementById('topbar-title');
     if (topbarTitle) topbarTitle.innerHTML = `<span>${escapeAttr(currentProject.nombre || 'Proyecto')}</span>`;
+    renderProjects();
+  }
+  if (field === 'estado') {
+    const badge = document.getElementById('detail-status-badge');
+    if (badge) {
+      badge.textContent = projectStatusLabels[currentProject.estado] || '—';
+      badge.className = 'project-card-status status-' + (currentProject.estado || 'pendiente');
+    }
+    const finishedDate = document.getElementById('detail-finished-date');
+    if (finishedDate) finishedDate.textContent = currentProject.terminadoEn ? new Date(currentProject.terminadoEn).toLocaleDateString('es-ES') : '-';
     renderProjects();
   }
   setTimeout(checkOverdueProjects, 0);
@@ -10331,10 +10561,12 @@ window.finishOverdueProject = function() {
   if (project) {
     const wasTerminado = project.estado === 'terminado';
     project.estado = 'terminado';
+    if (!wasTerminado) project.terminadoEn = new Date().toISOString();
     project.progreso = 100;
     project.overdueNoticeAckDate = project.fechaFin || new Date().toISOString().slice(0, 10);
     if (currentProject && currentProject.id === project.id) {
       currentProject.estado = project.estado;
+      currentProject.terminadoEn = project.terminadoEn;
       currentProject.progreso = project.progreso;
       currentProject.overdueNoticeAckDate = project.overdueNoticeAckDate;
       renderDetail();
@@ -11052,6 +11284,50 @@ function renderWorkTimer() {
   }
 }
 
+function showOtherProjectTimerWarning(otherProject) {
+  pendingTimerSwitchProjectId = otherProject?.id || '';
+  const text = document.getElementById('active-timer-warning-text');
+  if (text) {
+    const otherName = otherProject?.nombre || 'otro proyecto';
+    const currentName = currentProject?.nombre || 'este proyecto';
+    text.textContent = `El proyecto “${otherName}” tiene iniciado el tiempo. Pulsa Cancelar si quieres que se mantenga. Pulsa Aceptar si quieres cerrar el temporizador que ya hay e iniciar el temporizador de la labor “${currentName}”.`;
+  }
+  openModal('modal-active-timer-warning');
+}
+
+window.cancelTimerSwitch = function() {
+  pendingTimerSwitchProjectId = '';
+  closeModal('modal-active-timer-warning');
+}
+
+window.confirmTimerSwitch = function() {
+  if (!currentProject || !pendingTimerSwitchProjectId) {
+    cancelTimerSwitch();
+    return;
+  }
+  const otherProject = db.proyectos.find(project => project.id === pendingTimerSwitchProjectId);
+  if (!otherProject || !otherProject.timerRunning || otherProject.id === currentProject.id) {
+    cancelTimerSwitch();
+    return;
+  }
+
+  const stoppedSeconds = getWorkedSeconds(otherProject);
+  otherProject.tiempoTotalSegundos = stoppedSeconds;
+  otherProject.timerRunning = false;
+  otherProject.timerStartedAt = '';
+  otherProject.horas = Math.round(stoppedSeconds / 36) / 100;
+
+  currentProject.timerRunning = true;
+  currentProject.timerStartedAt = new Date().toISOString();
+  currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
+
+  pendingTimerSwitchProjectId = '';
+  saveProjectInDB();
+  renderWorkTimer();
+  renderProjects();
+  closeModal('modal-active-timer-warning');
+}
+
 window.toggleWorkTimer = function() {
   if (!currentProject) return;
   
@@ -11065,23 +11341,8 @@ window.toggleWorkTimer = function() {
     }
     
     if (otherRunningProject) {
-      if (confirm(`¿Quieres cerrar el otro temporizador del proyecto "${otherRunningProject.nombre}"?`)) {
-        otherRunningProject.tiempoTotalSegundos = getWorkedSeconds(otherRunningProject);
-        otherRunningProject.timerRunning = false;
-        otherRunningProject.timerStartedAt = '';
-        otherRunningProject.horas = Math.round(getWorkedSeconds(otherRunningProject) / 36) / 100;
-        
-        if (confirm(`¿Empezamos a contabilizar tiempo del proyecto "${currentProject.nombre}"?`)) {
-          // Continuar
-        } else {
-          saveProjectInDB();
-          renderWorkTimer();
-          renderProjects();
-          return;
-        }
-      } else {
-        return;
-      }
+      showOtherProjectTimerWarning(otherRunningProject);
+      return;
     }
     
     currentProject.timerRunning = true;
@@ -11261,38 +11522,67 @@ function accessoryLabel(a) {
   return [a.nombre, a.tipo].filter(Boolean).join(' · ') || 'Accesorio';
 }
 
-function askReturnQuantity(total, label) {
-  const available = Math.max(1, parseInt(total, 10) || 1);
-  const answer = prompt(`¿Cuántos ${label || 'quieres devolver'}?`, '1');
-  if (answer === null) return 0;
-  const normalized = String(answer).replace(',', '.').trim();
-  const qty = Math.floor(Number(normalized));
-  if (!Number.isFinite(qty) || qty < 1) {
-    alert('Escribe una cantidad válida.');
-    return 0;
+let quantityDialogResolver = null;
+
+window.cancelQuantityDialog = function() {
+  closeModal('modal-cantidad-material');
+  if (quantityDialogResolver) {
+    const resolve = quantityDialogResolver;
+    quantityDialogResolver = null;
+    resolve(0);
   }
-  return Math.min(qty, available);
+};
+
+window.acceptQuantityDialog = function() {
+  const input = document.getElementById('cantidad-material-input');
+  const error = document.getElementById('cantidad-material-error');
+  const qty = Math.floor(Number(String(input && input.value || '').replace(',', '.')));
+  const max = parseInt(input && input.max, 10) || 0;
+  if (!Number.isFinite(qty) || qty < 1) {
+    if (error) error.textContent = 'Escribe una cantidad válida.';
+    return;
+  }
+  if (max && qty > max) {
+    if (error) error.textContent = `Solo hay ${max} disponible(s).`;
+    return;
+  }
+  closeModal('modal-cantidad-material');
+  if (quantityDialogResolver) {
+    const resolve = quantityDialogResolver;
+    quantityDialogResolver = null;
+    resolve(qty);
+  }
+};
+
+function openQuantityDialog(label, available, mode) {
+  const title = document.getElementById('cantidad-material-titulo');
+  const question = document.getElementById('cantidad-material-pregunta');
+  const input = document.getElementById('cantidad-material-input');
+  const error = document.getElementById('cantidad-material-error');
+  if (!title || !question || !input) return Promise.resolve(0);
+  title.textContent = mode === 'return' ? 'Devolver material' : 'Añadir material';
+  question.textContent = `¿Cuántos ${label || (mode === 'return' ? 'quieres devolver' : 'quieres añadir')}?`;
+  input.max = String(available);
+  input.value = '1';
+  if (error) error.textContent = '';
+  openModal('modal-cantidad-material');
+  input.focus();
+  input.select();
+  return new Promise(resolve => { quantityDialogResolver = resolve; });
 }
 
-function askAddQuantity(stock, label) {
+async function askReturnQuantity(total, label) {
+  const available = Math.max(1, parseInt(total, 10) || 1);
+  return openQuantityDialog(label, available, 'return');
+}
+
+async function askAddQuantity(stock, label) {
   const available = Math.max(0, parseInt(stock, 10) || 0);
   if (available < 1) {
     alert('No queda stock disponible.');
     return 0;
   }
-  const answer = prompt(`¿Cuántos ${label || 'quieres añadir'}?`, '1');
-  if (answer === null) return 0;
-  const normalized = String(answer).replace(',', '.').trim();
-  const qty = Math.floor(Number(normalized));
-  if (!Number.isFinite(qty) || qty < 1) {
-    alert('Escribe una cantidad válida.');
-    return 0;
-  }
-  if (qty > available) {
-    alert('Solo hay ' + available + ' en stock.');
-    return 0;
-  }
-  return qty;
+  return openQuantityDialog(label, available, 'add');
 }
 
 function resourceIconHTML(kind, id, fallback, color) {
@@ -11575,11 +11865,11 @@ window.assignNeedleSlot = function(slot) {
   renderAgujas();
 }
 
-window.returnNeedleSlot = function(id) {
+window.returnNeedleSlot = async function(id) {
   const used = currentProject.agujasUsadas && currentProject.agujasUsadas.find(n => n && n.id === id);
   if (!used) return;
   const currentQty = parseInt(used.cantidad) || 0;
-  const qty = askReturnQuantity(currentQty, 'agujas quieres devolver');
+  const qty = await askReturnQuantity(currentQty, 'agujas quieres devolver');
   if (!qty) return;
   const aguja = db.agujas.find(a => a.id === used.agujaId);
   if (aguja) {
@@ -11592,21 +11882,23 @@ window.returnNeedleSlot = function(id) {
   }
   saveProjectInDB();
   renderProjectResourcesPanel();
+  renderMateriales();
   renderAgujas();
 }
 
-window.addNeedleSlotQty = function(id) {
+window.addNeedleSlotQty = async function(id) {
   const used = currentProject.agujasUsadas && currentProject.agujasUsadas.find(n => n && n.id === id);
   if (!used) return;
   const aguja = db.agujas.find(a => a.id === used.agujaId);
   if (!aguja) { alert('No encuentro esta aguja en el inventario.'); return; }
-  const qty = askAddQuantity(parseInt(aguja.cantidad) || 0, 'agujas quieres añadir');
+  const qty = await askAddQuantity(parseInt(aguja.cantidad) || 0, 'agujas quieres añadir');
   if (!qty) return;
   aguja.cantidad = (parseInt(aguja.cantidad) || 0) - qty;
   logMovement('agujas', aguja.id, 'salida', qty, `Añadido a proyecto: ${currentProject.nombre || 'Sin nombre'}`);
   used.cantidad = (parseInt(used.cantidad) || 0) + qty;
   saveProjectInDB();
   renderProjectResourcesPanel();
+  renderMateriales();
   renderAgujas();
 }
 
@@ -11645,13 +11937,13 @@ window.assignProjectAccessory = function(lineId) {
   renderAccesorios();
 }
 
-window.addProjectAccessoryQty = function(id) {
+window.addProjectAccessoryQty = async function(id) {
   if (!currentProject || !currentProject.accesoriosSlots) return;
   const used = currentProject.accesoriosSlots.find(ac => ac.id === id);
   if (!used) return;
   const acc = db.accesorios.find(a => a.id === used.accesorioId);
   if (!acc) { alert('No encuentro esta accesorio en el inventario.'); return; }
-  const qty = askAddQuantity(parseInt(acc.cantidad) || 0, 'accesorios quieres añadir');
+  const qty = await askAddQuantity(parseInt(acc.cantidad) || 0, 'accesorios quieres añadir');
   if (!qty) return;
   acc.cantidad = (parseInt(acc.cantidad) || 0) - qty;
   logMovement('accesorios', acc.id, 'salida', qty, `Añadido a proyecto: ${currentProject.nombre || 'Sin nombre'}`);
@@ -11662,12 +11954,12 @@ window.addProjectAccessoryQty = function(id) {
   renderAccesorios();
 }
 
-window.returnProjectAccessoryQty = function(id) {
+window.returnProjectAccessoryQty = async function(id) {
   if (!currentProject || !currentProject.accesoriosSlots) return;
   const used = currentProject.accesoriosSlots.find(ac => ac.id === id);
   if (!used) return;
   const currentQty = parseInt(used.cantidad) || 0;
-  const qty = askReturnQuantity(currentQty, 'accesorios quieres devolver');
+  const qty = await askReturnQuantity(currentQty, 'accesorios quieres devolver');
   if (!qty) return;
   const acc = db.accesorios.find(a => a.id === used.accesorioId);
   if (acc) {
@@ -12641,7 +12933,17 @@ function renderMateriales() {
         <strong style="font-size:14px;flex:1;">${escapeAttr(m.nombre)}</strong>
         <span style="font-size:13px;color:var(--text-muted);">${m.cantidad||1} ovillo(s)</span>
         <span style="font-size:13px;color:var(--text-muted);">${escapeAttr(m.notas||'')}</span>
-        ${m.llanaId ? `<button class="btn btn-secondary resource-mini-action" onclick="returnMaterialQty('${m.id}','tab')">Devolver</button>` : `<button onclick="removeMaterial('${m.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;">🗑</button>`}
+        ${m.llanaId ? `<button class="btn btn-secondary resource-mini-action" onclick="addMaterialQty('${m.id}','tab')">Añadir</button><button class="btn btn-secondary resource-mini-action" onclick="returnMaterialQty('${m.id}','tab')">Devolver</button>` : `<button onclick="removeMaterial('${m.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;">🗑</button>`}
+      </div>`).join('');
+  }
+  if (p.agujasUsadas && p.agujasUsadas.length) {
+    list.innerHTML += p.agujasUsadas.map(n => `
+      <div class="material-row">
+        <div class="yarn-swatch" style="background:var(--cream);" title="${escapeAttr(n.nombre)}">🔧</div>
+        <strong style="font-size:14px;flex:1;">${escapeAttr(n.nombre)}</strong>
+        <span style="font-size:13px;color:var(--text-muted);">${n.cantidad||1} ud.</span>
+        <span style="font-size:13px;color:var(--text-muted);">Aguja reservada</span>
+        ${n.agujaId ? `<button class="btn btn-secondary resource-mini-action" onclick="addNeedleSlotQty('${n.id}','tab')">Añadir</button><button class="btn btn-secondary resource-mini-action" onclick="returnNeedleSlot('${n.id}','tab')">Devolver</button>` : ''}
       </div>`).join('');
   }
   const projectAccessories = [
@@ -12655,7 +12957,7 @@ function renderMateriales() {
         <strong style="font-size:14px;flex:1;">${escapeAttr(ac.nombre)}</strong>
         <span style="font-size:13px;color:var(--text-muted);">${ac.cantidad||1} ud.</span>
         <span style="font-size:13px;color:var(--text-muted);">${escapeAttr(ac.tipo||'Accesorio')}</span>
-        ${ac.source === 'slot' ? `<button class="btn btn-secondary resource-mini-action" onclick="returnProjectAccessoryQty('${ac.id}','tab')">Devolver</button>` : `<button onclick="removeAccessoryMaterial('${ac.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;">🗑</button>`}
+        ${ac.source === 'slot' ? `<button class="btn btn-secondary resource-mini-action" onclick="addProjectAccessoryQty('${ac.id}','tab')">Añadir</button><button class="btn btn-secondary resource-mini-action" onclick="returnProjectAccessoryQty('${ac.id}','tab')">Devolver</button>` : `<button onclick="removeAccessoryMaterial('${ac.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;">🗑</button>`}
       </div>`).join('');
   }
   const options = db.llanas.map(l => `<option value="${l.id}">${escapeAttr(l.nombre||l.marca||'Lana o hilo sin nombre')} - ${escapeAttr(l.color||'sin color')} (${parseInt(l.cantidad)||0})</option>`).join('');
@@ -12736,12 +13038,12 @@ window.addManualMaterial = function() {
 
 window.addMaterial = window.addManualMaterial;
 
-window.returnMaterialQty = function(id, source) {
+window.returnMaterialQty = async function(id, source) {
   if (!currentProject || !currentProject.materiales) return;
   const material = currentProject.materiales.find(m => m.id === id);
   if (!material) return;
   const currentQty = parseInt(material.cantidad) || 0;
-  const qty = askReturnQuantity(currentQty, 'ovillos quieres devolver');
+  const qty = await askReturnQuantity(currentQty, 'ovillos quieres devolver');
   if (!qty) return;
   if (material.llanaId) {
     const llana = db.llanas.find(l => l.id === material.llanaId);
@@ -12760,13 +13062,13 @@ window.returnMaterialQty = function(id, source) {
   renderLlanas();
 }
 
-window.addMaterialQty = function(id) {
+window.addMaterialQty = async function(id) {
   if (!currentProject || !currentProject.materiales) return;
   const material = currentProject.materiales.find(m => m.id === id);
   if (!material || !material.llanaId) return;
   const llana = db.llanas.find(l => l.id === material.llanaId);
   if (!llana) { alert('No encuentro esta lana o hilo en el inventario.'); return; }
-  const qty = askAddQuantity(parseInt(llana.cantidad) || 0, 'ovillos quieres añadir');
+  const qty = await askAddQuantity(parseInt(llana.cantidad) || 0, 'ovillos quieres añadir');
   if (!qty) return;
   llana.cantidad = (parseInt(llana.cantidad) || 0) - qty;
   logMovement('llanas', llana.id, 'salida', qty, `Añadido a proyecto: ${currentProject.nombre || 'Sin nombre'}`);
@@ -13821,10 +14123,11 @@ window.renderStockHistory = function() {
   
   container.innerHTML = movs.slice().reverse().map(m => {
     const isEdit = m.tipo === 'edicion';
+    const isBalance = m.tipo === 'saldo';
     const isEntrada = m.tipo === 'entrada';
-    const badgeBg = isEdit ? 'var(--cream-dark)' : (isEntrada ? '#e6f4ea' : '#fce8e6');
-    const badgeColor = isEdit ? 'var(--bark)' : (isEntrada ? '#137333' : '#c5221f');
-    const sign = isEdit ? '✎' : (isEntrada ? '+' : '—');
+    const badgeBg = isBalance ? 'var(--camel-l)' : (isEdit ? 'var(--cream-dark)' : (isEntrada ? '#e6f4ea' : '#fce8e6'));
+    const badgeColor = isBalance ? 'var(--bark)' : (isEdit ? 'var(--bark)' : (isEntrada ? '#137333' : '#c5221f'));
+    const sign = isBalance ? '↺' : (isEdit ? '✎' : (isEntrada ? '+' : '—'));
     const unit = historyItemType === 'llanas' ? ' ovillo(s)' : ' ud.';
     
     return `
@@ -13840,7 +14143,7 @@ window.renderStockHistory = function() {
           </div>
         </div>
         <div style="font-weight:800; font-size:13px; color:var(--bark); text-align:right; white-space:nowrap;">
-          ${isEdit ? 'Edición' : `${m.cantidad}${unit}`}
+          ${isBalance ? `Saldo actual: ${m.saldo}` : (isEdit ? 'Edición' : `${m.cantidad}${unit}`)}
           ${m.saldo !== undefined ? `<div style="font-size:10px;color:var(--text-muted);font-weight:700;margin-top:2px;">Stock: ${m.saldo}</div>` : ''}
         </div>
       </div>
@@ -13855,17 +14158,19 @@ window.confirmResetStockHistory = function() {
   const list = db[historyItemType];
   const item = list.find(x => x.id === historyItemId);
   if (item) {
-    item.movimientos = [];
-    let inputId = '';
-    if (historyItemType === 'llanas') inputId = 'l-cantidad';
-    else if (historyItemType === 'agujas') inputId = 'a-cantidad';
-    else if (historyItemType === 'accesorios') inputId = 'ac-cantidad';
-    
-    const input = document.getElementById(inputId);
-    if (input) input.value = 0;
+    const saldoActual = stockQuantity(item.cantidad, 0);
+    item.movimientos = [{
+      id: uid(),
+      tipo: 'saldo',
+      cantidad: 0,
+      saldo: saldoActual,
+      fecha: new Date().toLocaleString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      motivo: 'Historial reiniciado',
+      detalle: `Saldo actual: ${saldoActual}`
+    }];
     save();
     renderStockHistory();
-    showNotification('🔄 Historial borrado. Puedes ingresar un nuevo stock.');
+    showNotification(`🔄 Historial reiniciado. Saldo actual: ${saldoActual}.`);
   }
 };
 
@@ -18258,15 +18563,16 @@ window.copyWebLink = function() {
 #app-version-badge {
   position: fixed;
   bottom: 95px;
+  left: 10px;
   right: 10px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: normal;
   color: rgba(0,0,0,0.5);
   z-index: 90;
   pointer-events: none;
   display: flex;
   gap: 8px;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 @media (max-width: 600px) {
   #app-version-badge {
@@ -18275,35 +18581,94 @@ window.copyWebLink = function() {
   }
 }
 @keyframes backupWaveAnim {
-  0% { color: #A8E8B4; }
-  20% { color: #A8D0E8; }
-  40% { color: #FCECC0; }
-  60% { color: #E8A8B4; }
-  80% { color: #B4A8E8; }
-  100% { color: #A8E8B4; }
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 .backup-wave-active {
-  animation: backupWaveAnim 10s infinite;
+  background-image: linear-gradient(90deg,
+    var(--backup-wave-next) 0%,
+    var(--backup-wave-next) 36%,
+    var(--backup-wave-current) 64%,
+    var(--backup-wave-current) 100%);
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  animation: backupWaveAnim 2.2s ease-in-out forwards;
 }
 </style>
 <div id="app-version-badge">
-  <span id="backup-warning-text" style="color:var(--bark); font-weight:normal; font-size: 12px; pointer-events:auto; cursor:pointer;" ondblclick="toggleBackupWave()"></span>
-  <span style="color:var(--text-muted); font-weight: normal; opacity:0.6; font-size:12px; letter-spacing:0.5px;">V25</span>
+  <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" ondblclick="toggleBackupWave()">Guarda tus datos regularmente</span>
+  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V26</span>
 </div>
 
 <script>
 window.backupWavePlaying = true;
+window.backupWaveTimer = null;
+window.backupWaveColorIndex = 0;
+window.backupWaveColors = [
+  '#F8E37A',
+  '#F48B3D',
+  '#D98463',
+  '#D4889A',
+  '#A45870',
+  '#E83060',
+  '#E820A0',
+  '#70B08A',
+  '#3A7A5A',
+  '#206028',
+  '#70A0C8',
+  '#3A6A9A',
+  '#0A1848',
+  '#8B7BB5',
+  '#829A66',
+  '#4A6B7C'
+];
+
+function showBackupWaveSolidColor(el, color) {
+  el.classList.remove('backup-wave-active');
+  el.style.removeProperty('--backup-wave-current');
+  el.style.removeProperty('--backup-wave-next');
+  el.style.backgroundImage = 'none';
+  el.style.color = color;
+  el.style.webkitTextFillColor = color;
+}
+
+function scheduleBackupWaveStep() {
+  if (!window.backupWavePlaying) return;
+  const el = document.getElementById('backup-warning-text');
+  if (!el) return;
+  const colors = window.backupWaveColors;
+  const currentColor = colors[window.backupWaveColorIndex % colors.length];
+  const nextIndex = (window.backupWaveColorIndex + 1) % colors.length;
+  const nextColor = colors[nextIndex];
+
+  showBackupWaveSolidColor(el, currentColor);
+  clearTimeout(window.backupWaveTimer);
+  window.backupWaveTimer = setTimeout(() => {
+    if (!window.backupWavePlaying) return;
+    el.style.setProperty('--backup-wave-current', currentColor);
+    el.style.setProperty('--backup-wave-next', nextColor);
+    el.style.backgroundImage = '';
+    el.style.color = '';
+    el.style.webkitTextFillColor = '';
+    void el.offsetWidth;
+    el.classList.add('backup-wave-active');
+  }, 2000);
+}
 
 function toggleBackupWave() {
   window.backupWavePlaying = !window.backupWavePlaying;
   const el = document.getElementById('backup-warning-text');
   if (el) {
+    clearTimeout(window.backupWaveTimer);
+    el.classList.remove('backup-wave-active');
     if (window.backupWavePlaying) {
-      el.classList.add('backup-wave-active');
-      el.style.color = '';
+      scheduleBackupWaveStep();
     } else {
-      el.classList.remove('backup-wave-active');
-      el.style.color = 'var(--bark)';
+      showBackupWaveSolidColor(el, 'var(--bark)');
     }
   }
 }
@@ -18311,7 +18676,12 @@ function toggleBackupWave() {
 document.addEventListener('DOMContentLoaded', () => {
   const el = document.getElementById('backup-warning-text');
   if (el && window.backupWavePlaying) {
-    el.classList.add('backup-wave-active');
+    el.addEventListener('animationend', event => {
+      if (event.animationName !== 'backupWaveAnim' || !window.backupWavePlaying) return;
+      window.backupWaveColorIndex = (window.backupWaveColorIndex + 1) % window.backupWaveColors.length;
+      scheduleBackupWaveStep();
+    });
+    scheduleBackupWaveStep();
   }
 });
 </script>
