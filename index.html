@@ -1109,8 +1109,104 @@ avisa a la creadora a través de su email.
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+  .rich-note-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 8px 14px;
+  }
+  .rich-note-tool {
+    min-width: 48px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid color-mix(in srgb, var(--cream-dark) 75%, var(--bark) 25%);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fff 0%, var(--cream) 100%);
+    color: var(--bark);
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    touch-action: manipulation;
+    box-shadow: 0 4px 0 color-mix(in srgb, var(--bark) 45%, var(--cream-dark) 55%), 0 6px 10px rgba(92,61,46,.16), inset 0 1px 0 rgba(255,255,255,.95);
+    transform: translateY(0);
+    transition: transform 80ms ease, box-shadow 80ms ease, background 80ms ease;
+  }
+  .rich-note-tool.is-active,
+  .rich-note-tool:active {
+    transform: translateY(4px);
+    background: color-mix(in srgb, var(--terracota-l) 55%, var(--cream) 45%);
+    box-shadow: 0 0 0 transparent, 0 1px 3px rgba(92,61,46,.18), inset 0 2px 5px rgba(92,61,46,.2);
+  }
+  .rich-note-tool.is-active {
+    border-color: var(--terracota-d);
+    color: var(--terracota-d);
+  }
+  .rich-note-editor:empty::before,
+  [contenteditable="true"][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .project-note-zoom-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 17px;
+    cursor: pointer;
+    padding: 2px;
+    touch-action: manipulation;
+  }
+  #modal-project-note-zoom {
+    padding: 0 !important;
+    align-items: stretch !important;
+  }
+  #modal-project-note-zoom .modal {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  #modal-project-note-zoom .modal-header {
+    flex: 0 0 auto;
+    padding-top: calc(18px + env(safe-area-inset-top));
+  }
+  #modal-project-note-zoom .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 16px 16px;
+  }
+  #project-note-zoom-editor {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--radius);
+    padding: 18px;
+    background: var(--warm-white);
+    color: var(--text-main);
+    font-family: 'Lato', sans-serif;
+    font-size: 22px;
+    line-height: 1.55;
+    outline: none;
+    white-space: pre-wrap;
+  }
+  #project-note-zoom-editor:focus {
+    border-color: var(--terracota);
+    box-shadow: 0 0 0 4px rgba(217,132,99,.15);
   }
   .material-picker {
     display: grid;
@@ -6059,6 +6155,13 @@ body.view-welcome #app-version-badge {
       <button class="modal-close" onclick="closeModal('modal-contador')">✕</button>
     </div>
     <div class="modal-body">
+      <div class="rich-note-toolbar" data-rich-toolbar="counter-zoom-notes" aria-label="Formato de las notas del contador">
+        <button type="button" class="rich-note-tool" data-rich-command="bold" aria-pressed="false" title="Escribir en negrita" onpointerdown="event.preventDefault()" onclick="toggleRichNoteFormat(this,'counter-zoom-notes','bold')"><strong>N</strong></button>
+        <button type="button" class="rich-note-tool" data-rich-command="underline" aria-pressed="false" title="Escribir subrayado" onpointerdown="event.preventDefault()" onclick="toggleRichNoteFormat(this,'counter-zoom-notes','underline')"><u>S</u></button>
+        <button type="button" class="rich-note-tool" title="Insertar exclamación" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('counter-zoom-notes','❗️')">❗️</button>
+        <button type="button" class="rich-note-tool" title="Insertar visto bueno" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('counter-zoom-notes','✅')">✅</button>
+        <button type="button" class="rich-note-tool" title="Insertar aspa" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('counter-zoom-notes','✖️')">✖️</button>
+      </div>
       <div class="counter-big-display" id="counter-zoom-value">0<span>/∞</span></div>
       <div class="counter-big-controls">
         <button class="counter-btn" id="counter-zoom-minus">−</button>
@@ -6070,6 +6173,32 @@ body.view-welcome #app-version-badge {
         <button class="note-zoom-btn" id="counter-zoom-notes-btn" title="Ver nota en grande">🔍</button>
         <button class="note-copy-btn" id="counter-zoom-copy-btn" title="Copiar notas al portapapeles">📋</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODAL: NOTA DEL PROYECTO GRANDE ═══════════════ -->
+<div class="modal-overlay" id="modal-project-note-zoom">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📝 Nota del proyecto</h2>
+      <button class="modal-close" onclick="closeModal('modal-project-note-zoom')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="rich-note-toolbar" data-rich-toolbar="project-note-zoom-editor" aria-label="Formato de la nota del proyecto">
+        <button type="button" class="rich-note-tool" data-rich-command="bold" aria-pressed="false" title="Escribir en negrita" onpointerdown="event.preventDefault()" onclick="toggleRichNoteFormat(this,'project-note-zoom-editor','bold')"><strong>N</strong></button>
+        <button type="button" class="rich-note-tool" data-rich-command="underline" aria-pressed="false" title="Escribir subrayado" onpointerdown="event.preventDefault()" onclick="toggleRichNoteFormat(this,'project-note-zoom-editor','underline')"><u>S</u></button>
+        <button type="button" class="rich-note-tool" title="Insertar exclamación" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('project-note-zoom-editor','❗️')">❗️</button>
+        <button type="button" class="rich-note-tool" title="Insertar visto bueno" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('project-note-zoom-editor','✅')">✅</button>
+        <button type="button" class="rich-note-tool" title="Insertar aspa" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('project-note-zoom-editor','✖️')">✖️</button>
+      </div>
+      <div id="project-note-zoom-editor" class="rich-note-editor" contenteditable="true" data-placeholder="Escribe la nota aquí..."></div>
+    </div>
+    <div class="modal-footer" style="padding-bottom:calc(14px + env(safe-area-inset-bottom));">
+      <button class="btn btn-danger" id="project-note-zoom-delete-btn">Borrar</button>
+      <div style="flex:1;"></div>
+      <button class="btn btn-secondary" onclick="closeModal('modal-project-note-zoom')">Cancelar</button>
+      <button class="btn btn-primary" id="project-note-zoom-save-btn">Guardar</button>
     </div>
   </div>
 </div>
@@ -6113,6 +6242,13 @@ body.view-welcome #app-version-badge {
       <button class="modal-close" onclick="closeModal('modal-note-zoom')">✕</button>
     </div>
     <div class="modal-body">
+      <div class="rich-note-toolbar" data-rich-toolbar="note-zoom-textarea" aria-label="Formato de la nota ampliada del contador">
+        <button type="button" class="rich-note-tool" data-rich-command="bold" aria-pressed="false" title="Escribir en negrita" onpointerdown="event.preventDefault()" onclick="toggleRichNoteFormat(this,'note-zoom-textarea','bold')"><strong>N</strong></button>
+        <button type="button" class="rich-note-tool" data-rich-command="underline" aria-pressed="false" title="Escribir subrayado" onpointerdown="event.preventDefault()" onclick="toggleRichNoteFormat(this,'note-zoom-textarea','underline')"><u>S</u></button>
+        <button type="button" class="rich-note-tool" title="Insertar exclamación" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('note-zoom-textarea','❗️')">❗️</button>
+        <button type="button" class="rich-note-tool" title="Insertar visto bueno" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('note-zoom-textarea','✅')">✅</button>
+        <button type="button" class="rich-note-tool" title="Insertar aspa" onpointerdown="event.preventDefault()" onclick="insertRichNoteSymbol('note-zoom-textarea','✖️')">✖️</button>
+      </div>
       <div id="note-zoom-textarea" contenteditable="true" data-placeholder="Escribe tus notas aquí con letra grande..."
         style="width: 100%; min-height: 250px; font-size: 22px; line-height: 1.5; padding: 16px; border: 1.5px solid var(--cream-dark); border-radius: var(--radius); outline: none; background: var(--warm-white); color: var(--text-main); font-family: 'Lato', sans-serif; resize: vertical;; overflow-y: auto;"></div>
     </div>
@@ -12587,6 +12723,61 @@ window.updateCounterNotes = function(id, notes) {
   if (c) { c.notas = notes; saveProjectInDB(); }
 }
 
+function placeCaretAtEnd(editor) {
+  editor.focus();
+  const range = document.createRange();
+  range.selectNodeContents(editor);
+  range.collapse(false);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
+function updateRichNoteToolbar(editorId) {
+  const editor = document.getElementById(editorId);
+  const toolbar = document.querySelector(`[data-rich-toolbar="${editorId}"]`);
+  if (!editor || !toolbar) return;
+  const selection = window.getSelection();
+  const selectionIsInEditor = !!(selection && selection.anchorNode && editor.contains(selection.anchorNode));
+  ['bold', 'underline'].forEach(command => {
+    const button = toolbar.querySelector(`[data-rich-command="${command}"]`);
+    if (!button) return;
+    let active = false;
+    try { active = selectionIsInEditor && document.queryCommandState(command); } catch (err) {}
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
+window.toggleRichNoteFormat = function(button, editorId, command) {
+  const editor = document.getElementById(editorId);
+  if (!editor) return;
+  const selection = window.getSelection();
+  if (!selection.rangeCount || !editor.contains(selection.anchorNode)) placeCaretAtEnd(editor);
+  document.execCommand(command, false, null);
+  editor.focus();
+  updateRichNoteToolbar(editorId);
+}
+
+window.insertRichNoteSymbol = function(editorId, symbol) {
+  const editor = document.getElementById(editorId);
+  if (!editor) return;
+  const selection = window.getSelection();
+  if (!selection.rangeCount || !editor.contains(selection.anchorNode)) placeCaretAtEnd(editor);
+  document.execCommand('insertText', false, symbol);
+  editor.focus();
+  updateRichNoteToolbar(editorId);
+}
+
+document.addEventListener('selectionchange', function() {
+  const selection = window.getSelection();
+  if (!selection || !selection.anchorNode) return;
+  ['counter-zoom-notes', 'note-zoom-textarea', 'project-note-zoom-editor'].forEach(id => {
+    const editor = document.getElementById(id);
+    if (editor && editor.contains(selection.anchorNode)) updateRichNoteToolbar(id);
+  });
+});
+
 window.addCounter = function() {
   if (!currentProject) return;
   if (!currentProject.contadores) currentProject.contadores = [];
@@ -12634,17 +12825,22 @@ window.openCounterZoom = function(id) {
   if (!c) return;
   document.getElementById('counter-zoom-title').textContent = c.nombre || 'Contador';
   document.getElementById('counter-zoom-notes').innerHTML = c.notas || '';
-  document.getElementById('counter-zoom-notes').onblur = function(){ updateCounterNotes(id, this.innerHTML); };
+  document.getElementById('counter-zoom-notes').onblur = function(){
+    updateCounterNotes(id, this.innerHTML);
+    const cardEditor = document.querySelector(`#counter-${id} .counter-notes`);
+    if (cardEditor) cardEditor.innerHTML = this.innerHTML;
+  };
+  updateRichNoteToolbar('counter-zoom-notes');
   
   // Asociar el botón de lupa de la nota en el modal de zoom del contador
   const zoomNotesBtn = document.getElementById('counter-zoom-notes-btn');
   if (zoomNotesBtn) {
     zoomNotesBtn.onclick = function() {
-      const newVal = document.getElementById('counter-zoom-notes').value;
+      const newVal = document.getElementById('counter-zoom-notes').innerHTML;
       updateCounterNotes(id, newVal);
       const card = document.getElementById('counter-' + id);
       const textarea = card ? card.querySelector('.counter-notes') : null;
-      if (textarea) textarea.value = newVal;
+      if (textarea) textarea.innerHTML = newVal;
       openNoteZoom(id);
     };
   }
@@ -12653,7 +12849,7 @@ window.openCounterZoom = function(id) {
   const zoomCopyBtn = document.getElementById('counter-zoom-copy-btn');
   if (zoomCopyBtn) {
     zoomCopyBtn.onclick = function() {
-      const text = document.getElementById('counter-zoom-notes').value;
+      const text = document.getElementById('counter-zoom-notes').innerText;
       copyTextToClipboard(text);
     };
   }
@@ -12676,6 +12872,7 @@ window.openNoteZoom = function(id) {
   document.getElementById('note-zoom-title').textContent = 'Notas: ' + (c.nombre || 'Contador');
   const txtArea = document.getElementById('note-zoom-textarea');
   txtArea.innerHTML = currentText;
+  updateRichNoteToolbar('note-zoom-textarea');
   
   document.getElementById('note-zoom-save-btn').onclick = function() {
     const newVal = txtArea.innerHTML;
@@ -13142,12 +13339,36 @@ function renderNotas() {
         <div class="timeline-dot"></div>
         <div class="timeline-text">${n.texto}<div class="timeline-date">${n.fecha}</div></div>
         <div style="display:flex; gap:8px;">
+          <button class="project-note-zoom-btn" onclick="openProjectNoteZoom('${n.id}')" title="Ver y modificar en grande">🔍</button>
           <button onclick="moveNotaUp('${n.id}')" title="Subir (ver antes)" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">⬆️</button>
           <button onclick="moveNotaDown('${n.id}')" title="Bajar (ver después)" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">⬇️</button>
           <button onclick="removeNota('${n.id}')" title="Borrar" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">🗑</button>
         </div>
       </div>`).join('');
   }
+}
+
+window.openProjectNoteZoom = function(id) {
+  if (!currentProject || !currentProject.apuntes) return;
+  const note = currentProject.apuntes.find(n => n.id === id);
+  if (!note) return;
+  const editor = document.getElementById('project-note-zoom-editor');
+  editor.innerHTML = note.texto || '';
+  updateRichNoteToolbar('project-note-zoom-editor');
+
+  document.getElementById('project-note-zoom-save-btn').onclick = function() {
+    note.texto = editor.innerHTML;
+    saveProjectInDB();
+    renderNotas();
+    closeModal('modal-project-note-zoom');
+  };
+  document.getElementById('project-note-zoom-delete-btn').onclick = function() {
+    currentProject.apuntes = currentProject.apuntes.filter(n => n.id !== id);
+    saveProjectInDB();
+    renderNotas();
+    closeModal('modal-project-note-zoom');
+  };
+  openModal('modal-project-note-zoom');
 }
 
 window.moveNotaUp = function(id) {
