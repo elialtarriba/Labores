@@ -5928,6 +5928,45 @@ body.view-welcome #app-version-badge {
         .manual-visual-index img { display:block; width:100%; height:auto; border-radius:18px; }
         .manual-visual-index a { display:block; border-radius:10px; }
         .manual-visual-index a:focus-visible { outline:3px solid #6d9c62; background:rgba(255,255,255,.28); }
+        /* El índice antiguo era una imagen con zonas transparentes por porcentaje.
+           Estas zonas se desajustan al ampliar; usamos enlaces de texto reales. */
+        #manual-indice {
+          padding:16px;
+          border:1.5px solid #e8c9b5;
+          border-radius:18px;
+          background:linear-gradient(145deg,#fff8ef 0%,#fbe9dc 100%);
+          box-shadow:0 6px 18px rgba(110,74,58,.09);
+        }
+        #manual-indice::before {
+          content:'Índice del manual';
+          display:block;
+          margin:0 0 12px;
+          color:var(--bark);
+          font:700 21px 'Playfair Display',serif;
+          text-align:center;
+        }
+        #manual-indice > img { display:none; }
+        #manual-indice > a {
+          position:static !important;
+          left:auto !important;
+          right:auto !important;
+          top:auto !important;
+          height:auto !important;
+          min-height:42px;
+          box-sizing:border-box;
+          display:flex;
+          align-items:center;
+          margin:7px 0;
+          padding:10px 13px;
+          border:1px solid rgba(217,132,99,.24);
+          background:rgba(255,255,255,.88);
+          color:var(--terracota-d);
+          font:800 14px/1.25 'Lato',sans-serif;
+          text-decoration:none;
+          box-shadow:0 2px 0 rgba(142,74,48,.16);
+        }
+        #manual-indice > a::after { content:attr(aria-label); }
+        #manual-indice > a:active { transform:translateY(2px); box-shadow:none; }
       </style>
 
       <section class="manual-visual-section" id="manual-resumen">
@@ -18750,7 +18789,7 @@ window.copyWebLink = function() {
 </style>
 <div id="app-version-badge">
   <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" onclick="toggleBackupWave()">Guarda tus datos regularmente</span>
-  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V28</span>
+  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V29</span>
 </div>
 
 <script>
@@ -18833,6 +18872,43 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style>
+  /* El índice funciona con enlaces de texto, también si hay un manual guardado. */
+  #view-instrucciones #manual-indice {
+    padding: 16px;
+    border: 1.5px solid #e8c9b5;
+    border-radius: 18px;
+    background: linear-gradient(145deg,#fff8ef 0%,#fbe9dc 100%);
+    box-shadow: 0 6px 18px rgba(110,74,58,.09);
+  }
+  #view-instrucciones #manual-indice::before {
+    content: 'Índice del manual';
+    display: block;
+    margin: 0 0 12px;
+    color: var(--bark);
+    font: 700 21px 'Playfair Display',serif;
+    text-align: center;
+  }
+  #view-instrucciones #manual-indice > img { display: none; }
+  #view-instrucciones #manual-indice > a {
+    position: static !important;
+    left: auto !important; right: auto !important; top: auto !important; height: auto !important;
+    min-height: 42px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin: 7px 0;
+    padding: 10px 13px;
+    border: 1px solid rgba(217,132,99,.24);
+    border-radius: 10px;
+    background: rgba(255,255,255,.88);
+    color: var(--terracota-d);
+    font: 800 14px/1.25 'Lato',sans-serif;
+    text-decoration: none;
+    box-shadow: 0 2px 0 rgba(142,74,48,.16);
+  }
+  #view-instrucciones #manual-indice > a::after { content: attr(aria-label); }
+  #view-instrucciones #manual-indice > a:active { transform: translateY(2px); box-shadow: none; }
+
   /* Visor accesible del manual: zoom por imagen en móvil y escritorio. */
   #manual-image-zoom {
     position: fixed;
