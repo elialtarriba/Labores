@@ -16,7 +16,7 @@ avisa a la creadora a través de su email.
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <title>Labores — Mi taller de tejido</title>
 <link rel="icon" type="image/png" href="icon.png?v=2">
 <link rel="shortcut icon" href="icon.png?v=2">
@@ -18830,6 +18830,162 @@ document.addEventListener('DOMContentLoaded', () => {
     scheduleBackupWaveStep();
   }
 });
+</script>
+
+<style>
+  /* Visor accesible del manual: zoom por imagen en móvil y escritorio. */
+  #manual-image-zoom {
+    position: fixed;
+    inset: 0;
+    z-index: 260;
+    display: none;
+    flex-direction: column;
+    background: rgba(45, 29, 23, .96);
+    color: #fff;
+  }
+  #manual-image-zoom.open { display: flex; }
+  .manual-image-zoom-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: calc(10px + env(safe-area-inset-top)) 14px 10px;
+    font-weight: 800;
+  }
+  .manual-image-zoom-close {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 13px;
+    background: #fff;
+    color: var(--bark);
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .manual-image-zoom-stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #manual-image-zoom-img {
+    display: block;
+    max-width: 94vw;
+    max-height: 82vh;
+    width: auto;
+    height: auto;
+    transform-origin: center center;
+    will-change: transform;
+    box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  .manual-image-zoom-help {
+    padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
+    text-align: center;
+    font-size: 12px;
+    opacity: .86;
+  }
+</style>
+
+<div id="manual-image-zoom" role="dialog" aria-modal="true" aria-label="Imagen del manual ampliada">
+  <div class="manual-image-zoom-header">
+    <span>🔍 Imagen ampliada</span>
+    <button class="manual-image-zoom-close" type="button" aria-label="Cerrar imagen ampliada">✕</button>
+  </div>
+  <div class="manual-image-zoom-stage" id="manual-image-zoom-stage">
+    <img id="manual-image-zoom-img" alt="Imagen del manual ampliada">
+  </div>
+  <div class="manual-image-zoom-help">Pellizca para ampliar · arrastra para moverte · doble toque para encajar</div>
+</div>
+
+<script>
+(() => {
+  const overlay = document.getElementById('manual-image-zoom');
+  const stage = document.getElementById('manual-image-zoom-stage');
+  const zoomImage = document.getElementById('manual-image-zoom-img');
+  const closeButton = overlay.querySelector('.manual-image-zoom-close');
+  let scale = 1, x = 0, y = 0, startDistance = 0, startScale = 1;
+  let startX = 0, startY = 0, startImageX = 0, startImageY = 0, moved = false;
+  let lastTap = 0;
+
+  function render() {
+    zoomImage.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+  }
+
+  function reset() {
+    scale = 1; x = 0; y = 0; render();
+  }
+
+  function open(image) {
+    zoomImage.src = image.currentSrc || image.src;
+    zoomImage.alt = image.alt || 'Imagen del manual ampliada';
+    reset();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    zoomImage.removeAttribute('src');
+  }
+
+  function distance(touches) {
+    return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+  }
+
+  document.addEventListener('click', event => {
+    const image = event.target.closest('#view-instrucciones .inst-body img');
+    if (!image || overlay.classList.contains('open')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    open(image);
+  }, true);
+
+  stage.addEventListener('touchstart', event => {
+    moved = false;
+    if (event.touches.length === 2) {
+      startDistance = distance(event.touches);
+      startScale = scale;
+    } else if (event.touches.length === 1) {
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+      startImageX = x;
+      startImageY = y;
+    }
+  }, { passive: false });
+
+  stage.addEventListener('touchmove', event => {
+    event.preventDefault();
+    moved = true;
+    if (event.touches.length === 2 && startDistance) {
+      scale = Math.min(5, Math.max(1, startScale * distance(event.touches) / startDistance));
+      render();
+    } else if (event.touches.length === 1 && scale > 1) {
+      x = startImageX + event.touches[0].clientX - startX;
+      y = startImageY + event.touches[0].clientY - startY;
+      render();
+    }
+  }, { passive: false });
+
+  stage.addEventListener('touchend', event => {
+    if (event.touches.length < 2) startDistance = 0;
+    if (event.changedTouches.length === 1 && !moved) {
+      const now = Date.now();
+      if (now - lastTap < 350) reset();
+      lastTap = now;
+    }
+  });
+  stage.addEventListener('dblclick', reset);
+  closeButton.addEventListener('click', close);
+  overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && overlay.classList.contains('open')) close(); });
+})();
 </script>
 </body>
 </html>
