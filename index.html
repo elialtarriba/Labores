@@ -5161,7 +5161,6 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
         <div class="empty-icon">🧶</div>
         <h3>Aún no tienes proyectos</h3>
         <p>¡Empieza añadiendo tu primer jersey, amigurumi o calcetín!</p>
-        <button class="btn btn-primary" onclick="openNewModal()">＋ Crear primer proyecto</button>
       </div>
     </div>
 
@@ -10001,6 +10000,12 @@ window.playTerminadosConfetti = function() {
 
 window.setFilter = function(f, el) {
   document.querySelectorAll('.filter-chip, .stat-card, .shared-projects-bar').forEach(c => c.classList.remove('active'));
+  if (f === 'compartidos' && activeFilter === 'compartidos') {
+    activeFilter = null;
+    document.getElementById('shared-import-panel')?.classList.remove('visible');
+    renderProjects();
+    return;
+  }
   if (el) el.classList.add('active');
   activeFilter = f;
   document.getElementById('shared-import-panel')?.classList.toggle('visible', f === 'compartidos');
@@ -18732,33 +18737,26 @@ window.copyWebLink = function() {
     justify-content: space-between;
   }
 }
-@keyframes backupWaveAnim {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes backupFloatAnim {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-6px) rotate(-1.5deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(5px) rotate(1.5deg); }
 }
 .backup-wave-active {
-  background-image: linear-gradient(90deg,
-    var(--backup-wave-next) 0%,
-    var(--backup-wave-next) 36%,
-    var(--backup-wave-current) 64%,
-    var(--backup-wave-current) 100%);
-  background-size: 300% 100%;
-  background-repeat: no-repeat;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent !important;
-  -webkit-text-fill-color: transparent;
-  animation: backupWaveAnim 2.2s ease-in-out forwards;
+  display: inline-block;
+  animation: backupFloatAnim 2.4s ease-in-out infinite;
 }
 </style>
 <div id="app-version-badge">
-  <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" ondblclick="toggleBackupWave()">Guarda tus datos regularmente</span>
+  <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" onclick="toggleBackupWave()">Guarda tus datos regularmente</span>
   <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V28</span>
 </div>
 
 <script>
 window.backupWavePlaying = true;
 window.backupWaveTimer = null;
+window.backupWaveColorTimer = null;
 window.backupWaveColorIndex = 0;
 window.backupWaveColors = [
   '#F8E37A',
@@ -18793,22 +18791,17 @@ function scheduleBackupWaveStep() {
   const el = document.getElementById('backup-warning-text');
   if (!el) return;
   const colors = window.backupWaveColors;
-  const currentColor = colors[window.backupWaveColorIndex % colors.length];
-  const nextIndex = (window.backupWaveColorIndex + 1) % colors.length;
-  const nextColor = colors[nextIndex];
-
-  showBackupWaveSolidColor(el, currentColor);
   clearTimeout(window.backupWaveTimer);
-  window.backupWaveTimer = setTimeout(() => {
+  clearInterval(window.backupWaveColorTimer);
+  showBackupWaveSolidColor(el, colors[window.backupWaveColorIndex % colors.length]);
+  window.backupWaveColorTimer = setInterval(() => {
     if (!window.backupWavePlaying) return;
-    el.style.setProperty('--backup-wave-current', currentColor);
-    el.style.setProperty('--backup-wave-next', nextColor);
-    el.style.backgroundImage = '';
-    el.style.color = '';
-    el.style.webkitTextFillColor = '';
-    void el.offsetWidth;
-    el.classList.add('backup-wave-active');
-  }, 2000);
+    window.backupWaveColorIndex = (window.backupWaveColorIndex + 1) % colors.length;
+    el.style.color = colors[window.backupWaveColorIndex];
+    el.style.webkitTextFillColor = colors[window.backupWaveColorIndex];
+  }, 850);
+  void el.offsetWidth;
+  el.classList.add('backup-wave-active');
 }
 
 function toggleBackupWave() {
@@ -18816,6 +18809,7 @@ function toggleBackupWave() {
   const el = document.getElementById('backup-warning-text');
   if (el) {
     clearTimeout(window.backupWaveTimer);
+    clearInterval(window.backupWaveColorTimer);
     el.classList.remove('backup-wave-active');
     if (window.backupWavePlaying) {
       scheduleBackupWaveStep();
