@@ -1,6 +1,6 @@
 {
-  "name": "LaboresSinConex",
-  "short_name": "LaboresSinConex",
+  "name": "Labores",
+  "short_name": "Labores",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#FEFCE8",

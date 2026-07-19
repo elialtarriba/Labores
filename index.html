@@ -17,7 +17,7 @@ avisa a la creadora a través de su email.
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Labores — Mi taller de tejido</title>
+<title>Labores</title>
 <link rel="icon" type="image/png" href="icon.png?v=2">
 <link rel="shortcut icon" href="icon.png?v=2">
 <link rel="apple-touch-icon" href="icon.png?v=2">
@@ -221,13 +221,25 @@ avisa a la creadora a través de su email.
   html, body { min-height: 100%; max-width: 100%; overflow-x: hidden; }
   body {
     font-family: 'Lato', sans-serif;
-    background: var(--cream);
+    background: color-mix(in srgb, var(--bark) 12%, var(--cream) 88%);
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
     padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  body::before {
+    content: "🧶  🧵  🪡";
+    position: fixed;
+    top: 112px;
+    right: 22px;
+    z-index: 0;
+    pointer-events: none;
+    font-size: 38px;
+    letter-spacing: 8px;
+    opacity: .12;
+    filter: saturate(.8);
   }
 
   /* ─── BOTTOM NAV ─────────────────────────────────────────── */
@@ -334,7 +346,7 @@ avisa a la creadora a través de su email.
     display: flex;
     flex-direction: column;
     overflow: visible;
-    background: var(--warm-white);
+    background: transparent;
   }
 
   /* ─── TOP BAR ────────────────────────────────────────────── */
@@ -745,6 +757,11 @@ avisa a la creadora a través de su email.
   .status-en-pausa    { background:#FEE2E2; color:#991B1B; }
 
   .project-card-body { padding: 16px; }
+  .project-card-title-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:4px; }
+  .project-card-title-row .project-card-title { flex:1; min-width:0; }
+  .project-order-controls { display:flex; flex-direction:column; gap:4px; flex:0 0 auto; }
+  .project-order-btn { width:32px; height:28px; padding:0; border:1px solid var(--cream-dark); border-radius:8px; background:linear-gradient(180deg,#fff,var(--cream)); color:var(--terracota-d); font-size:15px; cursor:pointer; box-shadow:0 2px 0 var(--cream-dark); touch-action:manipulation; }
+  .project-order-btn:active { transform:translateY(2px); box-shadow:0 0 0 var(--cream-dark); }
   .project-card-title {
     font-family: 'Playfair Display', serif;
     font-size: 17px; color: var(--bark);
@@ -973,6 +990,11 @@ avisa a la creadora a través de su email.
     border-color: var(--terracota);
     box-shadow: 0 0 0 3px rgba(217,132,99,.12);
   }
+  .counter-inline-timer { display:flex; align-items:center; gap:8px; width:100%; box-sizing:border-box; min-height:42px; margin-top:10px; padding:6px 8px; border:1px solid color-mix(in srgb,var(--terracota-d) 55%,transparent); border-radius:10px; background:color-mix(in srgb,var(--terracota-d) 18%,var(--warm-white) 82%); color:var(--terracota-d); }
+  .counter-inline-timer.running { background:color-mix(in srgb,var(--terracota-d) 30%,var(--warm-white) 70%); }
+  .counter-timer-value { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left; font-size:12px; font-weight:900; }
+  .counter-timer-toggle,.counter-timer-reset { border:0; border-radius:7px; min-height:29px; padding:0 9px; color:#fff; background:var(--terracota-d); font:700 11px 'Lato',sans-serif; cursor:pointer; white-space:nowrap; touch-action:manipulation; }
+  .counter-timer-reset { background:var(--bark); padding:0 8px; }
   .note-zoom-btn {
     position: absolute;
     right: 8px;
@@ -6276,6 +6298,23 @@ body.view-welcome #app-version-badge {
   </div>
 </div>
 
+<!-- ═══════════════ MODAL: REINICIAR TIEMPO DEL CONTADOR ═══════════════ -->
+<div class="modal-overlay" id="modal-reset-counter-timer">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h2>⏱ Reiniciar tiempo</h2>
+      <button class="modal-close" onclick="closeModal('modal-reset-counter-timer')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="reset-counter-timer-text" style="font-size:15px;color:var(--text-soft);line-height:1.55;text-align:center;">¿Quieres reiniciar el tiempo de este contador?</p>
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-reset-counter-timer')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmResetCounterTimer()">Reiniciar</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ MODAL: PROYECTO VENCIDO ═══════════════ -->
 <div class="modal-overlay" id="modal-overdue-project">
   <div class="modal" style="max-width:520px;">
@@ -7563,6 +7602,8 @@ let pendingMeasurePersonType = '';
 let activeFilter = null;
 let editingId = null;
 let workTimerInterval = null;
+let counterTimerInterval = null;
+let pendingCounterTimerResetId = '';
 let pendingTimerSwitchProjectId = '';
 let overdueProjectQueue = [];
 let activeOverdueProjectId = '';
@@ -9947,14 +9988,20 @@ function projectCardHTML(p) {
   const yarnLabel = yarns.length ? yarns.join(', ') : manualYarns.join(', ');
 
   return `
-  <div class="project-card anim-card-appear" onclick="openProject('${p.id}')">
+  <div class="project-card anim-card-appear" id="project-${p.id}" onclick="openProject('${p.id}')">
     <div class="project-card-image ${colorClass}">
       ${hasMedia(p,'foto') ? `<img data-media-key="${getMediaKey(p,'foto')}" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 1 1'%2F%3E" alt="${escapeAttr(p.nombre)}">` : `<span>${emoji}</span>`}
       <span class="type-badge">${escapeAttr(findProjectType(p.tipo)?.name || String(p.tipo || 'Otro').replace(/-/g, ' '))}</span>
       <span class="project-card-status ${statusClass}">${statusLabel}</span>
     </div>
     <div class="project-card-body">
-      <div class="project-card-title">${p.nombre}</div>
+      <div class="project-card-title-row">
+        <div class="project-card-title">${escapeAttr(p.nombre)}</div>
+        ${!p.compartidoRecibido ? `<div class="project-order-controls" aria-label="Ordenar proyecto">
+          <button type="button" class="project-order-btn" onclick="event.stopPropagation(); moveProject('${p.id}', -1)" title="Poner este proyecto antes" aria-label="Subir proyecto">▲</button>
+          <button type="button" class="project-order-btn" onclick="event.stopPropagation(); moveProject('${p.id}', 1)" title="Poner este proyecto después" aria-label="Bajar proyecto">▼</button>
+        </div>` : ''}
+      </div>
       ${p.compartidoRecibido ? `<div class="project-shared-badge">🤝 Compartido por ${escapeAttr(p.compartidoPor || 'otra persona')}</div>` : (p.compartidoCopiaPor ? `<div class="project-shared-badge" style="background:#eaf5e9;color:#2e7d32;border:1px solid #c8e6c9;">📥 Importado de: ${escapeAttr(p.compartidoCopiaPor)}</div>` : '')}
       <div class="project-card-meta">
         <span>${normalizeTechnique(p.tecnica)}</span>
@@ -9977,6 +10024,22 @@ function projectCardHTML(p) {
       </div>
     </div>
   </div>`;
+}
+
+window.moveProject = function(id, direction) {
+  const own = db.proyectos.filter(project => !project.compartidoRecibido);
+  const currentIndex = own.findIndex(project => project.id === id);
+  const targetIndex = currentIndex + direction;
+  if (currentIndex < 0 || targetIndex < 0 || targetIndex >= own.length) return;
+  const currentItem = own[currentIndex];
+  const targetItem = own[targetIndex];
+  const currentDbIndex = db.proyectos.indexOf(currentItem);
+  const targetDbIndex = db.proyectos.indexOf(targetItem);
+  if (currentDbIndex < 0 || targetDbIndex < 0) return;
+  [db.proyectos[currentDbIndex], db.proyectos[targetDbIndex]] = [db.proyectos[targetDbIndex], db.proyectos[currentDbIndex]];
+  save();
+  renderProjects();
+  setTimeout(() => document.getElementById('project-' + id)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
 }
 
 function calcProgress(p) {
@@ -10179,7 +10242,7 @@ window.saveProject = async function() {
   const tipo = document.getElementById('p-tipo').value;
   const selectedPresets = Array.from(document.querySelectorAll('#counter-presets .counter-preset.active')).map(btn => btn.dataset.counterName).filter(Boolean);
   const presets = selectedPresets.length ? selectedPresets : (counterPresets[tipo] || []);
-  const contadores = presets.map(name => ({ id: uid(), nombre: name, valor: 0, objetivo: 0, notas: '' }));
+  const contadores = presets.map(name => ({ id: uid(), nombre: name, valor: 0, objetivo: 0, notas: '', tiempoTotalSegundos: 0, timerRunning: false, timerStartedAt: '' }));
 
   const fotoData = await fileToData('p-foto');
   const isEditing = !!editingId;
@@ -12485,6 +12548,7 @@ function renderCounters() {
   if (shortcutsContainer) shortcutsContainer.innerHTML = shortcuts;
   grid.innerHTML = p.contadores.map(c => counterCardHTML(c)).join('');
   setupCounterDragAndDrop();
+  refreshCounterTimers();
 }
 
 function setupCounterDragAndDrop() {
@@ -12663,7 +12727,80 @@ function counterCardHTML(c) {
       <button class="note-zoom-btn" onclick="openNoteZoom('${c.id}')" title="Ver nota en grande">🔍</button>
       <button class="note-copy-btn" onclick="copyCounterNotes('${c.id}')" title="Copiar notas al portapapeles">📋</button>
     </div>
+    <div class="counter-inline-timer ${c.timerRunning ? 'running' : ''}" data-counter-timer="${c.id}">
+      <span class="counter-timer-value">⏱ <span data-counter-timer-value="${c.id}">${formatCounterTime(c)}</span></span>
+      <button type="button" class="counter-timer-toggle" onclick="toggleCounterTimer('${c.id}')">${c.timerRunning ? '⏸ Parar' : '▶ Empezar'}</button>
+      <button type="button" class="counter-timer-reset" onclick="resetCounterTimer('${c.id}')" title="Reiniciar tiempo">↺</button>
+    </div>
   </div>`;
+}
+
+function getCounterWorkedSeconds(counter) {
+  let total = parseInt(counter?.tiempoTotalSegundos || 0, 10) || 0;
+  if (counter?.timerRunning && counter.timerStartedAt) {
+    total += Math.max(0, Math.floor((Date.now() - new Date(counter.timerStartedAt).getTime()) / 1000));
+  }
+  return total;
+}
+
+function formatCounterTime(counter) {
+  return formatDuration(getCounterWorkedSeconds(counter));
+}
+
+function refreshCounterTimers() {
+  clearInterval(counterTimerInterval);
+  const update = () => {
+    if (!currentProject?.contadores) return;
+    currentProject.contadores.forEach(counter => {
+      const value = document.querySelector('[data-counter-timer-value="' + counter.id + '"]');
+      const box = document.querySelector('[data-counter-timer="' + counter.id + '"]');
+      const toggle = box?.querySelector('.counter-timer-toggle');
+      if (value) value.textContent = formatCounterTime(counter);
+      if (box) box.classList.toggle('running', !!counter.timerRunning);
+      if (toggle) toggle.textContent = counter.timerRunning ? '⏸ Parar' : '▶ Empezar';
+    });
+  };
+  update();
+  if (currentProject?.contadores?.some(counter => counter.timerRunning)) counterTimerInterval = setInterval(update, 1000);
+}
+
+window.toggleCounterTimer = function(id) {
+  const counter = currentProject?.contadores?.find(item => item.id === id);
+  if (!counter) return;
+  if (counter.timerRunning) {
+    counter.tiempoTotalSegundos = getCounterWorkedSeconds(counter);
+    counter.timerRunning = false;
+    counter.timerStartedAt = '';
+  } else {
+    counter.timerRunning = true;
+    counter.timerStartedAt = new Date().toISOString();
+  }
+  saveProjectInDB();
+  refreshCounterTimers();
+}
+
+window.resetCounterTimer = function(id) {
+  const counter = currentProject?.contadores?.find(item => item.id === id);
+  if (!counter) return;
+  pendingCounterTimerResetId = id;
+  const text = document.getElementById('reset-counter-timer-text');
+  if (text) text.textContent = '¿Quieres reiniciar el tiempo de «' + (counter.nombre || 'este contador') + '?';
+  openModal('modal-reset-counter-timer');
+}
+
+window.confirmResetCounterTimer = function() {
+  const counter = currentProject?.contadores?.find(item => item.id === pendingCounterTimerResetId);
+  if (!counter) {
+    closeModal('modal-reset-counter-timer');
+    return;
+  }
+  counter.tiempoTotalSegundos = 0;
+  counter.timerRunning = false;
+  counter.timerStartedAt = '';
+  pendingCounterTimerResetId = '';
+  saveProjectInDB();
+  refreshCounterTimers();
+  closeModal('modal-reset-counter-timer');
 }
 
 window.changeCounter = function(id, delta) {
@@ -12768,7 +12905,7 @@ window.addCounter = function() {
   if (!currentProject) return;
   if (!currentProject.contadores) currentProject.contadores = [];
   const n = currentProject.contadores.length + 1;
-  currentProject.contadores.push({ id: uid(), nombre: 'Nuevo contador ' + n, valor: 0, objetivo: 0, notas: '' });
+  currentProject.contadores.push({ id: uid(), nombre: 'Nuevo contador ' + n, valor: 0, objetivo: 0, notas: '', tiempoTotalSegundos: 0, timerRunning: false, timerStartedAt: '' });
   saveProjectInDB();
   renderCounters();
   showTab('contadores');
@@ -17418,6 +17555,8 @@ function initSpeechRecognition() {
 
   recognition.onstart = function() {
     isDictating = true;
+    window.dictationLastProcessedIndex = -1; // Prevents Android duplicate bug
+    window.dictationLastFinalText = ''; // Extra layer of defense for Android
     document.getElementById('dictation-status-indicator').style.display = 'block';
     document.getElementById('dictation-status-text').textContent = 'Escuchando...';
     document.getElementById('dictation-status-text').style.color = '#EF4444';
@@ -17429,14 +17568,19 @@ function initSpeechRecognition() {
     let final_transcript = '';
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
-        final_transcript += event.results[i][0].transcript;
+        if (i > window.dictationLastProcessedIndex) {
+          final_transcript += event.results[i][0].transcript;
+          window.dictationLastProcessedIndex = i;
+        }
       } else {
         interim_transcript += event.results[i][0].transcript;
       }
     }
     const ta = document.getElementById('dictation-textarea');
-    if (final_transcript) {
-      ta.value = ta.value + (ta.value && !ta.value.endsWith(' ') ? ' ' : '') + final_transcript.trim() + ' ';
+    let trimmedFinal = final_transcript.trim();
+    if (trimmedFinal && trimmedFinal !== window.dictationLastFinalText) {
+      ta.value = ta.value + (ta.value && !ta.value.endsWith(' ') ? ' ' : '') + trimmedFinal + ' ';
+      window.dictationLastFinalText = trimmedFinal;
     }
     document.getElementById('dictation-interim').textContent = interim_transcript;
   };
@@ -18800,7 +18944,7 @@ window.copyWebLink = function() {
 </style>
 <div id="app-version-badge">
   <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" onclick="toggleBackupWave()">Guarda tus datos regularmente</span>
-  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V29</span>
+  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V30</span>
 </div>
 
 <script>
