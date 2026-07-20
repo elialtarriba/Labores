@@ -2417,10 +2417,15 @@ avisa a la creadora a través de su email.
   #modal-daily-history .modal-header { padding-top: calc(16px + env(safe-area-inset-top)); }
   .daily-history-subtitle { color: var(--text-soft); font-size: 13px; margin-top: 4px; }
   .daily-history-list { flex: 1; overflow: auto; padding: 16px; background: var(--cream); }
-  .daily-history-card { display:flex; align-items:center; gap:12px; margin-bottom:10px; padding:14px; border-radius:16px; background: linear-gradient(135deg, var(--warm-white), color-mix(in srgb, var(--cream-dark) 55%, var(--warm-white) 45%)); border:1px solid color-mix(in srgb, var(--terracota-l) 35%, transparent); box-shadow: 0 4px 0 color-mix(in srgb, var(--cream-dark) 70%, transparent); }
+  .daily-history-card { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:10px; padding:14px; border-radius:16px; background: linear-gradient(135deg, var(--warm-white), color-mix(in srgb, var(--cream-dark) 55%, var(--warm-white) 45%)); border:1px solid color-mix(in srgb, var(--terracota-l) 35%, transparent); box-shadow: 0 4px 0 color-mix(in srgb, var(--cream-dark) 70%, transparent); }
   .daily-history-day { flex:1; min-width:0; color:var(--bark); font-weight:900; }
   .daily-history-date { display:block; margin-top:3px; color:var(--text-muted); font-size:12px; font-weight:700; }
   .daily-history-duration { color:var(--terracota-d); font-weight:900; text-align:right; white-space:nowrap; }
+  .daily-history-card-actions { flex-basis:100%; display:flex; justify-content:flex-end; margin-top:2px; }
+  .daily-history-add-to-timer { min-height:36px; padding:8px 12px; font-size:12px; }
+  .daily-history-total { margin:18px 4px 4px; padding:10px 12px; text-align:right; color:var(--text-muted); font-size:12px; font-weight:700; opacity:.82; border-top:1px solid color-mix(in srgb, var(--terracota-l) 24%, transparent); line-height:1.55; }
+  .daily-history-total strong { color:var(--bark); }
+  .daily-history-total-gap { display:block; color:var(--terracota-d); font-size:11px; font-weight:800; }
   .daily-history-empty { padding:40px 18px; text-align:center; color:var(--text-soft); line-height:1.5; }
   .daily-history-add-panel { margin:0 16px 16px; padding:14px; border-radius:16px; background:color-mix(in srgb, var(--warm-white) 88%, var(--cream-dark) 12%); border:1px solid color-mix(in srgb, var(--terracota-l) 35%, transparent); }
   .daily-history-add-panel[hidden] { display:none; }
@@ -11537,17 +11542,50 @@ function addDailyWorkSession(p, startValue, endValue) {
     const seconds = Math.floor((segmentEnd - cursor) / 1000);
     if (seconds > 0) {
       const fecha = localDateKey(cursor);
-      const entry = p.tiempoDiario.find(item => item.fecha === fecha);
+      const entry = p.tiempoDiario.find(item => item.fecha === fecha && item.origen !== 'manual');
       if (entry) entry.segundos = (parseInt(entry.segundos, 10) || 0) + seconds;
-      else p.tiempoDiario.push({ fecha, segundos: seconds });
+      else p.tiempoDiario.push({ id: uid(), fecha, segundos: seconds, origen: 'automatico' });
     }
     cursor = segmentEnd;
   }
   p.tiempoDiario.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
 }
 
+function normalizeDailyWorkEntries(p) {
+  if (!p || !Array.isArray(p.tiempoDiario)) return false;
+  let changed = false;
+  const normalized = [];
+  p.tiempoDiario.forEach(item => {
+    if (!item || !item.fecha) return;
+    const seconds = Math.max(0, parseInt(item.segundos, 10) || 0);
+    const pending = Math.max(0, parseInt(item.manualSegundosPendientes, 10) || 0);
+    if (item.origen === 'manual') {
+      normalized.push({
+        ...item,
+        id: item.id || uid(),
+        segundos: seconds,
+        manualSegundosPendientes: pending
+      });
+      if (!item.id) changed = true;
+      return;
+    }
+    if (pending > 0) {
+      const automaticSeconds = Math.max(0, seconds - pending);
+      if (automaticSeconds > 0) normalized.push({ id: item.id || uid(), fecha: item.fecha, segundos: automaticSeconds, origen: 'automatico' });
+      normalized.push({ id: uid(), fecha: item.fecha, segundos: pending, origen: 'manual', manualSegundosPendientes: pending, comentarios: Array.isArray(item.comentarios) ? item.comentarios.filter(Boolean) : [] });
+      changed = true;
+      return;
+    }
+    normalized.push({ ...item, id: item.id || uid(), segundos: seconds, origen: 'automatico' });
+    if (!item.id || item.origen !== 'automatico' || item.manualSegundosPendientes) changed = true;
+  });
+  normalized.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)) || (a.origen === b.origen ? 0 : a.origen === 'automatico' ? -1 : 1));
+  if (changed) p.tiempoDiario = normalized;
+  return changed;
+}
+
 function getDailyWorkEntries(p) {
-  const entries = Array.isArray(p?.tiempoDiario) ? p.tiempoDiario.map(item => ({ fecha: item.fecha, segundos: parseInt(item.segundos, 10) || 0, comentarios: Array.isArray(item.comentarios) ? item.comentarios.filter(Boolean) : [] })) : [];
+  const entries = Array.isArray(p?.tiempoDiario) ? p.tiempoDiario.map(item => ({ id: item.id || '', fecha: item.fecha, origen: item.origen === 'manual' ? 'manual' : 'automatico', segundos: parseInt(item.segundos, 10) || 0, manualSegundosPendientes: Math.max(0, parseInt(item.manualSegundosPendientes, 10) || 0), comentarios: Array.isArray(item.comentarios) ? item.comentarios.filter(Boolean) : [] })) : [];
   if (p?.timerRunning && p.timerStartedAt) {
     const live = { fecha: localDateKey(p.timerStartedAt), segundos: 0 };
     const start = new Date(p.timerStartedAt);
@@ -11558,12 +11596,12 @@ function getDailyWorkEntries(p) {
       const segmentEnd = new Date(Math.min(nextMidnight.getTime(), end.getTime()));
       const seconds = Math.floor((segmentEnd - cursor) / 1000);
       const fecha = localDateKey(cursor);
-      const found = entries.find(item => item.fecha === fecha);
-      if (found) found.segundos += seconds; else entries.push({ fecha, segundos, comentarios: [] });
+      const found = entries.find(item => item.fecha === fecha && item.origen === 'automatico');
+      if (found) found.segundos += seconds; else entries.push({ id: uid(), fecha, origen: 'automatico', segundos, manualSegundosPendientes: 0, comentarios: [] });
       cursor = segmentEnd;
     }
   }
-  return entries.filter(item => item.segundos > 0).sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
+  return entries.filter(item => item.segundos > 0).sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)) || (a.origen === b.origen ? 0 : a.origen === 'automatico' ? -1 : 1));
 }
 
 function formatDailyDate(fecha) {
@@ -11577,14 +11615,24 @@ window.openDailyWorkHistory = function() {
   const list = document.getElementById('daily-history-list');
   const subtitle = document.getElementById('daily-history-subtitle');
   if (!list) return;
+  if (normalizeDailyWorkEntries(currentProject)) saveProjectInDB();
   const entries = getDailyWorkEntries(currentProject);
   if (subtitle) subtitle.textContent = `Tiempo dedicado a “${currentProject.nombre || 'esta labor'}”`;
+  const totalDailySeconds = entries.reduce((total, item) => total + (parseInt(item.segundos, 10) || 0), 0);
+  const totalTimerSeconds = getWorkedSeconds(currentProject);
+  const differenceSeconds = totalTimerSeconds - totalDailySeconds;
+  const differenceLabel = differenceSeconds > 0
+    ? `<span class="daily-history-total-gap">Falta en la lista: ${escapeAttr(formatDetailedDuration(differenceSeconds))}</span>`
+    : differenceSeconds < 0
+      ? `<span class="daily-history-total-gap">Pendiente de añadir al temporizador: ${escapeAttr(formatDetailedDuration(Math.abs(differenceSeconds)))}</span>`
+      : '';
   list.innerHTML = entries.length ? entries.map(item => `
     <div class="daily-history-card">
-      <div style="font-size:24px;" aria-hidden="true">🧶</div>
-      <div class="daily-history-day">${escapeAttr(formatDailyDate(item.fecha))}<span class="daily-history-date">Trabajo registrado${item.comentarios?.length ? ` · ${escapeAttr(item.comentarios.join(' · '))}` : ''}</span></div>
+      <div style="font-size:24px;" aria-hidden="true">${item.origen === 'manual' ? '✍️' : '🧶'}</div>
+      <div class="daily-history-day">${escapeAttr(formatDailyDate(item.fecha))}<span class="daily-history-date">${item.origen === 'manual' ? 'Añadido manualmente' : 'Trabajo automático'}${item.comentarios?.length ? ` · ${escapeAttr(item.comentarios.join(' · '))}` : ''}</span></div>
       <div class="daily-history-duration">${escapeAttr(formatLongDuration(item.segundos))}</div>
-    </div>`).join('') : '<div class="daily-history-empty">Todavía no hay tiempo diario guardado.<br>Cuando pulses <strong>Parar</strong>, aparecerá aquí el tiempo de cada día.</div>';
+      ${item.origen === 'manual' ? `<div class="daily-history-card-actions">${item.manualSegundosPendientes > 0 ? `<button class="btn btn-secondary daily-history-add-to-timer" type="button" onclick="addManualDailyToTimer('${escapeAttr(item.id)}')">⏱ Añadir al temporizador</button>` : '<span class="daily-history-date">Ya añadido al temporizador</span>'}<button class="btn btn-ghost daily-history-delete-manual" type="button" onclick="deleteManualDailyWork('${escapeAttr(item.id)}')">🗑 Borrar</button></div>` : ''}
+    </div>`).join('') + `<div class="daily-history-total"><strong>Total del temporizador: ${escapeAttr(formatDetailedDuration(totalTimerSeconds))}</strong><br>Total en la lista: ${escapeAttr(formatDetailedDuration(totalDailySeconds))}${differenceLabel}</div>` : `<div class="daily-history-empty">Todavía no hay tiempo diario guardado.<br>Cuando pulses <strong>Parar</strong>, aparecerá aquí el tiempo de cada día.</div><div class="daily-history-total"><strong>Total del temporizador: ${escapeAttr(formatDetailedDuration(totalTimerSeconds))}</strong>${differenceLabel}</div>`;
   cancelManualDailyWork();
   openModal('modal-daily-history');
 };
@@ -11637,16 +11685,15 @@ window.saveManualDailyWork = function() {
   }
   try {
     if (!Array.isArray(currentProject.tiempoDiario)) currentProject.tiempoDiario = [];
-    let entry = currentProject.tiempoDiario.find(item => item.fecha === date);
+    let entry = currentProject.tiempoDiario.find(item => item.fecha === date && item.origen === 'manual');
     if (!entry) {
-      entry = { fecha: date, segundos: 0, comentarios: [] };
+      entry = { id: uid(), fecha: date, segundos: 0, origen: 'manual', manualSegundosPendientes: 0, comentarios: [] };
       currentProject.tiempoDiario.push(entry);
     }
     entry.segundos = (parseInt(entry.segundos, 10) || 0) + seconds;
+    entry.manualSegundosPendientes = (parseInt(entry.manualSegundosPendientes, 10) || 0) + seconds;
     if (!Array.isArray(entry.comentarios)) entry.comentarios = [];
     if (comment) entry.comentarios.push(comment);
-    currentProject.tiempoTotalSegundos = (parseInt(currentProject.tiempoTotalSegundos, 10) || 0) + seconds;
-    currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
     currentProject.tiempoDiario.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
     saveProjectInDB();
     renderWorkTimer();
@@ -11661,6 +11708,43 @@ window.saveManualDailyWork = function() {
   }
 };
 
+window.addManualDailyToTimer = function(id) {
+  if (!currentProject || manualDailyWorkSaving) return;
+  const entry = Array.isArray(currentProject.tiempoDiario) ? currentProject.tiempoDiario.find(item => item.id === id && item.origen === 'manual') : null;
+  const pendingSeconds = Math.max(0, parseInt(entry?.manualSegundosPendientes, 10) || 0);
+  if (!entry || pendingSeconds <= 0) return;
+  manualDailyWorkSaving = true;
+  try {
+    entry.manualSegundosPendientes = 0;
+    currentProject.tiempoTotalSegundos = (parseInt(currentProject.tiempoTotalSegundos, 10) || 0) + pendingSeconds;
+    currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
+    saveProjectInDB();
+    renderWorkTimer();
+    renderProjects();
+    openDailyWorkHistory();
+  } finally {
+    manualDailyWorkSaving = false;
+  }
+};
+
+window.deleteManualDailyWork = function(id) {
+  if (!currentProject || manualDailyWorkSaving || !Array.isArray(currentProject.tiempoDiario)) return;
+  const index = currentProject.tiempoDiario.findIndex(item => item.id === id && item.origen === 'manual');
+  if (index < 0) return;
+  const entry = currentProject.tiempoDiario[index];
+  if (!confirm(`¿Borrar las ${formatLongDuration(entry.segundos)} añadidas manualmente en ${formatDailyDate(entry.fecha)}?`)) return;
+  const wasAddedToTimer = Math.max(0, parseInt(entry.manualSegundosPendientes, 10) || 0) === 0;
+  if (wasAddedToTimer) {
+    currentProject.tiempoTotalSegundos = Math.max(0, (parseInt(currentProject.tiempoTotalSegundos, 10) || 0) - (parseInt(entry.segundos, 10) || 0));
+    currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
+  }
+  currentProject.tiempoDiario.splice(index, 1);
+  saveProjectInDB();
+  renderWorkTimer();
+  renderProjects();
+  openDailyWorkHistory();
+};
+
 function formatLongDuration(seconds) {
   seconds = Math.max(0, Math.floor(seconds || 0));
   const hours = Math.floor(seconds / 3600); seconds %= 3600;
@@ -11668,6 +11752,20 @@ function formatLongDuration(seconds) {
   if (hours && minutes) return `${hours} ${hours === 1 ? 'hora' : 'horas'} ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
   if (hours) return `${hours} ${hours === 1 ? 'hora' : 'horas'}`;
   return `${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+}
+
+function formatDetailedDuration(seconds) {
+  seconds = Math.max(0, Math.floor(seconds || 0));
+  const days = Math.floor(seconds / 86400);
+  seconds %= 86400;
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+  const minutes = Math.floor(seconds / 60);
+  const parts = [];
+  if (days) parts.push(`${days} ${days === 1 ? 'día' : 'días'}`);
+  if (hours) parts.push(`${hours} ${hours === 1 ? 'hora' : 'horas'}`);
+  if (minutes || !parts.length) parts.push(`${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`);
+  return parts.join(', ');
 }
 
 window.printDailyWorkHistory = function() { window.print(); };
@@ -19169,7 +19267,7 @@ window.copyWebLink = function() {
 </style>
 <div id="app-version-badge">
   <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" onclick="toggleBackupWave()">Guarda tus datos regularmente</span>
-  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V31</span>
+  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V32</span>
 </div>
 
 <script>
