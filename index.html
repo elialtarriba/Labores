@@ -11589,6 +11589,8 @@ window.openDailyWorkHistory = function() {
   openModal('modal-daily-history');
 };
 
+let manualDailyWorkSaving = false;
+
 window.showManualDailyWorkForm = function() {
   const panel = document.getElementById('daily-history-add-panel');
   const date = document.getElementById('daily-history-add-date');
@@ -11601,12 +11603,23 @@ window.showManualDailyWorkForm = function() {
 window.cancelManualDailyWork = function() {
   const panel = document.getElementById('daily-history-add-panel');
   if (panel) panel.hidden = true;
+  const date = document.getElementById('daily-history-add-date');
+  if (date) date.value = '';
+  const hours = document.getElementById('daily-history-add-hours');
+  if (hours) hours.value = '0';
+  const minutes = document.getElementById('daily-history-add-minutes');
+  if (minutes) minutes.value = '0';
   const comment = document.getElementById('daily-history-add-comment');
   if (comment) comment.value = '';
+  const saveButton = document.querySelector('#daily-history-add-panel button[onclick*="saveManualDailyWork"]');
+  if (saveButton) {
+    saveButton.disabled = false;
+    saveButton.dataset.saving = '';
+  }
 };
 
 window.saveManualDailyWork = function() {
-  if (!currentProject) return;
+  if (!currentProject || manualDailyWorkSaving) return;
   const date = document.getElementById('daily-history-add-date')?.value;
   const hours = Math.max(0, parseInt(document.getElementById('daily-history-add-hours')?.value, 10) || 0);
   const minutes = Math.max(0, parseInt(document.getElementById('daily-history-add-minutes')?.value, 10) || 0);
@@ -11616,22 +11629,36 @@ window.saveManualDailyWork = function() {
     alert('Indica una fecha y al menos un minuto de tiempo.');
     return;
   }
-  if (!Array.isArray(currentProject.tiempoDiario)) currentProject.tiempoDiario = [];
-  let entry = currentProject.tiempoDiario.find(item => item.fecha === date);
-  if (!entry) {
-    entry = { fecha: date, segundos: 0, comentarios: [] };
-    currentProject.tiempoDiario.push(entry);
+  manualDailyWorkSaving = true;
+  const saveButton = document.querySelector('#daily-history-add-panel button[onclick*="saveManualDailyWork"]');
+  if (saveButton) {
+    saveButton.disabled = true;
+    saveButton.dataset.saving = '1';
   }
-  entry.segundos = (parseInt(entry.segundos, 10) || 0) + seconds;
-  if (!Array.isArray(entry.comentarios)) entry.comentarios = [];
-  if (comment) entry.comentarios.push(comment);
-  currentProject.tiempoTotalSegundos = (parseInt(currentProject.tiempoTotalSegundos, 10) || 0) + seconds;
-  currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
-  currentProject.tiempoDiario.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
-  saveProjectInDB();
-  renderWorkTimer();
-  renderProjects();
-  openDailyWorkHistory();
+  try {
+    if (!Array.isArray(currentProject.tiempoDiario)) currentProject.tiempoDiario = [];
+    let entry = currentProject.tiempoDiario.find(item => item.fecha === date);
+    if (!entry) {
+      entry = { fecha: date, segundos: 0, comentarios: [] };
+      currentProject.tiempoDiario.push(entry);
+    }
+    entry.segundos = (parseInt(entry.segundos, 10) || 0) + seconds;
+    if (!Array.isArray(entry.comentarios)) entry.comentarios = [];
+    if (comment) entry.comentarios.push(comment);
+    currentProject.tiempoTotalSegundos = (parseInt(currentProject.tiempoTotalSegundos, 10) || 0) + seconds;
+    currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
+    currentProject.tiempoDiario.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
+    saveProjectInDB();
+    renderWorkTimer();
+    renderProjects();
+    openDailyWorkHistory();
+  } finally {
+    manualDailyWorkSaving = false;
+    if (saveButton) {
+      saveButton.disabled = false;
+      saveButton.dataset.saving = '';
+    }
+  }
 };
 
 function formatLongDuration(seconds) {
