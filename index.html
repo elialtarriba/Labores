@@ -221,7 +221,7 @@ avisa a la creadora a través de su email.
   html, body { min-height: 100%; max-width: 100%; overflow-x: hidden; }
   body {
     font-family: 'Lato', sans-serif;
-    background: color-mix(in srgb, var(--bark) 12%, var(--cream) 88%);
+    background: var(--cream);
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
@@ -229,18 +229,8 @@ avisa a la creadora a través de su email.
     overflow-x: hidden;
     padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
-  body::before {
-    content: "🧶  🧵  🪡";
-    position: fixed;
-    top: 112px;
-    right: 22px;
-    z-index: 0;
-    pointer-events: none;
-    font-size: 38px;
-    letter-spacing: 8px;
-    opacity: .12;
-    filter: saturate(.8);
-  }
+  /* El fondo pertenece al tema y se mantiene claro en todas las vistas. */
+  .main, .content { background: var(--cream); }
 
   /* ─── BOTTOM NAV ─────────────────────────────────────────── */
   .sidebar {
@@ -2406,6 +2396,49 @@ avisa a la creadora a través de su email.
     filter:drop-shadow(0 7px 5px rgba(110,74,58,.25));
   }
   #active-timer-warning-text { color:#6e4a3a !important; }
+
+  .daily-history-trigger {
+    width: 100%;
+    margin-top: 14px;
+    min-height: 48px;
+    border: 0;
+    border-radius: 15px;
+    color: #fff;
+    font: 900 14px 'Lato', sans-serif;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--terracota-l), var(--terracota));
+    border: 1px solid color-mix(in srgb, var(--terracota-d) 65%, transparent);
+    box-shadow: 0 5px 0 var(--terracota-d), 0 9px 16px rgba(110,74,58,.16), inset 0 1px 0 rgba(255,255,255,.5);
+    transition: transform .1s ease, box-shadow .1s ease;
+  }
+  .daily-history-trigger:active { transform: translateY(5px); box-shadow: 0 0 0 var(--terracota-d), inset 0 2px 5px rgba(0,0,0,.18); }
+  #modal-daily-history { z-index: 240; padding: 0; }
+  #modal-daily-history .daily-history-modal { width: 100%; max-width: 760px; min-height: 100dvh; max-height: 100dvh; border-radius: 0; display:flex; flex-direction:column; }
+  #modal-daily-history .modal-header { padding-top: calc(16px + env(safe-area-inset-top)); }
+  .daily-history-subtitle { color: var(--text-soft); font-size: 13px; margin-top: 4px; }
+  .daily-history-list { flex: 1; overflow: auto; padding: 16px; background: var(--cream); }
+  .daily-history-card { display:flex; align-items:center; gap:12px; margin-bottom:10px; padding:14px; border-radius:16px; background: linear-gradient(135deg, var(--warm-white), color-mix(in srgb, var(--cream-dark) 55%, var(--warm-white) 45%)); border:1px solid color-mix(in srgb, var(--terracota-l) 35%, transparent); box-shadow: 0 4px 0 color-mix(in srgb, var(--cream-dark) 70%, transparent); }
+  .daily-history-day { flex:1; min-width:0; color:var(--bark); font-weight:900; }
+  .daily-history-date { display:block; margin-top:3px; color:var(--text-muted); font-size:12px; font-weight:700; }
+  .daily-history-duration { color:var(--terracota-d); font-weight:900; text-align:right; white-space:nowrap; }
+  .daily-history-empty { padding:40px 18px; text-align:center; color:var(--text-soft); line-height:1.5; }
+  .daily-history-add-panel { margin:0 16px 16px; padding:14px; border-radius:16px; background:color-mix(in srgb, var(--warm-white) 88%, var(--cream-dark) 12%); border:1px solid color-mix(in srgb, var(--terracota-l) 35%, transparent); }
+  .daily-history-add-panel[hidden] { display:none; }
+  .daily-history-add-panel h3 { margin:0 0 10px; color:var(--bark); font-size:15px; }
+  .daily-history-add-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:8px; }
+  .daily-history-add-grid label { display:flex; flex-direction:column; gap:4px; color:var(--text-soft); font-size:12px; font-weight:800; }
+  .daily-history-add-grid input, .daily-history-add-grid textarea { width:100%; box-sizing:border-box; border:1px solid color-mix(in srgb, var(--terracota-l) 38%, transparent); border-radius:10px; padding:9px; background:var(--warm-white); color:var(--bark); font:700 13px 'Lato', sans-serif; }
+  .daily-history-add-grid textarea { grid-column:1 / -1; min-height:58px; resize:vertical; }
+  .daily-history-add-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+  @media (max-width:520px) { .daily-history-add-grid { grid-template-columns:1fr 1fr; } .daily-history-add-grid label:first-child { grid-column:1 / -1; } }
+  @media print {
+    body * { visibility: hidden !important; }
+    #modal-daily-history, #modal-daily-history * { visibility: visible !important; }
+    #modal-daily-history { position: absolute !important; inset: 0 !important; display: block !important; }
+    #modal-daily-history .modal-header { color: #000; }
+    #modal-daily-history .modal-footer, #modal-daily-history .modal-close { display:none !important; }
+    #modal-daily-history .daily-history-list { overflow: visible; }
+  }
   .resource-block { margin-top: 18px; }
   .resource-block h4 {
     font-size: 13px;
@@ -5300,6 +5333,7 @@ body.edit-mode .calc-key:active::after, body.edit-mode .calc-mini-key:active::af
                 <button class="btn btn-primary" id="work-timer-btn" onclick="toggleWorkTimer()">▶ Empezar</button>
                 <span class="timer-state" id="work-timer-state">Parado</span>
               </div>
+              <button class="daily-history-trigger" type="button" onclick="openDailyWorkHistory()">📅 Ver tiempo dedicado cada día</button>
             </div>
             <div class="form-group">
               <label>Fecha inicio</label>
@@ -6468,6 +6502,37 @@ body.view-welcome #app-version-badge {
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="cancelTimerSwitch()">Cancelar</button>
       <button class="btn btn-primary" onclick="confirmTimerSwitch()">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-daily-history" onclick="if(event.target===this) closeModal('modal-daily-history')">
+  <div class="modal daily-history-modal">
+    <div class="modal-header">
+      <div>
+        <h2>📅 Mi tiempo de labores</h2>
+        <p class="daily-history-subtitle" id="daily-history-subtitle">Tiempo dedicado a este proyecto</p>
+      </div>
+      <button class="modal-close" type="button" onclick="closeModal('modal-daily-history')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="daily-history-list" id="daily-history-list"></div>
+    <div class="daily-history-add-panel" id="daily-history-add-panel" hidden>
+      <h3>➕ Añadir tiempo manual</h3>
+      <div class="daily-history-add-grid">
+        <label>Fecha<input type="date" id="daily-history-add-date"></label>
+        <label>Horas<input type="number" id="daily-history-add-hours" min="0" step="1" value="0" inputmode="numeric"></label>
+        <label>Minutos<input type="number" id="daily-history-add-minutes" min="0" max="59" step="1" value="0" inputmode="numeric"></label>
+        <label>Comentario (opcional)<textarea id="daily-history-add-comment" placeholder="Ej.: tiempo realizado antes de empezar a usar el temporizador"></textarea></label>
+      </div>
+      <div class="daily-history-add-actions">
+        <button class="btn btn-ghost" type="button" onclick="cancelManualDailyWork()">Cancelar</button>
+        <button class="btn btn-primary" type="button" onclick="saveManualDailyWork()">💾 Añadir tiempo</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" type="button" onclick="closeModal('modal-daily-history')">Cerrar</button>
+      <button class="btn btn-secondary" type="button" onclick="showManualDailyWorkForm()">➕ Añadir tiempo</button>
+      <button class="btn btn-primary" type="button" onclick="printDailyWorkHistory()">🖨️ Imprimir / guardar</button>
     </div>
   </div>
 </div>
@@ -10295,6 +10360,7 @@ window.saveProject = async function() {
     progreso: existing.progreso || 0,
     horas: existing.horas || 0,
     tiempoTotalSegundos: existing.tiempoTotalSegundos || 0,
+    tiempoDiario: existing.tiempoDiario || [],
     timerRunning: existing.timerRunning || false,
     timerStartedAt: existing.timerStartedAt || '',
     contadores: isEditing ? (existing.contadores || contadores) : contadores,
@@ -11449,6 +11515,136 @@ function getWorkedSeconds(p) {
   return total;
 }
 
+function localDateKey(date) {
+  const d = new Date(date);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function addDailyWorkSession(p, startValue, endValue) {
+  if (!p || !startValue || !endValue) return;
+  const start = new Date(startValue);
+  const end = new Date(endValue);
+  if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end <= start) return;
+  if (!Array.isArray(p.tiempoDiario)) p.tiempoDiario = [];
+  let cursor = new Date(start);
+  while (cursor < end) {
+    const nextMidnight = new Date(cursor);
+    nextMidnight.setHours(24, 0, 0, 0);
+    const segmentEnd = new Date(Math.min(nextMidnight.getTime(), end.getTime()));
+    const seconds = Math.floor((segmentEnd - cursor) / 1000);
+    if (seconds > 0) {
+      const fecha = localDateKey(cursor);
+      const entry = p.tiempoDiario.find(item => item.fecha === fecha);
+      if (entry) entry.segundos = (parseInt(entry.segundos, 10) || 0) + seconds;
+      else p.tiempoDiario.push({ fecha, segundos: seconds });
+    }
+    cursor = segmentEnd;
+  }
+  p.tiempoDiario.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
+}
+
+function getDailyWorkEntries(p) {
+  const entries = Array.isArray(p?.tiempoDiario) ? p.tiempoDiario.map(item => ({ fecha: item.fecha, segundos: parseInt(item.segundos, 10) || 0, comentarios: Array.isArray(item.comentarios) ? item.comentarios.filter(Boolean) : [] })) : [];
+  if (p?.timerRunning && p.timerStartedAt) {
+    const live = { fecha: localDateKey(p.timerStartedAt), segundos: 0 };
+    const start = new Date(p.timerStartedAt);
+    const end = new Date();
+    let cursor = new Date(start);
+    while (cursor < end) {
+      const nextMidnight = new Date(cursor); nextMidnight.setHours(24, 0, 0, 0);
+      const segmentEnd = new Date(Math.min(nextMidnight.getTime(), end.getTime()));
+      const seconds = Math.floor((segmentEnd - cursor) / 1000);
+      const fecha = localDateKey(cursor);
+      const found = entries.find(item => item.fecha === fecha);
+      if (found) found.segundos += seconds; else entries.push({ fecha, segundos, comentarios: [] });
+      cursor = segmentEnd;
+    }
+  }
+  return entries.filter(item => item.segundos > 0).sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
+}
+
+function formatDailyDate(fecha) {
+  const date = new Date(`${fecha}T12:00:00`);
+  const weekday = new Intl.DateTimeFormat('es-ES', { weekday: 'long' }).format(date);
+  return `${weekday.charAt(0).toUpperCase()}${weekday.slice(1)} - ${date.toLocaleDateString('es-ES')}`;
+}
+
+window.openDailyWorkHistory = function() {
+  if (!currentProject) return;
+  const list = document.getElementById('daily-history-list');
+  const subtitle = document.getElementById('daily-history-subtitle');
+  if (!list) return;
+  const entries = getDailyWorkEntries(currentProject);
+  if (subtitle) subtitle.textContent = `Tiempo dedicado a “${currentProject.nombre || 'esta labor'}”`;
+  list.innerHTML = entries.length ? entries.map(item => `
+    <div class="daily-history-card">
+      <div style="font-size:24px;" aria-hidden="true">🧶</div>
+      <div class="daily-history-day">${escapeAttr(formatDailyDate(item.fecha))}<span class="daily-history-date">Trabajo registrado${item.comentarios?.length ? ` · ${escapeAttr(item.comentarios.join(' · '))}` : ''}</span></div>
+      <div class="daily-history-duration">${escapeAttr(formatLongDuration(item.segundos))}</div>
+    </div>`).join('') : '<div class="daily-history-empty">Todavía no hay tiempo diario guardado.<br>Cuando pulses <strong>Parar</strong>, aparecerá aquí el tiempo de cada día.</div>';
+  cancelManualDailyWork();
+  openModal('modal-daily-history');
+};
+
+window.showManualDailyWorkForm = function() {
+  const panel = document.getElementById('daily-history-add-panel');
+  const date = document.getElementById('daily-history-add-date');
+  if (!panel || !date) return;
+  date.value = localDateKey(new Date());
+  panel.hidden = false;
+  document.getElementById('daily-history-add-hours')?.focus();
+};
+
+window.cancelManualDailyWork = function() {
+  const panel = document.getElementById('daily-history-add-panel');
+  if (panel) panel.hidden = true;
+  const comment = document.getElementById('daily-history-add-comment');
+  if (comment) comment.value = '';
+};
+
+window.saveManualDailyWork = function() {
+  if (!currentProject) return;
+  const date = document.getElementById('daily-history-add-date')?.value;
+  const hours = Math.max(0, parseInt(document.getElementById('daily-history-add-hours')?.value, 10) || 0);
+  const minutes = Math.max(0, parseInt(document.getElementById('daily-history-add-minutes')?.value, 10) || 0);
+  const comment = String(document.getElementById('daily-history-add-comment')?.value || '').trim();
+  const seconds = (hours * 60 + minutes) * 60;
+  if (!date || seconds <= 0) {
+    alert('Indica una fecha y al menos un minuto de tiempo.');
+    return;
+  }
+  if (!Array.isArray(currentProject.tiempoDiario)) currentProject.tiempoDiario = [];
+  let entry = currentProject.tiempoDiario.find(item => item.fecha === date);
+  if (!entry) {
+    entry = { fecha: date, segundos: 0, comentarios: [] };
+    currentProject.tiempoDiario.push(entry);
+  }
+  entry.segundos = (parseInt(entry.segundos, 10) || 0) + seconds;
+  if (!Array.isArray(entry.comentarios)) entry.comentarios = [];
+  if (comment) entry.comentarios.push(comment);
+  currentProject.tiempoTotalSegundos = (parseInt(currentProject.tiempoTotalSegundos, 10) || 0) + seconds;
+  currentProject.horas = Math.round(getWorkedSeconds(currentProject) / 36) / 100;
+  currentProject.tiempoDiario.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
+  saveProjectInDB();
+  renderWorkTimer();
+  renderProjects();
+  openDailyWorkHistory();
+};
+
+function formatLongDuration(seconds) {
+  seconds = Math.max(0, Math.floor(seconds || 0));
+  const hours = Math.floor(seconds / 3600); seconds %= 3600;
+  const minutes = Math.floor(seconds / 60);
+  if (hours && minutes) return `${hours} ${hours === 1 ? 'hora' : 'horas'} ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+  if (hours) return `${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+  return `${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+}
+
+window.printDailyWorkHistory = function() { window.print(); };
+
 function renderWorkTimer() {
   if (!currentProject) return;
   const input = document.getElementById('d-horas');
@@ -11498,6 +11694,7 @@ window.confirmTimerSwitch = function() {
 
   const stoppedSeconds = getWorkedSeconds(otherProject);
   otherProject.tiempoTotalSegundos = stoppedSeconds;
+  addDailyWorkSession(otherProject, otherProject.timerStartedAt, new Date());
   otherProject.timerRunning = false;
   otherProject.timerStartedAt = '';
   otherProject.horas = Math.round(stoppedSeconds / 36) / 100;
@@ -11533,6 +11730,7 @@ window.toggleWorkTimer = function() {
     currentProject.timerRunning = true;
     currentProject.timerStartedAt = new Date().toISOString();
   } else {
+    addDailyWorkSession(currentProject, currentProject.timerStartedAt, new Date());
     currentProject.tiempoTotalSegundos = getWorkedSeconds(currentProject);
     currentProject.timerRunning = false;
     currentProject.timerStartedAt = '';
@@ -18944,7 +19142,7 @@ window.copyWebLink = function() {
 </style>
 <div id="app-version-badge">
   <span id="backup-warning-text" style="color:var(--bark); font-weight:700; font-size:13px; pointer-events:auto; cursor:pointer;" onclick="toggleBackupWave()">Guarda tus datos regularmente</span>
-  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V30</span>
+  <span style="color:var(--text-muted); font-weight:600; opacity:0.8; font-size:13px; letter-spacing:0.5px;">V31</span>
 </div>
 
 <script>
